@@ -316,7 +316,7 @@ function newbarandarea() {
 
     var left = 60 * scalefactor;
     var right = width - 60 * scalefactor;
-    var gTop = 90 * scalefactor;
+    var gTop = 60 * scalefactor;
     var bottom = height - 60 * scalefactor;
 
     ctx.strokeStyle = '#000000';
@@ -349,6 +349,7 @@ function newbarandarea() {
         var sum = 0;
         var origMin = 0;
         for (var i in keys) {
+            var val = freq[keys[i]];
             if (val > maxY) {
                 maxY = val;
             }
@@ -357,8 +358,6 @@ function newbarandarea() {
             }
             sum += val;
         }
-        console.log("maxY: " + maxY);
-        var origMax = maxY;
         if (relativeFrequency) {
             maxY = maxY / sum;
         } else {
@@ -367,25 +366,25 @@ function newbarandarea() {
 
         var minMaxSteps = axisminmaxstep(minY, maxY);
         var minYTick = minMaxSteps[0];
-        var maxYTick = minMaxSteps[1];
+        var maxYTick = (relativeFrequency) ? minMaxSteps[1] : Math.ceil(minMaxSteps[1] / 10) * 10;
+        console.log("maxYTick: " + maxYTick + " maxY: " + maxY);
         var yStep = minMaxSteps[2];
 
-        vertaxis(ctx, gTop, bottom, left - 10 * scalefactor, minYTick, maxYTick, yStep);
+        vertaxis(ctx, gTop, bottom, left - 10 * scalefactor, minYTick, maxYTick, yStep, undefined, false);
         line(ctx, left - 10 * scalefactor, bottom, right, bottom);
 
-        var eachWidth = (width - 150 * scalefactor) / num;
+        var eachWidth = (width - 120 * scalefactor) / num;
         var tLeft = 90 * scalefactor;
-        ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+        ctx.font = 15 * scalefactor + "px Roboto";
         ctx.textAlign = "center";
         for (var i in keys) {
             ctx.fillStyle = '#000';
             var key = keys[i];
-            var value = convertvaltopixel(freq[keys[i]] / sum, origMin / sum, relativeFrequency ? origMax / sum : maxYTick, minYTick, maxYTick);
+            var value = convertvaltopixel(freq[keys[i]] / sum, origMin / sum, maxYTick, bottom, gTop);
             var tRight = tLeft + eachWidth;
             ctx.fillText(key, add(tLeft, tRight - 50 * scalefactor) / 2, height - 40 * scalefactor);
             ctx.fillStyle = '#d3d3d3';
-            // x, y, width, height
-            var yPixel = convertvaltopixel(value, minYTick, maxYTick, bottom, gTop);
+            var yPixel = value;
             var x1 = add(tLeft, tRight - 50 * scalefactor) / 2 - ((eachWidth * 0.7) / 2);
             ctx.fillRect(x1, yPixel, eachWidth * 0.7, bottom - yPixel);
             ctx.strokeRect(x1, yPixel, eachWidth * 0.7, bottom - yPixel);

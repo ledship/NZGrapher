@@ -48,3 +48,6 @@ Temporary Items
 
 #temp images
 */imagetemp/*.png
+
+# ide files
+.idea/*

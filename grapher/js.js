@@ -1376,7 +1376,7 @@ function jsgraphtoimage(dataURL) {
     }
 }
 
-var rtime = new Date(1, 1, 2000, 12, 00, 00);
+var rtime = new Date(1, 1, 2000, 12, 0, 0);
 var timeout = false;
 var delta = 200;
 $(window).resize(function() {
@@ -1740,14 +1740,14 @@ function horaxis(ctx, x1, x2, y, min, max, step, gridlinetop) {
     }
 }
 
-function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop) {
+function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop, extendBelow) {
     min = parseFloat(parseFloat(min.toFixed(10)).toPrecision(8));
     max = parseFloat(parseFloat(max.toFixed(10)).toPrecision(8));
     ctx.strokeStyle = '#000000';
     if (typeof gridlinetop === 'undefined') { gridlinetop = $('#graphdiv').width() - 50; }
     ctx.fillStyle = '#000000';
     ctx.lineWidth = 1 * scalefactor;
-    line(ctx, x, add(y1, -10 * scalefactor), x, add(y2, 10 * scalefactor));
+    line(ctx, x, add(y1, -10 * scalefactor), x, (extendBelow === false) ? y2 : add(y2, 10 * scalefactor));
     fontsize = 13 * scalefactor;
     ctx.font = fontsize + "px Roboto";
     ctx.textAlign = "right";
