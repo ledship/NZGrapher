@@ -440,7 +440,7 @@ echo "\n</table></body></html>";
 	<option value='newpairsplot'>Pairs Plot</option>
 	<option disabled></option>
 	<option value='newdotplot'>Dot Plot (and Box and Whisker)</option>
-	<option value='bar and area graph'>Bar Graph (and Area Graph)</option>
+	<option value='newbarandarea'>Bar Graph (and Area Graph)</option>
 	<option value='histogram'>Histogram</option>
 	<option value='histogramf'>Histogram - Summary Data</option>
 	<option value='pie chart'>Pie Chart</option>

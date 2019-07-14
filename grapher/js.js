@@ -1030,7 +1030,7 @@ function graphchange(obj) {
     document.getElementById('stripgraphshow').style.display = 'none';
     document.getElementById('stackdots').checked = false;
     $('#removedpointsshow').hide();
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart' || obj.value == 'bar and area graph' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
     };
@@ -1059,7 +1059,7 @@ function graphchange(obj) {
     if (obj.value == 'time series forecasts') { document.getElementById('for').style.display = 'inline'; };
     if (obj.value.substring(0, 4) == 'time') { document.getElementById('addmultshow').style.display = 'block'; };
     if (obj.value == 'time series') { document.getElementById('longtermtrendshow').style.display = 'block'; };
-    if (obj.value == 'histogramf' || obj.value == 'histogram' || obj.value == 'bar and area graph') { document.getElementById('relativefrequencyshow').style.display = 'block'; }
+    if (obj.value == 'histogramf' || obj.value == 'histogram' || obj.value == 'newbarandarea') { document.getElementById('relativefrequencyshow').style.display = 'block'; }
     if (obj.value == 'residuals') { document.getElementById('residualsforcexshow').style.display = 'block'; }
     if (obj.value == 'scatter') {
         document.getElementById('invertshow').style.display = 'block';
@@ -6113,7 +6113,7 @@ function drawminibarchart(ctx, data, bleft, bright, btop, bbottom, r, title) {
     });
     ctx.fillStyle = '#000';
 
-    $('#graphmap').append("<area shape='rect' coords='" + (bleft / scalefactor) + "," + (btop / scalefactor) + "," + (bright / scalefactor) + "," + (bbottom / scalefactor) + "' href=\"javascript:document.getElementById('xvar').selectedIndex=" + r + "+1;document.getElementById('yvar').selectedIndex=0;document.getElementById('type').value='bar and area graph';document.getElementById('xaxis').value=document.getElementById('xvar').options[document.getElementById('xvar').selectedIndex].text;document.getElementById('yaxis').value=document.getElementById('yvar').options[document.getElementById('yvar').selectedIndex].text;graphchange(document.getElementById('type'));updategraph();\" alt='" + bleft + "," + btop + "' desc='" + title + "'>");
+    $('#graphmap').append("<area shape='rect' coords='" + (bleft / scalefactor) + "," + (btop / scalefactor) + "," + (bright / scalefactor) + "," + (bbottom / scalefactor) + "' href=\"javascript:document.getElementById('xvar').selectedIndex=" + r + "+1;document.getElementById('yvar').selectedIndex=0;document.getElementById('type').value='newbarandarea';document.getElementById('xaxis').value=document.getElementById('xvar').options[document.getElementById('xvar').selectedIndex].text;document.getElementById('yaxis').value=document.getElementById('yvar').options[document.getElementById('yvar').selectedIndex].text;graphchange(document.getElementById('type'));updategraph();\" alt='" + bleft + "," + btop + "' desc='" + title + "'>");
 }
 
 function drawminiscatter(ctx, xdata, ydata, bleft, bright, btop, bbottom, c, r, title) {
@@ -6259,7 +6259,7 @@ function drawminiareagraphs(ctx, ydata, xdata, bleft, bright, btop, bbottom, c, 
         l = add(l, bwidth * total / count);
     });
     ctx.fillStyle = '#000';
-    $('#graphmap').append("<area shape='rect' coords='" + (bleft / scalefactor) + "," + (btop / scalefactor) + "," + (bright / scalefactor) + "," + (bbottom / scalefactor) + "' href=\"javascript:document.getElementById('xvar').selectedIndex=" + c + "+1;document.getElementById('yvar').selectedIndex=" + r + "+1;document.getElementById('type').value='bar and area graph';document.getElementById('xaxis').value=document.getElementById('xvar').options[document.getElementById('xvar').selectedIndex].text;document.getElementById('yaxis').value=document.getElementById('yvar').options[document.getElementById('yvar').selectedIndex].text;graphchange(document.getElementById('type'));updategraph();\" alt='" + bleft + "," + btop + "' desc='" + title + "'>");
+    $('#graphmap').append("<area shape='rect' coords='" + (bleft / scalefactor) + "," + (btop / scalefactor) + "," + (bright / scalefactor) + "," + (bbottom / scalefactor) + "' href=\"javascript:document.getElementById('xvar').selectedIndex=" + c + "+1;document.getElementById('yvar').selectedIndex=" + r + "+1;document.getElementById('type').value='newbarandarea';document.getElementById('xaxis').value=document.getElementById('xvar').options[document.getElementById('xvar').selectedIndex].text;document.getElementById('yaxis').value=document.getElementById('yvar').options[document.getElementById('yvar').selectedIndex].text;graphchange(document.getElementById('type'));updategraph();\" alt='" + bleft + "," + btop + "' desc='" + title + "'>");
 }
 
 function lockaxis() {

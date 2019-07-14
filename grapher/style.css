@@ -217,10 +217,6 @@ table {
     display: none;
 }
 
-input[type=checkbox] {
-    visibility: hidden;
-}
-
 input[type=checkbox]::before {
     content: "";
     background-image: url('./unchecked.png');
