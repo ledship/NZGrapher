@@ -1,51 +1,56 @@
-body, textarea, input {
-	font-family: 'Roboto', sans-serif;
+body,
+textarea,
+input {
+    font-family: 'Roboto', sans-serif;
 }
 
-textarea, input{
-	font-size:11px;
+textarea,
+input {
+    font-size: 11px;
 }
 
-body{
-	overflow:hidden;
+body {
+    overflow: hidden;
 }
 
-div{
-	position:absolute;
-	background-color:#fff;
-	border:1px solid #ddd;
+div {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }
 
-#showhideleft, #showhidebottom{
-	position:absolute;
-	z-index:5;
-	text-align:center;
-	padding:15px;
-	cursor:pointer;
-	border: 1px solid rgba(0,100,200,1);
-	background-color:rgba(0,100,200,0.85);
-	color:#fff;
+#showhideleft,
+#showhidebottom {
+    position: absolute;
+    z-index: 5;
+    text-align: center;
+    padding: 15px;
+    cursor: pointer;
+    border: 1px solid rgba(0, 100, 200, 1);
+    background-color: rgba(0, 100, 200, 0.85);
+    color: #fff;
 }
 
 #top {
-	height:60px;
-	width:100%;
-	top:0;
-	left:0;
-	border:none;
-	font-size:16px;
-	background-color:rgba(0,100,200,0.85);
-	text-align:right;
-	border-bottom:#ccc 1px solid;
-	z-index:2;
-	color:#fff;
+    height: 60px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border: none;
+    font-size: 16px;
+    background-color: rgba(0, 100, 200, 0.85);
+    text-align: right;
+    border-bottom: #ccc 1px solid;
+    z-index: 2;
+    color: #fff;
 }
 
-#top input, #top select {
-	color:#000;
-	background-color:#fff;
-	font-size:16px;
-	border:none;
+#top input,
+#top select {
+    color: #000;
+    background-color: #fff;
+    font-size: 16px;
+    border: none;
 }
 
 .spacer {
@@ -54,378 +59,452 @@ div{
     height: 10px;
     border: none;
     width: 1px;
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 a {
-	color:#0064c8;
+    color: #0064c8;
 }
 
 #overlay {
-	color:#000;
+    color: #000;
 }
 
-#overlay input[type="file"] ,#overlay label {
-	color:#000;
+#overlay input[type="file"],
+#overlay label {
+    color: #000;
 }
 
 #left {
-	top:60px;
-	bottom:140px;
-	right:60%;
-	left:0;
-	overflow:auto;
-	border-left:none;
+    top: 60px;
+    bottom: 140px;
+    right: 60%;
+    left: 0;
+    overflow: auto;
+    border-left: none;
 }
 
 table {
-	border-collapse:collapse;
+    border-collapse: collapse;
 }
 
-#data td,#data th{
-	border:1px solid #ccc;
-	font-size:12px;
-	min-width:40px;
-	background:none;
+#data td,
+#data th {
+    border: 1px solid #ccc;
+    font-size: 12px;
+    min-width: 40px;
+    background: none;
 }
+
 #data {
-	min-width:100%;
+    min-width: 100%;
 }
+
 #data td div {
-	border:none;
-	padding:0px;
-	position:relative;
-	top:0px;
-	width:100%;
-	height:100%;
-	background:none;
+    border: none;
+    padding: 0px;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: none;
 }
 
 #buttons {
-	position:absolute;
-	top:33px;
-	left:25px;
-	border: none;
-	height:25px;
-	background:none;
-	z-index:2;
+    position: absolute;
+    top: 33px;
+    left: 25px;
+    border: none;
+    height: 25px;
+    background: none;
+    z-index: 2;
 }
+
 .abutton {
     display: inline;
     position: relative;
     font-size: 16px;
     padding: 2px;
-	padding-left:7px;
-	padding-right:7px;
+    padding-left: 7px;
+    padding-right: 7px;
     border: none;
-	cursor:pointer;
-	color:#fff;
-	background:none;
+    cursor: pointer;
+    color: #fff;
+    background: none;
 }
 
 #variable {
-	height:140px;
-	right:60%;
-	bottom:0px;
-	left:0;
-	z-index:3;
+    height: 140px;
+    right: 60%;
+    bottom: 0px;
+    left: 0;
+    z-index: 3;
 }
 
 #graphdiv {
-	left:40%;
-	right:0;
-	top:60px;
-	bottom:140px;
-	border-left:none;
-	text-align:center;
-	border:none;
+    left: 40%;
+    right: 0;
+    top: 60px;
+    bottom: 140px;
+    border-left: none;
+    text-align: center;
+    border: none;
 }
 
 #graph {
-	top:0;
-	left:0;
-	border:none;
-	width:100%;
-	height:100%;
+    top: 0;
+    left: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
 }
 
 #controls {
-	height:140px;
-	left:40%;
-	bottom:0px;
-	right:0;
-	border-left:none;
+    height: 140px;
+    left: 40%;
+    bottom: 0px;
+    right: 0;
+    border-left: none;
 }
 
-#variable table td, #controls table td {
-	font-size:12px;
-	height:27px;
+#variable table td,
+#controls table td {
+    font-size: 12px;
+    height: 27px;
 }
 
-#overlay{
-	position:absolute;
-	top:17px;
-	left:10px;
-	z-index:4;
-	font-size:12px;
-	background:none;
-	border:none;
+#overlay {
+    position: absolute;
+    top: 17px;
+    left: 10px;
+    z-index: 4;
+    font-size: 12px;
+    background: none;
+    border: none;
 }
 
-#loading, #updating, #sampling {
-	color:#f00;
-	left:40%;
-	right:0;
-	top:60px;
-	bottom:140px;
-	border-left:none;
-	text-align:center;
-	z-index:5;
-	opacity: 0.6;
-    filter: alpha(opacity=60); /* For IE8 and earlier */
+#loading,
+#updating,
+#sampling {
+    color: #f00;
+    left: 40%;
+    right: 0;
+    top: 60px;
+    bottom: 140px;
+    border-left: none;
+    text-align: center;
+    z-index: 5;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+    /* For IE8 and earlier */
 }
 
 #updating {
-	left:0;
-	right:60%;
-	display:none;
+    left: 0;
+    right: 60%;
+    display: none;
 }
 
-#loading{
-	z-index:4;
+#loading {
+    z-index: 4;
 }
 
 #sampling {
-	left:0;
-	right:0;
-	bottom:0;
-	top:0;
-	display:none;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    display: none;
 }
 
-input[type=checkbox]{
-	visibility: hidden;
+input[type=checkbox] {
+    visibility: hidden;
 }
 
-input[type=checkbox]::before { 
+input[type=checkbox]::before {
     content: "";
     background-image: url('./unchecked.png');
     background-size: 15px 15px;
     display: inline-block;
-    width:15px;
-    height:15px;
-	visibility: visible;
+    width: 15px;
+    height: 15px;
+    visibility: visible;
 }
-input[type=checkbox]:checked::before { 
+
+input[type=checkbox]:checked::before {
     background-image: url('./checked.png');
-	background-repeat: no-repeat;
+    background-repeat: no-repeat;
 }
 
 #addtograph span {
-	text-indent:-20px;
-	display:block;
-	padding-left:20px;
+    text-indent: -20px;
+    display: block;
+    padding-left: 20px;
 }
+
 #addtograph span span {
-	display:inline;
-	padding-left:0px;
+    display: inline;
+    padding-left: 0px;
 }
+
 #addtograph select {
-	margin-left:-20px;
+    margin-left: -20px;
 }
 
 #variable label {
-	appearance:button;
-	-moz-appearance:button; /* Firefox */
-	-webkit-appearance:button; /* Safari and Chrome */
-	cursor: pointer;
-	font-size:12px;
-	padding:2px;
-	padding-left:8px;
-	padding-right:8px;
+    appearance: button;
+    -moz-appearance: button;
+    /* Firefox */
+    -webkit-appearance: button;
+    /* Safari and Chrome */
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 #tour {
-	z-index:100;
-	top:0px;
-	left:0px;
-	width:100%;
-	height:100%;
-	background-color:rgba(255,255,255,0.4);
-	border:none;
+    z-index: 100;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
 }
 
 #tour table td {
-	text-align:center;
-	vertical-align:middle;
-	border:none;
-	width:20%;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    width: 20%;
 }
 
-#tour table td span, #updater span, a.button, .button{
-	background-color:rgba(0,100,200,0.85);
-	display:inline-block;
-	padding:10px;
-	font-size:12px;
-	color:#fff;
-	text-align:center;
-	text-decoration:none;
-	cursor: pointer;
-	border:none;
+#tour table td span,
+#updater span,
+a.button,
+.button {
+    background-color: rgba(0, 100, 200, 0.85);
+    display: inline-block;
+    padding: 10px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
 }
 
 #updater {
-	position:absolute;
-	bottom:5px;
-	right:5px;
-	cursor:pointer;
-	border:none;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    cursor: pointer;
+    border: none;
 }
 
-#sum, #stackdotsshow, #reg, #for, #meandotshow, #startfinishshow, #gridlinesshow, #differentaxisshow, #for, #invertshow, #removedpointsshow, #relativefrequencyshow, #thicklinesshow, #boxplotshow, #regshow, #intervalshow, #labelshow, #colorname, #arrowsshow , #quadraticshow, #cubicshow, #expshow, #logshow, #powshow,#regtypeshow, #jittershow, #yxshow, #highboxplotshow, #btypeshow, #addmultshow, #longtermtrendshow, #boxnowhiskershow, #boxnooutliershow, #seasonalshow, #weightedaverageshow, #residualsforcexshow{
-	display:none;
+#sum,
+#stackdotsshow,
+#reg,
+#for,
+#meandotshow,
+#startfinishshow,
+#gridlinesshow,
+#differentaxisshow,
+#for,
+#invertshow,
+#removedpointsshow,
+#relativefrequencyshow,
+#thicklinesshow,
+#boxplotshow,
+#regshow,
+#intervalshow,
+#labelshow,
+#colorname,
+#arrowsshow,
+#quadraticshow,
+#cubicshow,
+#expshow,
+#logshow,
+#powshow,
+#regtypeshow,
+#jittershow,
+#yxshow,
+#highboxplotshow,
+#btypeshow,
+#addmultshow,
+#longtermtrendshow,
+#boxnowhiskershow,
+#boxnooutliershow,
+#seasonalshow,
+#weightedaverageshow,
+#residualsforcexshow {
+    display: none;
 }
-#regtypeshow, #btypeshow, #addmultshow{
-	position:relative;
-	left:5px;
+
+#regtypeshow,
+#btypeshow,
+#addmultshow {
+    position: relative;
+    left: 5px;
 }
-input, select{
-	font-family: 'Roboto', sans-serif;
-	font-size:12px;
-	padding:3px;
-	border:0px;
-	border-bottom:1px solid #87b9ed;
-	border-radius:0px;
-	padding:3px;
-	background-color:rgba(0,0,0,0);
+
+input,
+select {
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    padding: 3px;
+    border: 0px;
+    border-bottom: 1px solid #87b9ed;
+    border-radius: 0px;
+    padding: 3px;
+    background-color: rgba(0, 0, 0, 0);
 }
-input:focus, select:focus{
-	outline:none;
-	border-bottom:2px solid #267bd0;
+
+input:focus,
+select:focus {
+    outline: none;
+    border-bottom: 2px solid #267bd0;
 }
 
 label {
-	cursor:pointer;
+    cursor: pointer;
 }
 
-input[type=text]{
-	width:120px;
+input[type=text] {
+    width: 120px;
 }
 
 #sizediv {
-	position:absolute;
-	left:313px;
-	top:3px;
-	border:none;
-	font-size:12px;
-	display:none;
+    position: absolute;
+    left: 313px;
+    top: 3px;
+    border: none;
+    font-size: 12px;
+    display: none;
 }
+
 #transdiv {
-	position:absolute;
-	left:313px;
-	top:27px;
-	border:none;
-	font-size:12px;
-	display:none;
+    position: absolute;
+    left: 313px;
+    top: 27px;
+    border: none;
+    font-size: 12px;
+    display: none;
 }
+
 #size {
-	width:90px;
-	height:12px;
-	position:relative;
-	top:2px;
+    width: 90px;
+    height: 12px;
+    position: relative;
+    top: 2px;
 }
+
 #trans {
-	width:90px;
-	height:12px;
-	position:relative;
-	top:2px;
+    width: 90px;
+    height: 12px;
+    position: relative;
+    top: 2px;
 }
-#addtograph{
-	position:absolute;
-	left:-1px;
-	top:-1px;
-	z-index:15;
-	display:block;
-	width:125px;
-	height:140px;
-	overflow-y:scroll;
-	overflow-x: hidden;
-	font-family:'Roboto Condensed', sans-serif;
+
+#addtograph {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    z-index: 15;
+    display: block;
+    width: 125px;
+    height: 140px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: 'Roboto Condensed', sans-serif;
 }
-.popup{
-	position:abolute;
-	bottom:45px;
-	right:5px;
-	border:none;
-	background-color:#fff;
-	color:#fff;
-	display:none;
-	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
-	color:#000;
+
+.popup {
+    position: abolute;
+    bottom: 45px;
+    right: 5px;
+    border: none;
+    background-color: #fff;
+    color: #fff;
+    display: none;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    color: #000;
 }
-.popup ul li{
-	padding:3px;
-	font-size:14px;
-	cursor:pointer;
+
+.popup ul li {
+    padding: 3px;
+    font-size: 14px;
+    cursor: pointer;
 }
-.popup ul{
-	list-style-type: none;
-	margin:0px;
-	padding:3px;
+
+.popup ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 3px;
 }
-.popup ul li:hover{
-	background-color:#eee;
+
+.popup ul li:hover {
+    background-color: #eee;
 }
-.popup{
-	position:absolute;
-	left:0px;
-	top:55px;
-	display:none;
-	z-index:12;
-	right:auto;
-	bottom:auto;
-	color:#000;
+
+.popup {
+    position: absolute;
+    left: 0px;
+    top: 55px;
+    display: none;
+    z-index: 12;
+    right: auto;
+    bottom: auto;
+    color: #000;
 }
-#welcome{
-	position:fixed;
-	top:0px;
-	left:0px;
-	height:100%;
-	width:100%;
-	background-color:rgba(255,255,255,0.7);
-	z-index:101;
+
+#welcome {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 101;
 }
+
 #welcomecontent {
-	position:fixed;
-	top:50px;
-	left:50px;
-	right:50px;
-	bottom:50px;
-	margin-left:0;
-	margin-top:0;
-	z-index:102;
-	border: 1px solid #ccc;
-	overflow-y: auto;
-	padding:10px;
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    right: 50px;
+    bottom: 50px;
+    margin-left: 0;
+    margin-top: 0;
+    z-index: 102;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    padding: 10px;
 }
+
 .highlight {
-	background-color:#9cf;
+    background-color: #9cf;
 }
-#welcomeframe{
-	position: absolute;
-	bottom:0px;
-	left:0px;
-	width:100%;
-	height:80px;
-	border:none;
-	overflow: hidden;
+
+#welcomeframe {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 80px;
+    border: none;
+    overflow: hidden;
 }
-.callout .notch, .callout .notch-top {
+
+.callout .notch,
+.callout .notch-top {
     position: absolute;
     bottom: -10px;
     right: 15px;
     margin: 0;
-    border-top: 10px solid rgba(0,100,200,0.85);
+    border-top: 10px solid rgba(0, 100, 200, 0.85);
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 0;
@@ -435,66 +514,75 @@ input[type=text]{
     /* ie6 height fix */
     font-size: 0;
     line-height: 0;
-     /* ie6 transparent fix */
+    /* ie6 transparent fix */
     _border-right-color: pink;
     _border-left-color: pink;
     _filter: chroma(color=pink);
-	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
+
 .callout .notch-top {
-	bottom:auto;
-	top:-10px;
-	right:auto;
-	left:15px;
+    bottom: auto;
+    top: -10px;
+    right: auto;
+    left: 15px;
     border-top: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid rgba(0,100,200,0.85);
+    border-bottom: 10px solid rgba(0, 100, 200, 0.85);
 }
 
-#jsgraph{
-	width:100%;
-	height:100%;
-	border:1px solid #ccc;
-	display:none;
+#jsgraph {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    display: none;
 }
 
 #jsgraph img {
-	position:absolute;
-	top:0px;
-	left:0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
-#sites{
-	text-align:center;
-	font-size:14px;
-	position:fixed;
-	bottom:0px;
-	height:26px;
-	width:100%;
-	left:0px;
-	border-top:1px solid #ccc;
-	padding-top:4px;
-	z-index:16;
-	background-color:#eee;
-}
-#sites a{
-	color:#aaa;
-	text-decoration:none;
-	padding-left:10px;padding-right:10px;
+#sites {
+    text-align: center;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0px;
+    height: 26px;
+    width: 100%;
+    left: 0px;
+    border-top: 1px solid #ccc;
+    padding-top: 4px;
+    z-index: 16;
+    background-color: #eee;
 }
 
-.tabletop td, .tabletop th {
-	position:relative;
-	background-color:#fff;
-	z-index:2;
-	top:-2px;
-	background-color:#fff !important;
-	padding:0px;
+#sites a {
+    color: #aaa;
+    text-decoration: none;
+    padding-left: 10px;
+    padding-right: 10px;
 }
-#jsgraph, #jsgraph div{
-	border:none;
+
+.tabletop td,
+.tabletop th {
+    position: relative;
+    background-color: #fff;
+    z-index: 2;
+    top: -2px;
+    background-color: #fff !important;
+    padding: 0px;
 }
-.tabletop, .tabletop td, .tabletop th{
-	background-color: #ddd !important;
+
+#jsgraph,
+#jsgraph div {
+    border: none;
+}
+
+.tabletop,
+.tabletop td,
+.tabletop th {
+    background-color: #ddd !important;
 }

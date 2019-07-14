@@ -1,17 +1,6 @@
 <?php include './version.php'; ?>
 <html v=<?php echo $v; ?>>
 <head>
-	<!-- Google Analytics -->
-	<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-	ga('create', 'UA-19339458-1', 'auto');
-	ga('send', 'pageview');
-	</script>
-	<!-- End Google Analytics -->
 	<script src="./jquery-1.11.1.min.js"></script>
 	<script src="./regression.min.js"></script>
 	<title>NZGrapher</title>
@@ -27,7 +16,6 @@
 		echo $v;
 	?>"></script>
 	<meta name="description" content="NZGrapher is a web based graphing tool. NZ Grapher was designed for New Zealand Schools by a New Zealand Teacher.">
-	<link rel="canonical" href="https://grapher.jake4maths.com/" />
 	<link rel="apple-touch-icon" sizes="57x57" href="./icon/apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="./icon/apple-icon-60x60.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="./icon/apple-icon-72x72.png">
@@ -160,25 +148,6 @@ if (screen.availWidth < 760)
 
 </div>
 
-<div style="display:none">
-<?php
-function isSecure() {
-  return
-    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-    || $_SERVER['SERVER_PORT'] == 443;
-}
-
-$protocol = isSecure() === true ? 'https://' : 'http://';
-$actual_link = urlencode($protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
-$time = date('U');
-$randomString = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
-if(file_exists('./windowsapp.php')){$actual_link='Windows App v2';}
-echo "<script>
-$.get('https://tracking.jake4maths.com/trackingimage.php?v=$v&url=$actual_link&time=$time&r=$randomString');
-</script>";
-?>
-</div>
-
 <div id=top>
 	<div style="font-size:30px;background:none;border:none;position:absolute;top:3px;left:5px;z-index:4"><img src='logow.png' height=37></div>
 	<div style="position:absolute;top:18px;right:35px;background:none;border:none;">
@@ -245,11 +214,11 @@ $.get('https://tracking.jake4maths.com/trackingimage.php?v=$v&url=$actual_link&t
 
 <div id=helppopup class="callout popup">
 <ul>
-	<li onclick="window.open('//www.mathsnz.com/nzgrapher-info/video-tutorials','_blank');try{ga('send', 'event', 'Function', 'Help - Video Tutorials', '');} catch(err) {console.log(err.message);}">Video Tutorials</li>
-	<li onclick="window.open('//www.mathsnz.com/nzgrapher-info/graph-information','_blank');try{ga('send', 'event', 'Function', 'Help - Graph Infomation', '');} catch(err) {console.log(err.message);}">Graph Information</li>
-	<li onclick="window.open('//www.mathsnz.com/nzgrapher-info/dataset-information','_blank');try{ga('send', 'event', 'Function', 'Help - Dataset Infomation', '');} catch(err) {console.log(err.message);}">Dataset Information</li>
-	<li onclick="document.getElementById('welcome').style.display='block';try{ga('send', 'event', 'Function', 'Help - Show Welcome', '');} catch(err) {console.log(err.message);}">Show Welcome</li>
-	<li onclick="document.getElementById('tour').style.display='block';try{ga('send', 'event', 'Function', 'Help - Show Overlay', '');} catch(err) {console.log(err.message);}">Show Overlay</li>
+	<li onclick="window.open('//www.mathsnz.com/nzgrapher-info/video-tutorials','_blank');">Video Tutorials</li>
+	<li onclick="window.open('//www.mathsnz.com/nzgrapher-info/graph-information','_blank');">Graph Information</li>
+	<li onclick="window.open('//www.mathsnz.com/nzgrapher-info/dataset-information','_blank');">Dataset Information</li>
+	<li onclick="document.getElementById('welcome').style.display='block';">Show Welcome</li>
+	<li onclick="document.getElementById('tour').style.display='block';">Show Overlay</li>
 </ul>
 </div>
 
@@ -571,15 +540,7 @@ echo "\n</table></body></html>";
 		</table>
 		<br>
 		<div style='max-width: 800px;margin: 0 auto;display: inline-block;border: none; position: relative;'>
-		<?php
-			if(strpos($_SERVER['SERVER_NAME'],'jake4maths.com')>0){
-				echo "The version of NZGrapher you are using is hosted on my server.<br>";
-			} else {
-				echo "The version of NZGrapher you are using is not hosted on my server... if it's not working properly first make sure it is up to date, then check with your IT person... if they can't work out what is wrong let me know.<br>";
-			};
-
-		?>
-		<br>By pressing the button below you are acknowledging that NZGrapher uses cookies, and if you acting on behalf of a school, you are agreeing to the costs associated... if you're not happy with this don't use this website.<br>
+		<br>By pressing the button below you are acknowledging that NZGrapher uses cookies<br>
 		<button class=button style='font-size:15px;margin-top:10px;' onclick="$('#welcome').hide();document.cookie='welcome=yes; expires=<?php
 			echo date(DateTime::RSS, strtotime('24 hours'));
 		?>'">Start Using NZGrapher</button>
