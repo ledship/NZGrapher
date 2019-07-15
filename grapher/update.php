@@ -37,7 +37,7 @@
 <?php
 set_time_limit(0);
 
-$latest = floatval(file_get_contents('http://raw.githubusercontent.com/mathsnz/NZGrapher/master/grapherversion.php'));
+$latest = floatval(file_get_contents('http://raw.githubusercontent.com/ledship/NZGrapher/master/grapherversion.php'));
 
 echo "Latest Version: $latest<br><br>";
 
@@ -47,7 +47,7 @@ if(isset($_POST['password']) || isset($_POST['yup']) || isset($_GET['password'])
 	if(isset($_POST['password'])){$pw=$_POST['password'];}
 	if(isset($_GET['password'])){$pw=$_GET['password'];}
 	if($password==$pw || file_exists('./windowsapp.php')){
-		file_put_contents("Tmpfile.zip", fopen("http://raw.githubusercontent.com/mathsnz/NZGrapher/master/grapher.zip", 'r'));
+		file_put_contents("Tmpfile.zip", fopen("http://raw.githubusercontent.com/ledship/NZGrapher/master/grapher.zip", 'r'));
 
 		$zip = new ZipArchive;
 		if ($zip->open('Tmpfile.zip') === TRUE) {
