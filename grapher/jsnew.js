@@ -73,8 +73,12 @@ function newresiduals() {
     countx = 0;
     county = 0;
     for (var index in xpoints) {
-        if ($.isNumeric(xpoints[index])) { countx++; }
-        if ($.isNumeric(ypoints[index])) { county++; }
+        if ($.isNumeric(xpoints[index])) {
+            countx++;
+        }
+        if ($.isNumeric(ypoints[index])) {
+            county++;
+        }
         if ($.isNumeric(xpoints[index]) && $.isNumeric(ypoints[index])) {
             points.push(index);
             pointsforminmax.push(xpoints[index]);
@@ -108,8 +112,12 @@ function newresiduals() {
         var index = points[index];
         var xpoint = xpoints[index];
         var ypoint = ypoints[index];
-        if (xpoint == 0) { xpoint = xpoint + 0.0000000000001; }
-        if (ypoint == 0) { ypoint = ypoint + 0.0000000000001; }
+        if (xpoint == 0) {
+            xpoint = xpoint + 0.0000000000001;
+        }
+        if (ypoint == 0) {
+            ypoint = ypoint + 0.0000000000001;
+        }
         pointstofit.push([parseFloat(xpoint), parseFloat(ypoint)]);
     }
 
@@ -198,7 +206,9 @@ function newresiduals() {
         for (var index in points) {
             var index = points[index];
             var xpoint = xpoints[index];
-            if (xpoint == 0) { xpoint = xpoint + 0.0000000000001; }
+            if (xpoint == 0) {
+                xpoint = xpoint + 0.0000000000001;
+            }
             fitted[index] = add(a * Math.log(xpoint), b).toPrecision(5);
         }
 
@@ -333,15 +343,12 @@ function newbarandarea() {
         var freq = [];
         for (var index in xPoints) {
             var val = xPoints[index];
-            console.log("Val: " + val);
             freq[val] = (freq[val]) ? freq[val] + 1 : 1;
         }
 
         var keys = Object.keys(freq);
         keys.sort(sortorder);
         var num = keys.length;
-        console.log(freq);
-        console.log(keys);
 
         // y axis ticks
         var minY = 0.0001;
@@ -367,7 +374,6 @@ function newbarandarea() {
         var minMaxSteps = axisminmaxstep(minY, maxY);
         var minYTick = minMaxSteps[0];
         var maxYTick = (relativeFrequency) ? minMaxSteps[1] : Math.ceil(minMaxSteps[1] / 10) * 10;
-        console.log("maxYTick: " + maxYTick + " maxY: " + maxY);
         var yStep = minMaxSteps[2];
 
         vertaxis(ctx, gTop, bottom, left - 10 * scalefactor, minYTick, maxYTick, yStep, undefined, false);
@@ -396,8 +402,69 @@ function newbarandarea() {
         ctx.save();
         ctx.translate(20 * scalefactor, height / 2);
         ctx.rotate(-Math.PI / 2);
-        ctx.fillText($('#yvar').val(), 0, 0);
+        ctx.fillText($('#yaxis').val(), 0, 0);
         ctx.restore();
+
+        var categoriesY = array_unique(yPoints);
+        var categoriesX = array_unique(xPoints);
+        var countX = 0;
+        var vals = [];
+        for (var index in xPoints) {
+            countX++;
+            var val = xPoints[index];
+            vals[val] = (vals[val]) ? vals[val] + 1 : 1;
+        }
+        var keys = Object.keys(vals);
+        keys.sort(sortorder);
+
+        var full = [];
+        xPoints.forEach(function (ele) {
+            full[ele] = [];
+        });
+        var i = 0;
+        xPoints.forEach(function (xPoint) {
+            var yPoint = yPoints[i];
+            full[xPoint].push(yPoint);
+            i++;
+        });
+
+        var xb = 50 * scalefactor;
+        var eachWidth = (width - 100 * scalefactor);
+        categoriesX.sort(sortorder);
+        ctx.strokeWidth = scalefactor * 0.5;
+        ctx.font = 15 * scalefactor + "px Roboto";
+        categoriesX.sort(sortorder);
+        categoriesX.forEach(function (catX) {
+            ctx.fillStyle = '#000000';
+            var percentX = (vals[catX] / countX);
+            var xa = xb;
+            xb = xa + (eachWidth * percentX);
+            ctx.fillText(catX, (xa + xb) - ((xb + xa) / 2), height - 35 * scalefactor);
+
+            var numY = full[catX].length;
+            var tempArray = [];
+            for (var index in full[catX]) {
+                var val = full[catX][index];
+                tempArray[val] = (tempArray[val]) ? tempArray[val] + 1 : 1;
+            }
+            var fullKeys = Object.keys(vals);
+            fullKeys.sort(sortorder);
+            full[catX] = tempArray;
+
+            var yb = 50 * scalefactor;
+            categoriesY.sort(sortorder);
+            categoriesY.forEach(function (catY) {
+                var ya = yb;
+                if (full[catX].hasOwnProperty(catY)) {
+                    ctx.fillStyle = '#d3d3d3';
+                    yb = yb + (height - 100 * scalefactor) * full[catX][catY] / numY;
+                    ctx.fillRect(xa + 3 * scalefactor, ya + 3 * scalefactor, xb - xa - 3 * scalefactor, yb - ya - 3 * scalefactor);
+                    ctx.strokeRect(xa + 3 * scalefactor, ya + 3 * scalefactor, xb - xa - 3 * scalefactor, yb - ya - 3 * scalefactor);
+                    ctx.fillStyle = '#000000';
+                    ctx.fillText(catY, (xa + xb) / 2, (ya + yb) / 2 + 5 * scalefactor)
+                }
+            });
+        });
     }
 
 
@@ -406,4 +473,18 @@ function newbarandarea() {
     }
 
     return canvas.toDataURL();
+}
+
+function array_unique(array) {
+    var found = {};
+    var result = [];
+    var j = 0;
+    for (var i = 0; i < array.length; i++) {
+        var item = array[i];
+        if (found[item] !== 1) {
+            found[item] = 1;
+            result[j++] = item;
+        }
+    }
+    return result;
 }

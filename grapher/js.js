@@ -19,7 +19,7 @@ function getCookie(cname) {
     return "";
 }
 
-$(document).on('paste', function(e) {
+$(document).on('paste', function (e) {
     e.preventDefault();
     var text = '';
     if (e.clipboardData || e.originalEvent.clipboardData) {
@@ -37,18 +37,18 @@ $(document).on('paste', function(e) {
 
 var scalefactor;
 
-$(function() {
+$(function () {
 
-    $('#graph').on('load', function() {
+    $('#graph').on('load', function () {
         $('#loading').hide();
     });
 
-    $("#left").scroll(function() {
+    $("#left").scroll(function () {
         $(".tabletop td, .tabletop th").css("top", $("#left").scrollTop() - 2 + "px");
     });
 
     // This must be a hyperlink
-    $("#download").on('click', function(event) {
+    $("#download").on('click', function (event) {
         // CSV
         exportTableToCSV.apply(this, [$('#data'), 'data.csv']);
 
@@ -58,7 +58,7 @@ $(function() {
 
     var menu = 'hidden';
 
-    $(".abutton").on('click', function() {
+    $(".abutton").on('click', function () {
         if (menu == 'show') {
             menu = 'hidden'
         } else {
@@ -66,7 +66,7 @@ $(function() {
         }
     });
 
-    $(".abutton").on('click mouseover', function() {
+    $(".abutton").on('click mouseover', function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -76,49 +76,49 @@ $(function() {
         $(this).css("background-color", "rgba(0,100,200,0.85)");
     });
 
-    $("#buttons").on('mouseout', function() {
+    $("#buttons").on('mouseout', function () {
         $(".abutton").css('background', 'none');
     });
 
-    $("#rowbox").on('mouseover', function() {
+    $("#rowbox").on('mouseover', function () {
         $("#rowshowhide").css("background-color", "rgba(0,100,200,0.85)");
     });
 
-    $("#colbox").on('mouseover', function() {
+    $("#colbox").on('mouseover', function () {
         $("#colshowhide").css("background-color", "rgba(0,100,200,0.85)");
     });
 
-    $("#sambox").on('mouseover', function() {
+    $("#sambox").on('mouseover', function () {
         $("#samshowhide").css("background-color", "rgba(0,100,200,0.85)");
     });
 
-    $("#filepop").on('mouseover', function() {
+    $("#filepop").on('mouseover', function () {
         $("#fileshowhide").css("background-color", "rgba(0,100,200,0.85)");
     });
 
-    $("#helppopup").on('mouseover', function() {
+    $("#helppopup").on('mouseover', function () {
         $("#helper").css("background-color", "rgba(0,100,200,0.85)");
     });
 
-    $('.popup li').on('click', function() {
+    $('.popup li').on('click', function () {
         $(".abutton").css("background", "none");
         $(".popup").hide();
         menu = 'hidden';
     });
 
-    $('#pastelinkclick').click(function() {
+    $('#pastelinkclick').click(function () {
         document.getElementById("pastelink").style.display = "block";
         document.getElementById("linkarea").value = "";
         document.getElementById("linkarea").focus();
     });
 
-    $('#pastetableclick').click(function() {
+    $('#pastetableclick').click(function () {
         document.getElementById("pastetext").style.display = "block";
         document.getElementById("textarea").value = "";
         document.getElementById("textarea").focus();
     });
 
-    $("#fileshowhide").on('click mouseover', function() {
+    $("#fileshowhide").on('click mouseover', function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -133,7 +133,7 @@ $(function() {
         }
     });
 
-    $("#helper").on('click mouseover', function() {
+    $("#helper").on('click mouseover', function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -148,7 +148,7 @@ $(function() {
         }
     });
 
-    $("#rowshowhide").on('click mouseover', function() {
+    $("#rowshowhide").on('click mouseover', function () {
         $("#colbox").hide();
         $("#sambox").hide();
         $("#filepop").hide();
@@ -163,7 +163,7 @@ $(function() {
         }
     });
 
-    $("#colshowhide").on('click mouseover', function() {
+    $("#colshowhide").on('click mouseover', function () {
         $("#rowbox").hide();
         $("#sambox").hide();
         $("#filepop").hide();
@@ -178,7 +178,7 @@ $(function() {
         }
     });
 
-    $("#samshowhide").on('click mouseover', function() {
+    $("#samshowhide").on('click mouseover', function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#filepop").hide();
@@ -193,7 +193,7 @@ $(function() {
         }
     });
 
-    $("#3dots").click(function() {
+    $("#3dots").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -202,16 +202,24 @@ $(function() {
         $("#showhideleftbottom").toggle();
     });
 
-    $("#data td div").keypress(function(e) { return e.which != 13; });
-    $("#data td div").keypress(function(e) { return e.which != 44; });
-    $("#data td div").keypress(function(e) { if (e.which == 44) { alert("You entered a comma... you can't to this."); } });
+    $("#data td div").keypress(function (e) {
+        return e.which != 13;
+    });
+    $("#data td div").keypress(function (e) {
+        return e.which != 44;
+    });
+    $("#data td div").keypress(function (e) {
+        if (e.which == 44) {
+            alert("You entered a comma... you can't to this.");
+        }
+    });
 
-    $("#addcol").click(function() {
+    $("#addcol").click(function () {
         $("#data tr").append("<td><div><br></div></td>");
         $('#data td div').attr('contenteditable', 'true');
         updatebox();
     });
-    $("#addrow").click(function() {
+    $("#addrow").click(function () {
         var col = $("#data").find("tr:first td").length;
         var row = $('#data tr').length;
         var add = "<tr><th>" + (row);
@@ -223,25 +231,28 @@ $(function() {
         updatebox();
         $("#rowshowhide").click();
     });
-    $("#delrow").click(function() {
+    $("#delrow").click(function () {
         if ($('#data tr').length > 1) {
             $('#data tr:last').remove();
-        };
+        }
+        ;
         updatebox();
     });
-    $("#delcol").click(function() {
+    $("#delcol").click(function () {
         $('#data tr td:last-child').remove();
         $('#type').val('newabout');
         updatebox();
     });
 
-    $("#delspecrow").click(function() {
+    $("#delspecrow").click(function () {
         var row;
         row = prompt("Which row do you want to delete?");
         $('#data tr:eq(' + row + ')').remove();
         var i = 0;
-        $('#data tr th:first-child').each(function() {
-            if (i != 0) { $(this).html(i); }
+        $('#data tr th:first-child').each(function () {
+            if (i != 0) {
+                $(this).html(i);
+            }
             i++;
         });
         $("#rowbox").hide();
@@ -250,31 +261,39 @@ $(function() {
         updatebox();
     });
 
-    $("#deletecolgo").click(function() {
+    $("#deletecolgo").click(function () {
         col = $('#columndel').val();
-        $('#data tr').each(function() {
+        $('#data tr').each(function () {
             $(this).find('td:eq(' + col + ')').remove();
         })
         var xselindex = document.getElementById("xvar").selectedIndex;
         var yselindex = document.getElementById("yvar").selectedIndex;
         var zselindex = document.getElementById("zvar").selectedIndex;
         var colselindex = document.getElementById("color").selectedIndex;
-        if (xselindex > col) { document.getElementById("xvar").selectedIndex = xselindex - 1; }
-        if (yselindex > col) { document.getElementById("yvar").selectedIndex = yselindex - 1; }
-        if (zselindex > col) { document.getElementById("zvar").selectedIndex = zselindex - 1; }
-        if (colselindex > col) { document.getElementById("color").selectedIndex = colselindex - 1; }
+        if (xselindex > col) {
+            document.getElementById("xvar").selectedIndex = xselindex - 1;
+        }
+        if (yselindex > col) {
+            document.getElementById("yvar").selectedIndex = yselindex - 1;
+        }
+        if (zselindex > col) {
+            document.getElementById("zvar").selectedIndex = zselindex - 1;
+        }
+        if (colselindex > col) {
+            document.getElementById("color").selectedIndex = colselindex - 1;
+        }
         updatebox();
         $("#deletecoldiv").hide();
     });
 
-    $("#delspeccol").click(function() {
+    $("#delspeccol").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
         $("#deletecoldiv").show();
         var col = 0;
         var options = [];
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             options.push('<option value="' + col + '">' + $(this).text() + '</option>');
             col++;
         });
@@ -282,12 +301,12 @@ $(function() {
         $('#columndel').empty().append(options.join());
     });
 
-    $("#highlightdatatable").click(function() {
+    $("#highlightdatatable").click(function () {
         $('#filepop').hide();
         selectText($('#data')[0]);
     });
 
-    $("#reorder").click(function() {
+    $("#reorder").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -298,10 +317,10 @@ $(function() {
         var datain = "";
         var titles = "";
         options.push('<option value=""></option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             var items = [];
             //Iterate all td's in second column
-            $('#data tr td:nth-child(' + col + ')').each(function() {
+            $('#data tr td:nth-child(' + col + ')').each(function () {
                 //add item to array
                 items.push($(this).text());
             });
@@ -309,7 +328,7 @@ $(function() {
             var a = 0;
             var optionname;
             //iterate unique array and build array of select options
-            $.each(items, function(i, item) {
+            $.each(items, function (i, item) {
                 if (a == 0) {
                     optionname = item.trim();
                 } else {
@@ -322,7 +341,7 @@ $(function() {
             if (uniquevalues.length < 10) {
                 uniquevalues.sort(sortorder);
                 var value = "";
-                $.each(uniquevalues, function(index, val) {
+                $.each(uniquevalues, function (index, val) {
                     var num = countval(allvals, val);
                     value = value + val + ',' + num + ',';
                 });
@@ -335,7 +354,7 @@ $(function() {
         $('#orderingtable').empty();
     });
 
-    $("#orderby").change(function() {
+    $("#orderby").change(function () {
         var sampleon = $('#orderby option:selected').text();
         var options = this.value.split(',');
         options.pop();
@@ -349,11 +368,11 @@ $(function() {
         }
     });
 
-    $("#ordergo").click(function() {
+    $("#ordergo").click(function () {
         $("#sampling").hide();
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             var orderby = $('#orderby option:selected').text();
-            var index = $("#data td:contains('" + orderby.split("'")[0] + "')").filter(function() {
+            var index = $("#data td:contains('" + orderby.split("'")[0] + "')").filter(function () {
                 return $(this).text() === orderby;
             }).index() + 1;
             var num = $('[id^="order-"]').length;
@@ -363,7 +382,7 @@ $(function() {
                 ordername = ordername.slice(6);
                 if (ordername != '') {
                     //$("#data td:nth-child(" + index + "):contains('"+ordername+"')").html('<div contenteditable="true">'+ordernum+'. '+ordername+'<br></div>');
-                    $("#data td:nth-child(" + index + "):contains('" + ordername.split("'")[0] + "')").filter(function() {
+                    $("#data td:nth-child(" + index + "):contains('" + ordername.split("'")[0] + "')").filter(function () {
                         return $(this).text() === ordername;
                     }).html('<div contenteditable="true">' + ordernum + '. ' + ordername + '<br></div>');
                 }
@@ -373,7 +392,7 @@ $(function() {
         updatebox();
     });
 
-    $("#sort").click(function() {
+    $("#sort").click(function () {
         $("#sortdiv").show();
         $("#sampling").show();
         $("#rowbox").hide();
@@ -382,7 +401,7 @@ $(function() {
         var col = 2;
         var options = [];
         options.push('<option></option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             options.push('<option value="' + (col - 2) + '">' + $(this).text() + '</option>');
             col++;
         });
@@ -390,7 +409,7 @@ $(function() {
         $('#sortby').empty().append(options.join());
     });
 
-    $("#filter").click(function() {
+    $("#filter").click(function () {
         $("#filterdiv").show();
         $("#sampling").show();
         $("#rowbox").hide();
@@ -399,7 +418,7 @@ $(function() {
         var col = 2;
         var options = [];
         options.push('<option></option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             options.push('<option value="' + (col - 2) + '">' + $(this).text() + '</option>');
             col++;
         });
@@ -407,14 +426,14 @@ $(function() {
         $('#filterby').empty().append(options.join());
     });
 
-    $("#sortgo").click(function() {
+    $("#sortgo").click(function () {
         var col = $('#sortby').val();
         sortTable(col);
         $("#sampling").hide();
         $("#sortdiv").hide();
     });
 
-    $("#samvar").click(function() {
+    $("#samvar").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -424,10 +443,10 @@ $(function() {
         var datain = "";
         var titles = "";
         options.push('<option value=",,">Simple Random</option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             var items = [];
             //Iterate all td's in second column
-            $('#data tr td:nth-child(' + col + ')').each(function() {
+            $('#data tr td:nth-child(' + col + ')').each(function () {
                 //add item to array
                 items.push($(this).text());
             });
@@ -435,7 +454,7 @@ $(function() {
             var a = 0;
             var optionname;
             //iterate unique array and build array of select options
-            $.each(items, function(i, item) {
+            $.each(items, function (i, item) {
                 if (a == 0) {
                     optionname = item.trim();
                 } else {
@@ -448,7 +467,7 @@ $(function() {
             if (uniquevalues.length < 500) {
                 uniquevalues.sort(sortorder);
                 var value = "";
-                $.each(uniquevalues, function(index, val) {
+                $.each(uniquevalues, function (index, val) {
                     var num = countval(allvals, val);
                     value = value + val + ',' + num + ',';
                 });
@@ -463,7 +482,7 @@ $(function() {
         $('#presampledataholder').html($('#data').html());
     });
 
-    $("#sample").click(function() {
+    $("#sample").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -474,10 +493,10 @@ $(function() {
         var datain = "";
         var titles = "";
         options.push('<option value=",,">Simple Random</option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             var items = [];
             //Iterate all td's in second column
-            $('#data tr td:nth-child(' + col + ')').each(function() {
+            $('#data tr td:nth-child(' + col + ')').each(function () {
                 //add item to array
                 items.push($(this).text());
             });
@@ -485,7 +504,7 @@ $(function() {
             var a = 0;
             var optionname;
             //iterate unique array and build array of select options
-            $.each(items, function(i, item) {
+            $.each(items, function (i, item) {
                 if (a == 0) {
                     optionname = item.trim();
                 } else {
@@ -498,7 +517,7 @@ $(function() {
             if (uniquevalues.length < 500) {
                 uniquevalues.sort(sortorder);
                 var value = "";
-                $.each(uniquevalues, function(index, val) {
+                $.each(uniquevalues, function (index, val) {
                     var num = countval(allvals, val);
                     value = value + val + ',' + num + ',';
                 });
@@ -512,7 +531,7 @@ $(function() {
         $('#samplingtable').append('<tr><td> <td><input id="sample-">');
     });
 
-    $("#sampleon").change(function() {
+    $("#sampleon").change(function () {
         var sampleon = $('#sampleon option:selected').text();
         var options = this.value.split(',');
         options.pop();
@@ -526,7 +545,7 @@ $(function() {
         }
     });
 
-    $("#samvaron").change(function() {
+    $("#samvaron").change(function () {
         var sampleon = $('#samvaron option:selected').text();
         var options = this.value.split(',');
         options.pop();
@@ -540,12 +559,12 @@ $(function() {
         }
     });
 
-    $("#samplego").click(function() {
+    $("#samplego").click(function () {
         $("#samplediv").hide();
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             console.log($('[id^="sample-"]').length);
             if ($('[id^="sample-"]').length == 1) {
-                $("#updating").css({ "display": "block" });
+                $("#updating").css({"display": "block"});
                 var samplesize = $('[id^="sample-"]')[0].value;
                 if (samplesize) {
                     samplesize = Number(samplesize) + 1;
@@ -560,8 +579,10 @@ $(function() {
                         i--;
                     }
                     i = 0;
-                    $('#data tr th:first-child').each(function() {
-                        if (i != 0) { $(this).html(i); }
+                    $('#data tr th:first-child').each(function () {
+                        if (i != 0) {
+                            $(this).html(i);
+                        }
                         i++;
                     });
                 }
@@ -570,7 +591,7 @@ $(function() {
                 $("#sampling").hide();
             } else {
                 var sampleon = $('#sampleon option:selected').text();
-                var index = $("#data td:contains('" + sampleon.split("'")[0] + "')").filter(function() {
+                var index = $("#data td:contains('" + sampleon.split("'")[0] + "')").filter(function () {
                     return $(this).text() === sampleon;
                 }).index() + 1;
                 var num = $('[id^="sample-"]').length;
@@ -578,7 +599,7 @@ $(function() {
                     var samplesize = $('[id^="sample-"]')[i].value;
                     var samplename = $('[id^="sample-"]')[i].id;
                     samplename = samplename.slice(7);
-                    var rows = $("#data td:nth-child(" + index + "):contains('" + samplename.split("'")[0] + "')").filter(function() {
+                    var rows = $("#data td:nth-child(" + index + "):contains('" + samplename.split("'")[0] + "')").filter(function () {
                         return $(this).text() === samplename;
                     });
                     var parentrows = rows.parent();
@@ -597,8 +618,10 @@ $(function() {
                     }
                 }
                 i = 0;
-                $('#data tr th:first-child').each(function() {
-                    if (i != 0) { $(this).html(i); }
+                $('#data tr th:first-child').each(function () {
+                    if (i != 0) {
+                        $(this).html(i);
+                    }
                     i++;
                 });
                 document.getElementById('updating').style.display = "none";
@@ -609,9 +632,9 @@ $(function() {
         updatebox();
     });
 
-    $("#samvargo").click(function() {
+    $("#samvargo").click(function () {
         $('#data').html($('#presampledataholder').html());
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             if ($('[id^="samvar-"]').length == 1) {
                 var samplesize = $('[id^="samvar-"]')[0].value;
                 if (samplesize) {
@@ -627,15 +650,17 @@ $(function() {
                         i--;
                     }
                     i = 0;
-                    $('#data tr th:first-child').each(function() {
-                        if (i != 0) { $(this).html(i); }
+                    $('#data tr th:first-child').each(function () {
+                        if (i != 0) {
+                            $(this).html(i);
+                        }
                         i++;
                     });
                 }
                 updatebox();
             } else {
                 var sampleon = $('#samvaron option:selected').text();
-                var index = $("#data td:contains('" + sampleon.split("'")[0] + "')").filter(function() {
+                var index = $("#data td:contains('" + sampleon.split("'")[0] + "')").filter(function () {
                     return $(this).text() === sampleon;
                 }).index() + 1;
                 var num = $('[id^="samvar-"]').length;
@@ -643,7 +668,7 @@ $(function() {
                     var samplesize = $('[id^="samvar-"]')[i].value;
                     var samplename = $('[id^="samvar-"]')[i].id;
                     samplename = samplename.slice(7);
-                    var rows = $("#data td:nth-child(" + index + "):contains('" + samplename.split("'")[0] + "')").filter(function() {
+                    var rows = $("#data td:nth-child(" + index + "):contains('" + samplename.split("'")[0] + "')").filter(function () {
                         return $(this).text() === samplename;
                     });
                     var parentrows = rows.parent();
@@ -662,8 +687,10 @@ $(function() {
                     }
                 }
                 i = 0;
-                $('#data tr th:first-child').each(function() {
-                    if (i != 0) { $(this).html(i); }
+                $('#data tr th:first-child').each(function () {
+                    if (i != 0) {
+                        $(this).html(i);
+                    }
                     i++;
                 });
                 updatebox();
@@ -673,7 +700,7 @@ $(function() {
     });
 
 
-    $("#filtergo").click(function() {
+    $("#filtergo").click(function () {
         var filtermin = parseFloat($('#filtermin').val());
         var filtermax = parseFloat($('#filtermax').val());
         if (isNaN(filtermin) || isNaN(filtermax)) {
@@ -686,11 +713,11 @@ $(function() {
             return false;
         }
         $("#filterdiv").hide();
-        var index = $("#data td:contains('" + filterby.split("'")[0] + "')").filter(function() {
+        var index = $("#data td:contains('" + filterby.split("'")[0] + "')").filter(function () {
             return $(this).text() === filterby;
         }).index() - 1;
         var a = 0;
-        $('#data tr').each(function() {
+        $('#data tr').each(function () {
             if (a != 0) {
                 val = parseFloat($(this).children('td').eq(index).text());
                 if (val < filtermin || val > filtermax) {
@@ -700,8 +727,10 @@ $(function() {
             a++;
         });
         i = 0;
-        $('#data tr th:first-child').each(function() {
-            if (i != 0) { $(this).html(i); }
+        $('#data tr th:first-child').each(function () {
+            if (i != 0) {
+                $(this).html(i);
+            }
             i++;
         });
         $("#sampling").hide();
@@ -709,13 +738,13 @@ $(function() {
     });
 
 
-    $("#reset").click(function() {
+    $("#reset").click(function () {
         $('#data').html($('#originaldataholder').html());
         $('#data td div').attr('contenteditable', 'true');
         updatebox();
     });
 
-    $("#newvarc2").click(function() {
+    $("#newvarc2").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -726,7 +755,7 @@ $(function() {
         var datain = "";
         var titles = "";
         options.push('<option></option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             options.push('<option>' + $(this).text() + '</option>');
             col++;
         });
@@ -734,7 +763,7 @@ $(function() {
         $('#newvarcx').empty().append(options.join());
     });
 
-    $("#newvarc3").click(function() {
+    $("#newvarc3").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -745,7 +774,7 @@ $(function() {
         var datain = "";
         var titles = "";
         options.push('<option></option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             options.push('<option>' + $(this).text() + '</option>');
             col++;
         });
@@ -755,7 +784,7 @@ $(function() {
         addnewcond();
     });
 
-    $("#newvar").click(function() {
+    $("#newvar").click(function () {
         $("#rowbox").hide();
         $("#colbox").hide();
         $("#sambox").hide();
@@ -766,7 +795,7 @@ $(function() {
         var datain = "";
         var titles = "";
         options.push('<option></option>');
-        $('#data tr:first td').each(function() {
+        $('#data tr:first td').each(function () {
             options.push('<option>' + $(this).text() + '</option>');
             col++;
         });
@@ -775,19 +804,19 @@ $(function() {
         $('#newvar2').empty().append(options.join());
     });
 
-    $("#creatego").click(function() {
+    $("#creatego").click(function () {
         $("#newvardiv").hide();
         var type = encodeURIComponent($('#newvarcom option:selected').text());
         var var1 = $('#newvar1 option:selected').text();
         var var2 = $('#newvar2 option:selected').text();
-        var index1 = $("#data td:contains('" + var1.split("'")[0] + "')").filter(function() {
+        var index1 = $("#data td:contains('" + var1.split("'")[0] + "')").filter(function () {
             return $(this).text() === var1;
         }).index() - 1;
-        var index2 = $("#data td:contains('" + var2.split("'")[0] + "')").filter(function() {
+        var index2 = $("#data td:contains('" + var2.split("'")[0] + "')").filter(function () {
             return $(this).text() === var2;
         }).index() - 1;
         var a = 0;
-        $('#data tr').each(function() {
+        $('#data tr').each(function () {
             if (a == 0) {
                 $(this).append("<td><div>" + var1 + " " + decodeURIComponent(type) + " " + var2 + "<br></div></td>");
             } else {
@@ -811,18 +840,18 @@ $(function() {
         $("#sampling").hide();
     });
 
-    $("#createcgo").click(function() {
+    $("#createcgo").click(function () {
         $("#newvarcdiv").hide();
         var cx = $('#newvarcx option:selected').text();
         var md = encodeURIComponent($('#newvarcmd option:selected').text());
         var a = parseFloat($('#newvarca').val());
         var as = encodeURIComponent($('#newvarcas option:selected').text());
         var b = parseFloat($('#newvarcb').val());
-        var index = $("#data td:contains('" + cx.split("'")[0] + "')").filter(function() {
+        var index = $("#data td:contains('" + cx.split("'")[0] + "')").filter(function () {
             return $(this).text() === cx;
         }).index() - 1;
         var i = 0;
-        $('#data tr').each(function() {
+        $('#data tr').each(function () {
             if (i == 0) {
                 title = cx;
                 if (a) {
@@ -860,26 +889,30 @@ $(function() {
         $("#sampling").hide();
     });
 
-    $("#createc3go").click(function() {
+    $("#createc3go").click(function () {
         $("#newvarc3div").hide();
         var cx = $('#newvarc3var option:selected').text();
-        var index = $("#data td:contains('" + cx.split("'")[0] + "')").filter(function() {
+        var index = $("#data td:contains('" + cx.split("'")[0] + "')").filter(function () {
             return $(this).text() === cx;
         }).index() - 1;
         var i = 0;
-        $('#data tr').each(function() {
+        $('#data tr').each(function () {
             if (i == 0) {
                 title = cx;
                 title = title + " (Conditions)";
                 $(this).append("<td><div>" + title + "<br></div></td>");
             } else {
                 val = $(this).children('td').eq(index).text();
-                if ($.isNumeric(val)) { val = parseFloat(val); }
+                if ($.isNumeric(val)) {
+                    val = parseFloat(val);
+                }
                 value = 'Other';
-                $('.condition').each(function() {
+                $('.condition').each(function () {
                     symbol = $(this).find('.newvarc3gle').val();
                     cond = $(this).find('.newvarc3cond').val();
-                    if ($.isNumeric(cond)) { cond = parseFloat(cond); }
+                    if ($.isNumeric(cond)) {
+                        cond = parseFloat(cond);
+                    }
                     if (symbol == "<") {
                         if (val < cond) {
                             value = $(this).find('.newvarc3newval').val();
@@ -916,7 +949,7 @@ $(function() {
         $("#sampling").hide();
     });
 
-    $(".close").click(function() {
+    $(".close").click(function () {
         $("#sampling").hide();
         $("#filterdiv").hide();
         $("#newvardiv").hide();
@@ -930,11 +963,11 @@ $(function() {
         $("#newvarc3div").hide();
     });
 
-    $("#update").click(function() {
+    $("#update").click(function () {
         updatebox()
     });
 
-    $("#import").click(function() {
+    $("#import").click(function () {
         var data = document.getElementById("textarea").value;
         var rows = data.split('\n');
         var row = 0;
@@ -942,7 +975,9 @@ $(function() {
         var firstrow = 0;
         for (i = 0; i < rows.length; i++) {
             var cells = rows[i].split('\t');
-            if (i == 0) { firstrow = cells.length; }
+            if (i == 0) {
+                firstrow = cells.length;
+            }
             if (cells.length >= firstrow) {
                 if (i == 0) {
                     newtable += "<tr class=tabletop><th>id";
@@ -961,14 +996,14 @@ $(function() {
         $('#type').val('newabout');
         updatebox();
     });
-    $("#importlink").click(function() {
+    $("#importlink").click(function () {
         var link = document.getElementById("linkarea").value;
         document.location = document.location.origin + document.location.pathname + '?url=' + encodeURIComponent(link);
     });
 
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('#data td div').attr('contenteditable', 'true');
     $('#originaldataholder').html($('#data').html());
     if ($('#variable').length) {
@@ -1033,19 +1068,45 @@ function graphchange(obj) {
     if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
-    };
+    }
+    ;
     if (obj.value == 'bootstrap') {
         document.getElementById('yvar').style.display = 'none';
         document.getElementById('yvar').selectedIndex = 0;
-    };
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart') { document.getElementById('regshow').style.display = 'block'; };
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time') { document.getElementById('labelshow').style.display = 'block'; };
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart') { document.getElementById('sum').style.display = 'inline'; };
-    if (obj.value == 'paired experiment') { document.getElementById('arrowsshow').style.display = 'block'; };
-    if (obj.value == 'dotplot') { document.getElementById('highboxplotshow').style.display = 'block'; };
-    if (obj.value == 'dotplot') { document.getElementById('boxnowhiskershow').style.display = 'block'; };
-    if (obj.value == 'dotplot') { document.getElementById('boxnooutliershow').style.display = 'block'; };
-    if (obj.value == 'residuals') { document.getElementById('regtypeshow').style.display = 'block'; };
+    }
+    ;
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
+        document.getElementById('regshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time') {
+        document.getElementById('labelshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
+        document.getElementById('sum').style.display = 'inline';
+    }
+    ;
+    if (obj.value == 'paired experiment') {
+        document.getElementById('arrowsshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'dotplot') {
+        document.getElementById('highboxplotshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'dotplot') {
+        document.getElementById('boxnowhiskershow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'dotplot') {
+        document.getElementById('boxnooutliershow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'residuals') {
+        document.getElementById('regtypeshow').style.display = 'block';
+    }
+    ;
     if (obj.value == 'scatter') {
         document.getElementById('jittershow').style.display = 'block';
         document.getElementById('reg').style.display = 'inline';
@@ -1055,12 +1116,26 @@ function graphchange(obj) {
         document.getElementById('logshow').style.display = 'block';
         document.getElementById('powshow').style.display = 'block';
         document.getElementById('yxshow').style.display = 'block';
-    };
-    if (obj.value == 'time series forecasts') { document.getElementById('for').style.display = 'inline'; };
-    if (obj.value.substring(0, 4) == 'time') { document.getElementById('addmultshow').style.display = 'block'; };
-    if (obj.value == 'time series') { document.getElementById('longtermtrendshow').style.display = 'block'; };
-    if (obj.value == 'histogramf' || obj.value == 'histogram' || obj.value == 'newbarandarea') { document.getElementById('relativefrequencyshow').style.display = 'block'; }
-    if (obj.value == 'residuals') { document.getElementById('residualsforcexshow').style.display = 'block'; }
+    }
+    ;
+    if (obj.value == 'time series forecasts') {
+        document.getElementById('for').style.display = 'inline';
+    }
+    ;
+    if (obj.value.substring(0, 4) == 'time') {
+        document.getElementById('addmultshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'time series') {
+        document.getElementById('longtermtrendshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'histogramf' || obj.value == 'histogram' || obj.value == 'newbarandarea') {
+        document.getElementById('relativefrequencyshow').style.display = 'block';
+    }
+    if (obj.value == 'residuals') {
+        document.getElementById('residualsforcexshow').style.display = 'block';
+    }
     if (obj.value == 'scatter') {
         document.getElementById('invertshow').style.display = 'block';
         document.getElementById('thicklinesshow').style.display = 'block';
@@ -1068,22 +1143,35 @@ function graphchange(obj) {
     if (obj.value == 'dotplot' || obj.value == 'paired experiment') {
         document.getElementById('boxplotshow').style.display = 'block';
         document.getElementById('intervalshow').style.display = 'block';
-    };
+    }
+    ;
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Point Size:';
-    };
+    }
+    ;
     if (obj.value == 'histogram' || obj.value == 'histogramf') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Interval Width:';
-    };
-    if (obj.value == 'bootstrap') { document.getElementById('btypeshow').style.display = 'block'; };
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals') { document.getElementById('transdiv').style.display = 'block'; };
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'histogramf') { document.getElementById('zvar').style.display = 'inline'; };
+    }
+    ;
+    if (obj.value == 'bootstrap') {
+        document.getElementById('btypeshow').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals') {
+        document.getElementById('transdiv').style.display = 'block';
+    }
+    ;
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'histogramf') {
+        document.getElementById('zvar').style.display = 'inline';
+    }
+    ;
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment') {
         document.getElementById('color').style.display = 'inline';
         document.getElementById('colorname').style.display = 'inline';
-    };
+    }
+    ;
 
     updategraph();
 }
@@ -1102,11 +1190,11 @@ function exportTableToCSV($table, filename) {
         rowDelim = '"\r\n"',
 
         // Grab text from table into CSV formatted string
-        csv = '"' + $rows.map(function(i, row) {
+        csv = '"' + $rows.map(function (i, row) {
             var $row = $(row),
                 $cols = $row.find('td');
 
-            return $cols.map(function(j, col) {
+            return $cols.map(function (j, col) {
                 var $col = $(col),
                     text = $col.text();
 
@@ -1115,8 +1203,8 @@ function exportTableToCSV($table, filename) {
             }).get().join(tmpColDelim);
 
         }).get().join(tmpRowDelim)
-        .split(tmpRowDelim).join(rowDelim)
-        .split(tmpColDelim).join(colDelim) + '"',
+            .split(tmpRowDelim).join(rowDelim)
+            .split(tmpColDelim).join(colDelim) + '"',
 
         // Data URI
         csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -1130,13 +1218,13 @@ function exportTableToCSV($table, filename) {
 }
 
 function updategraph() {
-    $('#loading').show(80, function() {
+    $('#loading').show(80, function () {
         updategraphgo();
     });
 }
 
-$.expr[':'].textEquals = $.expr.createPseudo(function(arg) {
-    return function(elem) {
+$.expr[':'].textEquals = $.expr.createPseudo(function (arg) {
+    return function (elem) {
         return $(elem).text().match("^" + arg + "$");
     };
 });
@@ -1302,7 +1390,7 @@ function updategraphgo() {
     }
     document.getElementById('datain').value = thedatain;
     desaturate();
-    $('area').mousemove(function(e) {
+    $('area').mousemove(function (e) {
         $('.highlight').removeClass('highlight');
         $('#tooltip').show();
         if (e.pageX > document.body.scrollWidth / 2) {
@@ -1329,7 +1417,7 @@ function updategraphgo() {
             $('#left').scrollTop($('#data').find("th:textEquals('" + id + "')").position().top - 100);
             $('#data').find("th:textEquals('" + id + "')").closest('tr').addClass('highlight');
         }
-    }).mouseout(function() {
+    }).mouseout(function () {
         $('.highlight').removeClass('highlight');
         $('#tooltip').hide();
     });
@@ -1366,10 +1454,10 @@ function jsgraphtoimage(dataURL) {
                 imgBase64: dataURL,
                 highres: highres
             },
-            success: function(data) {
+            success: function (data) {
                 $('#jsgraph').html(data);
             }
-        }).done(function(o) {
+        }).done(function (o) {
             console.log('saved');
             $('#loading').hide();
         });
@@ -1379,7 +1467,7 @@ function jsgraphtoimage(dataURL) {
 var rtime = new Date(1, 1, 2000, 12, 0, 0);
 var timeout = false;
 var delta = 200;
-$(window).resize(function() {
+$(window).resize(function () {
     rtime = new Date();
     if (timeout === false) {
         timeout = true;
@@ -1397,7 +1485,7 @@ function resizeend() {
 }
 
 function unique(array) {
-    return array.filter(function(el, index, arr) {
+    return array.filter(function (el, index, arr) {
         return index == arr.indexOf(el);
     });
 }
@@ -1421,10 +1509,10 @@ function updatebox() {
     var datain = "";
     var titles = "";
     options.push('<option value=" "> </option>');
-    $('#data tr:first td').each(function() {
+    $('#data tr:first td').each(function () {
         var items = [];
         //Iterate all td's in second column
-        $('#data tr td:nth-child(' + col + ')').each(function() {
+        $('#data tr td:nth-child(' + col + ')').each(function () {
             //add item to array
             items.push($(this).text());
         });
@@ -1432,7 +1520,7 @@ function updatebox() {
         var a = 0;
         var optionname;
         //iterate unique array and build array of select options
-        $.each(items, function(i, item) {
+        $.each(items, function (i, item) {
             if (a == 0) {
                 optionname = item.trim();
             } else {
@@ -1450,32 +1538,48 @@ function updatebox() {
     var yselindex = document.getElementById("yvar").selectedIndex;
     var zselindex = document.getElementById("zvar").selectedIndex;
     var colselindex = document.getElementById("color").selectedIndex;
-    if (xselindex == -1) { xselindex = 0; }
-    if (yselindex == -1) { yselindex = 0; }
-    if (zselindex == -1) { zselindex = 0; }
-    if (colselindex == -1) { colselindex = 0; }
+    if (xselindex == -1) {
+        xselindex = 0;
+    }
+    if (yselindex == -1) {
+        yselindex = 0;
+    }
+    if (zselindex == -1) {
+        zselindex = 0;
+    }
+    if (colselindex == -1) {
+        colselindex = 0;
+    }
 
     $('#xvar').empty().append(options.join());
     $('#yvar').empty().append(options.join());
     $('#zvar').empty().append(options.join());
     $('#color').empty().append(options.join());
 
-    if (xselindex < document.getElementById("xvar").length && xselindex > -1) { document.getElementById("xvar").selectedIndex = xselindex; } else {
+    if (xselindex < document.getElementById("xvar").length && xselindex > -1) {
+        document.getElementById("xvar").selectedIndex = xselindex;
+    } else {
         $("#xvar")[0].selectedIndex = 0;
         $('#type').val('newabout');
         console.log('resetx');
     }
-    if (yselindex < document.getElementById("yvar").length && yselindex > -1) { document.getElementById("yvar").selectedIndex = yselindex; } else {
+    if (yselindex < document.getElementById("yvar").length && yselindex > -1) {
+        document.getElementById("yvar").selectedIndex = yselindex;
+    } else {
         $("#yvar")[0].selectedIndex = 0;
         $('#type').val('newabout');
         console.log('resety');
     }
-    if (zselindex < document.getElementById("zvar").length && zselindex > -1) { document.getElementById("zvar").selectedIndex = zselindex; } else {
+    if (zselindex < document.getElementById("zvar").length && zselindex > -1) {
+        document.getElementById("zvar").selectedIndex = zselindex;
+    } else {
         $("#zvar")[0].selectedIndex = 0;
         $('#type').val('newabout');
         console.log('resetz');
     }
-    if (colselindex < document.getElementById("color").length && colselindex > -1) { document.getElementById("color").selectedIndex = colselindex; } else {
+    if (colselindex < document.getElementById("color").length && colselindex > -1) {
+        document.getElementById("color").selectedIndex = colselindex;
+    } else {
         $("#color")[0].selectedIndex = 0;
         $('#type').val('newabout');
         console.log('resetcol');
@@ -1548,19 +1652,25 @@ function escapeHtml(text) {
         "'": '&#039;'
     };
 
-    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    return text.replace(/[&<>"']/g, function (m) {
+        return map[m];
+    });
 }
 
 function sortTable(x) {
     var rows = $('#data tbody  tr:not(:first)').get();
     var firstrow = $('#data tbody  tr:first').get();
 
-    rows.sort(function(a, b) {
+    rows.sort(function (a, b) {
 
         var A = $(a).children('td').eq(x).text().toUpperCase();
-        if ($.isNumeric(A)) { A = parseFloat(A); }
+        if ($.isNumeric(A)) {
+            A = parseFloat(A);
+        }
         var B = $(b).children('td').eq(x).text().toUpperCase();
-        if ($.isNumeric(B)) { B = parseFloat(B); }
+        if ($.isNumeric(B)) {
+            B = parseFloat(B);
+        }
 
         if (A < B) {
             return -1;
@@ -1575,12 +1685,14 @@ function sortTable(x) {
     });
     $('#data tbody').empty();
     $('#data').children('tbody').append(firstrow);
-    $.each(rows, function(index, row) {
+    $.each(rows, function (index, row) {
         $('#data').children('tbody').append(row);
     });
     i = 0;
-    $('#data tr th:first-child').each(function() {
-        if (i != 0) { $(this).html(i); }
+    $('#data tr th:first-child').each(function () {
+        if (i != 0) {
+            $(this).html(i);
+        }
         i++;
     });
     updatebox();
@@ -1715,7 +1827,9 @@ function line(ctx, x1, y1, x2, y2) {
 
 function horaxis(ctx, x1, x2, y, min, max, step, gridlinetop) {
     ctx.strokeStyle = '#000000';
-    if (typeof gridlinetop === 'undefined') { gridlinetop = 50; }
+    if (typeof gridlinetop === 'undefined') {
+        gridlinetop = 50;
+    }
     ctx.fillStyle = '#000000';
     ctx.lineWidth = 1 * scalefactor;
     line(ctx, add(x1, -10 * scalefactor), y, add(x2, 10 * scalefactor), y);
@@ -1744,7 +1858,9 @@ function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop, extendBelow) {
     min = parseFloat(parseFloat(min.toFixed(10)).toPrecision(8));
     max = parseFloat(parseFloat(max.toFixed(10)).toPrecision(8));
     ctx.strokeStyle = '#000000';
-    if (typeof gridlinetop === 'undefined') { gridlinetop = $('#graphdiv').width() - 50; }
+    if (typeof gridlinetop === 'undefined') {
+        gridlinetop = $('#graphdiv').width() - 50;
+    }
     ctx.fillStyle = '#000000';
     ctx.lineWidth = 1 * scalefactor;
     line(ctx, x, add(y1, -10 * scalefactor), x, (extendBelow === false) ? y2 : add(y2, 10 * scalefactor));
@@ -1779,7 +1895,9 @@ function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop, extendBelow) {
 }
 
 function rvertaxis(ctx, y1, y2, x, min, max, step, gridlinetop) {
-    if (typeof gridlinetop === 'undefined') { gridlinetop = 50; }
+    if (typeof gridlinetop === 'undefined') {
+        gridlinetop = 50;
+    }
     ctx.fillStyle = '#000000';
     ctx.lineWidth = 1 * scalefactor;
     line(ctx, x, add(y1, -10 * scalefactor), x, add(y2, 10 * scalefactor));
@@ -1848,7 +1966,9 @@ function axisminmaxstep(min, max) {
         steps = steps * 2;
     }
     var step = rangeround / steps;
-    if (step == 0) { step = 1; }
+    if (step == 0) {
+        step = 1;
+    }
     var mintick = (min / step).toFixed(0) * step;
     if (mintick > min) {
         mintick = mintick - step;
@@ -1990,23 +2110,41 @@ function makebscolors(num, alpha) {
 
 function lowerquartile(values) {
     count = values.length;
-    values.sort(function(a, b) { return a - b });
+    values.sort(function (a, b) {
+        return a - b
+    });
     n = (Math.floor(count / 2)) / 2 - 0.5;
-    if (n < 0) { quart = median(values); } else if (Math.ceil(n) == n) { quart = values[n]; } else { quart = add(values[n - 0.5], values[n + 0.5]) / 2; }
+    if (n < 0) {
+        quart = median(values);
+    } else if (Math.ceil(n) == n) {
+        quart = values[n];
+    } else {
+        quart = add(values[n - 0.5], values[n + 0.5]) / 2;
+    }
     return parseFloat(Number(quart).toPrecision(10));
 }
 
 function upperquartile(values) {
     count = values.length;
-    values.sort(function(a, b) { return b - a });
+    values.sort(function (a, b) {
+        return b - a
+    });
     n = (Math.floor(count / 2)) / 2 - 0.5;
-    if (n < 0) { quart = median(values); } else if (Math.ceil(n) == n) { quart = values[n]; } else { quart = add(values[n - 0.5], values[n + 0.5]) / 2; }
+    if (n < 0) {
+        quart = median(values);
+    } else if (Math.ceil(n) == n) {
+        quart = values[n];
+    } else {
+        quart = add(values[n - 0.5], values[n + 0.5]) / 2;
+    }
     return parseFloat(Number(quart).toPrecision(10));
 }
 
 function median(values) {
     count = values.length;
-    values.sort(function(a, b) { return a - b });
+    values.sort(function (a, b) {
+        return a - b
+    });
     n = count / 2 - 0.5;
     if (Math.ceil(n) == n) {
         themedian = values[n];
@@ -2028,7 +2166,7 @@ function calculatemean(values) {
 function standarddeviation(values) {
     var avg = averageforsd(values, 0);
 
-    var squareDiffs = values.map(function(value) {
+    var squareDiffs = values.map(function (value) {
         var diff = value - avg;
         var sqrDiff = diff * diff;
         return sqrDiff;
@@ -2050,7 +2188,9 @@ function averageforsd(values, d) {
 }
 
 function maxnooutliers(values, lq, uq) {
-    values.sort(function(a, b) { return b - a });
+    values.sort(function (a, b) {
+        return b - a
+    });
     newmax = values[0];
     i = 0;
     while (i < values.length && newmax > uq + 1.5 * (uq - lq)) {
@@ -2061,7 +2201,9 @@ function maxnooutliers(values, lq, uq) {
 }
 
 function minnooutliers(values, lq, uq) {
-    values.sort(function(a, b) { return a - b });
+    values.sort(function (a, b) {
+        return a - b
+    });
     newmin = values[0];
     i = 0;
     while (i < values.length && newmin < lq - 1.5 * (uq - lq)) {
@@ -2254,7 +2396,9 @@ function newdotplot() {
                 ctx.fillText(group, add(thisleft, thisright - 50 * scalefactor) / 2, oypixel - maxheight);
 
                 var error = plotysplit(ctx, add(thisleft, 30 * scalefactor), thisright - 50 * scalefactor, oypixel, minxtick, maxxtick, xstep, maxheight, points, xpoints, ypoints, colors, allygroups);
-                if (error != 'good') { return error; }
+                if (error != 'good') {
+                    return error;
+                }
 
 
                 thisleft = add(thisleft, eachwidth);
@@ -2264,7 +2408,9 @@ function newdotplot() {
         }
     } else {
         var error = plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxheight, points, xpoints, ypoints, colors, allygroups);
-        if (error != 'good') { return error; }
+        if (error != 'good') {
+            return error;
+        }
     }
 
     //graph title
@@ -2404,7 +2550,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
     var num = thisvalues.length;
 
     var counts = {};
-    $.each(xpixels, function(key, value) {
+    $.each(xpixels, function (key, value) {
         key = value[0];
         xpixel = value[1];
         if (counts[xpixel]) {
@@ -2414,7 +2560,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         }
     });
     var maxpoints = 0;
-    $.each(counts, function(i, v) {
+    $.each(counts, function (i, v) {
         if (v > maxpoints) {
             maxpoints = v;
         }
@@ -2422,10 +2568,18 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
     var ypixel = oypixel;
     var lastxpixel = 0;
     var yheight = rad * 2;
-    if ((maxheight - 10 * scalefactor) / maxpoints < yheight) { yheight = (maxheight - 10 * scalefactor) / maxpoints; }
-    xpixels.sort(function(a, b) { return a[sort] - b[sort] })
-    if ($('#labels').is(":checked")) { var labels = "yes"; } else { var labels = "no"; }
-    $.each(xpixels, function(key, value) {
+    if ((maxheight - 10 * scalefactor) / maxpoints < yheight) {
+        yheight = (maxheight - 10 * scalefactor) / maxpoints;
+    }
+    xpixels.sort(function (a, b) {
+        return a[sort] - b[sort]
+    })
+    if ($('#labels').is(":checked")) {
+        var labels = "yes";
+    } else {
+        var labels = "no";
+    }
+    $.each(xpixels, function (key, value) {
         key = value[0];
         xpixel = value[1];
         rawxpixel = value[2];
@@ -2610,7 +2764,10 @@ function checkforts(xpoints) {
         s = 0;
         for (var j in xpoints) {
             ts = xpoints[j].split('C')[1]
-            if (ts > s) { s = ts };
+            if (ts > s) {
+                s = ts
+            }
+            ;
         }
         return s;
     }
@@ -2933,7 +3090,9 @@ function bootstrap(mm) {
     }
 
     bootstrapdifsforsort = bootstrapdifs.slice();
-    bootstrapdifsforsort.sort(function(a, b) { return a - b });
+    bootstrapdifsforsort.sort(function (a, b) {
+        return a - b
+    });
 
     // set up axis for bootstrap
     steps = (maxxtick - minxtick) / xstep;
@@ -2950,12 +3109,20 @@ function bootstrap(mm) {
 
     maxheight = height * 0.5 - 100 * scalefactor;
 
-    if ($('#labels').is(":checked")) { var waslabels = "yes"; } else { var waslabels = "no"; }
+    if ($('#labels').is(":checked")) {
+        var waslabels = "yes";
+    } else {
+        var waslabels = "no";
+    }
     $('#labels')[0].checked = false;
     plotdotplot(ctx, bspoints, bootstrapdifs, minxtick, maxxtick, oypixel, left, right, maxheight, colors, 1, 0);
-    if (waslabels == "yes") { $('#labels')[0].checked = true; }
+    if (waslabels == "yes") {
+        $('#labels')[0].checked = true;
+    }
 
-    bootstrapdifs.sort(function(a, b) { return a - b });
+    bootstrapdifs.sort(function (a, b) {
+        return a - b
+    });
 
     y = oypixel - 3 * scalefactor;
     ctx.lineWidth = 2 * scalefactor;
@@ -3036,8 +3203,16 @@ function newtimeseries() {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if ($('#longtermtrend').is(":checked")) { var longtermtrend = "yes"; } else { var longtermtrend = "no"; }
-    if ($('#seasonal').is(":checked")) { var seasonal = "yes"; } else { var seasonal = "no"; }
+    if ($('#longtermtrend').is(":checked")) {
+        var longtermtrend = "yes";
+    } else {
+        var longtermtrend = "no";
+    }
+    if ($('#seasonal').is(":checked")) {
+        var seasonal = "yes";
+    } else {
+        var seasonal = "no";
+    }
 
     //graph title
     ctx.fillStyle = '#000000';
@@ -3076,15 +3251,15 @@ function newtimeseries() {
         //1) combine the arrays:
         var list = [];
         for (var j in tsxpoints)
-            list.push({ 'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j] });
+            list.push({'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j]});
 
         //2) sort:
-        list.sort(function(a, b) {
+        list.sort(function (a, b) {
             return ((a.tsxpoint < b.tsxpoint) ? -1 : ((a.tsxpoint == b.tsxpoint) ? 0 : 1));
         });
 
         if ($.isNumeric(list[0].tsxpoint)) {
-            list.sort(function(a, b) {
+            list.sort(function (a, b) {
                 return (a.tsxpoint - b.tsxpoint);
             });
         }
@@ -3098,15 +3273,15 @@ function newtimeseries() {
         //1) combine the arrays:
         var list = [];
         for (var j in tsxpoints)
-            list.push({ 'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j], 'zpoint': zpoints[j] });
+            list.push({'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j], 'zpoint': zpoints[j]});
 
         //2) sort:
-        list.sort(function(a, b) {
+        list.sort(function (a, b) {
             return ((a.tsxpoint < b.tsxpoint) ? -1 : ((a.tsxpoint == b.tsxpoint) ? 0 : 1));
         });
 
         if ($.isNumeric(list[0].tsxpoint)) {
-            list.sort(function(a, b) {
+            list.sort(function (a, b) {
                 return (a.tsxpoint - b.tsxpoint);
             });
         }
@@ -3154,7 +3329,9 @@ function newtimeseries() {
     var minxtick = minmaxstep[0];
     var maxxtick = minmaxstep[1];
     var xstep = minmaxstep[2];
-    if (xstep < 1) { xstep = 1; }
+    if (xstep < 1) {
+        xstep = 1;
+    }
 
     left = 60 * scalefactor;
     right = width - 60 * scalefactor;
@@ -3168,8 +3345,16 @@ function newtimeseries() {
         pointsforminmax.push(ypoints[index]);
     }
 
-    if ($('#differentaxis').is(":checked")) { var differentaxis = "yes"; } else { var differentaxis = "no"; }
-    if ($('#startfinish').is(":checked")) { var startfinish = "yes"; } else { var startfinish = "no"; }
+    if ($('#differentaxis').is(":checked")) {
+        var differentaxis = "yes";
+    } else {
+        var differentaxis = "no";
+    }
+    if ($('#startfinish').is(":checked")) {
+        var startfinish = "yes";
+    } else {
+        var startfinish = "no";
+    }
 
     if (longtermtrend == 'yes') {
         stlresponse = stl(tsxpoints, ypoints, seasons);
@@ -3209,7 +3394,11 @@ function newtimeseries() {
     var maxytick = minmaxstep[1];
     var ystep = minmaxstep[2];
 
-    if ($('#addmult option:selected').text() == "Multiplicative") { var multiplicative = "yes"; } else { var multiplicative = "no"; }
+    if ($('#addmult option:selected').text() == "Multiplicative") {
+        var multiplicative = "yes";
+    } else {
+        var multiplicative = "no";
+    }
     vertaxis(ctx, gtop, gbottom, left - 10 * scalefactor, minytick, maxytick, ystep, right + 10 * scalefactor);
     if (seasonal == "yes") {
         seasonright = width / 0.7 * 0.3 + right;
@@ -3288,7 +3477,11 @@ function newtimeseries() {
         ctx.restore();
     }
 
-    if ($('#labels').is(":checked")) { var labels = "yes"; } else { var labels = "no"; }
+    if ($('#labels').is(":checked")) {
+        var labels = "yes";
+    } else {
+        var labels = "no";
+    }
     ytrendpts = [];
     for (index in tsxpoints) {
         if (zpoints.length > 0) {
@@ -3552,10 +3745,10 @@ function newtimeseriesrecomp() {
     //1) combine the arrays:
     var list = [];
     for (var j in tsxpoints)
-        list.push({ 'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j] });
+        list.push({'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j]});
 
     //2) sort:
-    list.sort(function(a, b) {
+    list.sort(function (a, b) {
         return ((a.tsxpoint < b.tsxpoint) ? -1 : ((a.tsxpoint == b.tsxpoint) ? 0 : 1));
     });
 
@@ -3615,7 +3808,11 @@ function newtimeseriesrecomp() {
     var abslowest = Math.min.apply(null, pointsforminmax);
     var abshighest = Math.max.apply(null, pointsforminmax);
 
-    if ($('#startfinish').is(":checked")) { var startfinish = "yes"; } else { var startfinish = "no"; }
+    if ($('#startfinish').is(":checked")) {
+        var startfinish = "yes";
+    } else {
+        var startfinish = "no";
+    }
 
     stlresponse = stl(tsxpoints, ypoints, seasons);
     trend = stlresponse[0];
@@ -3679,8 +3876,16 @@ function newtimeseriesrecomp() {
         lastypixel = ypixel;
     }
 
-    if ($('#addmult option:selected').text() == "Multiplicative") { var multiplicative = "yes"; } else { var multiplicative = "no"; }
-    if ($('#labels').is(":checked")) { var labels = "yes"; } else { var labels = "no"; }
+    if ($('#addmult option:selected').text() == "Multiplicative") {
+        var multiplicative = "yes";
+    } else {
+        var multiplicative = "no";
+    }
+    if ($('#labels').is(":checked")) {
+        var labels = "yes";
+    } else {
+        var labels = "no";
+    }
     trendpts = [];
     for (index in tsxpoints) {
         xpixel = convertvaltopixel(tsxpoints[index], minxtick, maxxtick, left, right);
@@ -3835,7 +4040,11 @@ function newtimeseriesrecomp() {
 
 
 function stl(xpoints, ypoints, seasons) {
-    if ($('#addmult option:selected').text() == "Multiplicative") { var multiplicative = "yes"; } else { var multiplicative = "no"; }
+    if ($('#addmult option:selected').text() == "Multiplicative") {
+        var multiplicative = "yes";
+    } else {
+        var multiplicative = "no";
+    }
     if (multiplicative == "yes") {
         for (index in ypoints) {
             ypoints[index] = Math.log(ypoints[index]);
@@ -3889,7 +4098,9 @@ function stl(xpoints, ypoints, seasons) {
 
 function nextodd(n) {
     n = Math.ceil(n);
-    if (Math.floor(n / 2) == n / 2) { n++; }
+    if (Math.floor(n / 2) == n / 2) {
+        n++;
+    }
     return n;
 }
 
@@ -3912,7 +4123,9 @@ function innerloop(xpoints, raw, T, n_s, n_l, n_t) {
             year = Math.floor(xpoint);
             season = (xpoint - year).toFixed(4);
             xpoint = xpoint.toString();
-            if (cyclesubseries[season] === undefined) { cyclesubseries[season] = []; }
+            if (cyclesubseries[season] === undefined) {
+                cyclesubseries[season] = [];
+            }
             cyclesubseries[season][xpoint] = detrended[xpoint];
         }
         for (index in cyclesubseries) {
@@ -3927,8 +4140,12 @@ function innerloop(xpoints, raw, T, n_s, n_l, n_t) {
                 keys.push(key);
                 vals.push(values[key])
                 forpoints.push(key);
-                if (key < minkey) { minkey = key; }
-                if (key > maxkey) { maxkey = key; }
+                if (key < minkey) {
+                    minkey = key;
+                }
+                if (key > maxkey) {
+                    maxkey = key;
+                }
             }
             forpoints.push((parseFloat(maxkey) + 1).toFixed(4));
             forpoints.push((minkey - 1).toFixed(4));
@@ -3946,7 +4163,9 @@ function innerloop(xpoints, raw, T, n_s, n_l, n_t) {
         for (index in C) {
             Ckeys.push(parseFloat(index).toFixed(4));
         }
-        Ckeys.sort(function(a, b) { return a - b });
+        Ckeys.sort(function (a, b) {
+            return a - b
+        });
         L = [];
         for (index in Ckeys) {
             key = Ckeys[index];
@@ -3976,7 +4195,9 @@ function innerloop(xpoints, raw, T, n_s, n_l, n_t) {
             xpoint = xpoints[index];
             year = Math.floor(xpoint);
             season = (xpoint - year).toFixed(4);
-            if (S2[season] === undefined) { S2[season] = []; }
+            if (S2[season] === undefined) {
+                S2[season] = [];
+            }
             S2[season][xpoint] = S[xpoint.toString()];
         }
 
@@ -4003,7 +4224,9 @@ function innerloop(xpoints, raw, T, n_s, n_l, n_t) {
             Skeys.push(parseFloat(index).toFixed(4));
             Svals[index] = S[index];
         }
-        Skeys.sort(function(a, b) { return a - b });
+        Skeys.sort(function (a, b) {
+            return a - b
+        });
 
         S = [];
         for (index in Skeys) {
@@ -4087,7 +4310,9 @@ function loess(xpoints, ypoints, nPts, xvals, row) {
             if (smallestndistances.length < nPts) {
                 smallestndistances.push(distances[index]);
             } else {
-                smallestndistances.sort(function(a, b) { return a - b });
+                smallestndistances.sort(function (a, b) {
+                    return a - b
+                });
                 biggest = smallestndistances[smallestndistances.length - 1];
                 distance = distances[index];
                 if (distance < biggest) {
@@ -4107,9 +4332,13 @@ function loess(xpoints, ypoints, nPts, xvals, row) {
         }
 
         distances = smallestndistances;
-        distances.sort(function(a, b) { return a - b });
+        distances.sort(function (a, b) {
+            return a - b
+        });
         maxdis = distances[distances.length - 1];
-        if (nPts <= 3) { maxdis += 0.001; }
+        if (nPts <= 3) {
+            maxdis += 0.001;
+        }
         weights = [];
         // work out the weights
         for (index in points) {
@@ -4280,8 +4509,12 @@ function newscatter() {
     countx = 0;
     county = 0;
     for (var index in xpoints) {
-        if ($.isNumeric(xpoints[index])) { countx++; }
-        if ($.isNumeric(ypoints[index])) { county++; }
+        if ($.isNumeric(xpoints[index])) {
+            countx++;
+        }
+        if ($.isNumeric(ypoints[index])) {
+            county++;
+        }
         if ($.isNumeric(xpoints[index]) && $.isNumeric(ypoints[index])) {
             points.push(index);
             allpoints.push(index);
@@ -4392,7 +4625,11 @@ function plotscatter(ctx, indexes, xpoints, ypoints, minxtick, maxxtick, xstep, 
     if ($('#thicklines').is(":checked")) {
         ctx.lineWidth = 5 * scalefactor;
     }
-    if ($('#labels').is(":checked")) { var labels = "yes"; } else { var labels = "no"; }
+    if ($('#labels').is(":checked")) {
+        var labels = "yes";
+    } else {
+        var labels = "no";
+    }
     var rad = $('#size').val() / 2 * scalefactor;
     num = 0;
     pointstofit = [];
@@ -4402,8 +4639,12 @@ function plotscatter(ctx, indexes, xpoints, ypoints, minxtick, maxxtick, xstep, 
         var index = indexes[index];
         var xpoint = xpoints[index];
         var ypoint = ypoints[index];
-        if (xpoint == 0) { xpoint = xpoint + 0.0000000000001; }
-        if (ypoint == 0) { ypoint = ypoint + 0.0000000000001; }
+        if (xpoint == 0) {
+            xpoint = xpoint + 0.0000000000001;
+        }
+        if (ypoint == 0) {
+            ypoint = ypoint + 0.0000000000001;
+        }
         pointstofit.push([parseFloat(xpoint), parseFloat(ypoint)]);
         xcurvefit += xpoint + ",";
         ycurvefit += ypoint + ",";
@@ -4675,9 +4916,13 @@ function plotscatter(ctx, indexes, xpoints, ypoints, minxtick, maxxtick, xstep, 
         ctx.strokeStyle = '#000';
         ctx.setLineDash([5, 5]);
         min = minxtick;
-        if (min < minytick) { min = minytick; }
+        if (min < minytick) {
+            min = minytick;
+        }
         max = maxxtick;
-        if (max > maxytick) { max = maxytick; }
+        if (max > maxytick) {
+            max = maxytick;
+        }
         if (min < max) {
             var mnx = convertvaltopixel(min, minxtick, maxxtick, left, right);
             var mny = convertvaltopixel(min, minytick, maxytick, bottom, gtop);
@@ -4856,15 +5101,15 @@ function newtimeseriesseasonaleffects() {
     //1) combine the arrays:
     var list = [];
     for (var j in tsxpoints)
-        list.push({ 'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j] });
+        list.push({'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j]});
 
     //2) sort:
-    list.sort(function(a, b) {
+    list.sort(function (a, b) {
         return ((a.tsxpoint < b.tsxpoint) ? -1 : ((a.tsxpoint == b.tsxpoint) ? 0 : 1));
     });
 
     if ($.isNumeric(list[0].tsxpoint)) {
-        list.sort(function(a, b) {
+        list.sort(function (a, b) {
             return (a.tsxpoint - b.tsxpoint);
         });
     }
@@ -4914,7 +5159,11 @@ function newtimeseriesseasonaleffects() {
 
     vertaxis(ctx, gtop, gbottom, left - 10 * scalefactor, minytick, maxytick, ystep, right + 10 * scalefactor);
 
-    if ($('#addmult option:selected').text() == "Multiplicative") { var multiplicative = "yes"; } else { var multiplicative = "no"; }
+    if ($('#addmult option:selected').text() == "Multiplicative") {
+        var multiplicative = "yes";
+    } else {
+        var multiplicative = "no";
+    }
 
     seasonleft = width / 2 + 60 * scalefactor;
     seasonright = width - 60 * scalefactor;
@@ -4966,7 +5215,11 @@ function newtimeseriesseasonaleffects() {
         ctx.setLineDash([]);
     }
 
-    if ($('#labels').is(":checked")) { var labels = "yes"; } else { var labels = "no"; }
+    if ($('#labels').is(":checked")) {
+        var labels = "yes";
+    } else {
+        var labels = "no";
+    }
     ytrendpts = [];
     firstyear = Math.floor(Math.min.apply(null, pointsfortminmax));
     lastyear = Math.floor(Math.max.apply(null, pointsfortminmax));
@@ -5096,7 +5349,11 @@ function newtimeseriessforecasts() {
 
     tsxpoints = maketsxpoints(xpoints, seasons);
 
-    if ($('#addmult option:selected').text() == "Multiplicative") { var multiplicative = "yes"; } else { var multiplicative = "no"; }
+    if ($('#addmult option:selected').text() == "Multiplicative") {
+        var multiplicative = "yes";
+    } else {
+        var multiplicative = "no";
+    }
 
     pointsforminmax = [];
     for (index in ypoints) {
@@ -5110,15 +5367,15 @@ function newtimeseriessforecasts() {
     //1) combine the arrays:
     var list = [];
     for (var j in tsxpoints)
-        list.push({ 'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j] });
+        list.push({'tsxpoint': tsxpoints[j], 'ypoint': ypoints[j]});
 
     //2) sort:
-    list.sort(function(a, b) {
+    list.sort(function (a, b) {
         return ((a.tsxpoint < b.tsxpoint) ? -1 : ((a.tsxpoint == b.tsxpoint) ? 0 : 1));
     });
 
     if ($.isNumeric(list[0].tsxpoint)) {
-        list.sort(function(a, b) {
+        list.sort(function (a, b) {
             return (a.tsxpoint - b.tsxpoint);
         });
     }
@@ -5166,7 +5423,9 @@ function newtimeseriessforecasts() {
     while (c < seasons * 2) {
         season = add(i, c - seasons);
         x = add(x, 1 / seasons);
-        while (season > i - 1) { season = season - seasons; }
+        while (season > i - 1) {
+            season = season - seasons;
+        }
         t = add(trend[c - 1], b[i - 1]);
         trend[c] = t;
         forecasts[c] = [x, add(t, s[season])];
@@ -5187,7 +5446,9 @@ function newtimeseriessforecasts() {
         c = 0;
         while (c < seasons * 2) {
             season = i + c - seasons;
-            while (season > i - 1) { season = season - seasons; }
+            while (season > i - 1) {
+                season = season - seasons;
+            }
             t = add(add(bstrend[c - 1], b[i - 1]), purebell(error));
             bstrend[c] = t;
             bsforecasts[c].push(add(t, s[season]));
@@ -5200,7 +5461,9 @@ function newtimeseriessforecasts() {
     c = 0;
     while (c < seasons * 2) {
         x = x + 1 / seasons;
-        bsforecasts[c].sort(function(a, b) { return a - b });
+        bsforecasts[c].sort(function (a, b) {
+            return a - b
+        });
         forecastsmin[c] = bsforecasts[c][25];
         forecastsmax[c] = bsforecasts[c][975];
         c++;
@@ -5258,7 +5521,11 @@ function newtimeseriessforecasts() {
 
     vertaxis(ctx, gtop, gbottom, left - 10 * scalefactor, minytick, maxytick, ystep, right + 10 * scalefactor);
 
-    if ($('#labels').is(":checked")) { var labels = "yes"; } else { var labels = "no"; }
+    if ($('#labels').is(":checked")) {
+        var labels = "yes";
+    } else {
+        var labels = "no";
+    }
 
     if ($('#regression').is(":checked")) {
         toreturn = "Error:";
@@ -5577,7 +5844,7 @@ function hwoptim(ypoints, seasons, alphamin, alphamax, betamin, betamax, gammami
     }
 
 
-    results.sort(function(a, b) {
+    results.sort(function (a, b) {
         return ((a[0] < b[0]) ? -1 : ((a[0] == b[0]) ? 0 : 1));
     });
 
@@ -5617,7 +5884,7 @@ function addindex() {
     $("#colbox").hide();
     $("#sambox").hide();
     i = 0;
-    $('#data tr').each(function() {
+    $('#data tr').each(function () {
         if (i == 0) {
             val = 'Index';
         } else {
@@ -5639,7 +5906,7 @@ function converttimeshow() {
     var col = 2;
     var options = [];
     options.push('<option></option>');
-    $('#data tr:first td').each(function() {
+    $('#data tr:first td').each(function () {
         options.push('<option value="' + (col) + '">' + $(this).text() + '</option>');
         col++;
     });
@@ -5653,7 +5920,7 @@ function converttimego() {
     i = 0;
     items = [];
     minmax = [];
-    $('#data tr td:nth-child(' + col + ')').each(function() {
+    $('#data tr td:nth-child(' + col + ')').each(function () {
         if (i != 0) {
             test = Date.parse($(this).text());
             if ($.isNumeric(test)) {
@@ -5672,11 +5939,19 @@ function converttimego() {
     lowesttime = Math.min.apply(null, minmax);
     i = 0;
     divideby = 1;
-    if (convertto == 'Seconds') { divideby = 1000; }
-    if (convertto == 'Minutes') { divideby = 60000; }
-    if (convertto == 'Hours') { divideby = 3600000; }
-    if (convertto == 'Days') { divideby = 86400000; }
-    $('#data tr').each(function() {
+    if (convertto == 'Seconds') {
+        divideby = 1000;
+    }
+    if (convertto == 'Minutes') {
+        divideby = 60000;
+    }
+    if (convertto == 'Hours') {
+        divideby = 3600000;
+    }
+    if (convertto == 'Days') {
+        divideby = 86400000;
+    }
+    $('#data tr').each(function () {
         if (i == 0) {
             val = convertto;
         } else {
@@ -5700,7 +5975,7 @@ function encodetimeshow() {
     var col = 2;
     var options = [];
     options.push('<option></option>');
-    $('#data tr:first td').each(function() {
+    $('#data tr:first td').each(function () {
         options.push('<option value="' + (col) + '">' + $(this).text() + '</option>');
         col++;
     });
@@ -5722,7 +5997,7 @@ function encodetimego() {
     var type = $('#encodetimetype').val();
     i = 0;
     items = [];
-    $('#data tr td:nth-child(' + col + ')').each(function() {
+    $('#data tr td:nth-child(' + col + ')').each(function () {
         if (i != 0) {
             items.push(Date.parse($(this).text()));
         }
@@ -5788,7 +6063,7 @@ function encodetimego() {
             data[timestamp] = [];
             data[timestamp][0] = [timestamp];
             c = 1;
-            $('#data tr:first td').each(function() {
+            $('#data tr:first td').each(function () {
                 data[timestamp][c] = [];
                 c++;
             });
@@ -5797,11 +6072,11 @@ function encodetimego() {
         currentyear++;
     }
     i = 0;
-    $('#data tr').each(function() {
+    $('#data tr').each(function () {
         time = Date.parse($(this).children().eq(col - 1).text());
         time = converttots(time - start, seasons, length);
         c = 1;
-        $(this).children('td').each(function() {
+        $(this).children('td').each(function () {
             if (i == 0) {
                 data['0000'][c] = $(this).text();
             } else {
@@ -5849,7 +6124,9 @@ function encodetimego() {
         }
         for (c = 0; c < cells.length; c++) {
             cell = cells[c];
-            if (cell == '') { cell = "-"; }
+            if (cell == '') {
+                cell = "-";
+            }
             newtable += "<td><div>" + cell + "<br></div></td>"
         }
         i++;
@@ -5915,7 +6192,9 @@ function mode(values) {
         counts[key] = (counts[key]) ? counts[key] + 1 : 1;
 
     }
-    return Object.keys(counts).reduce(function(a, b) { return counts[a] > counts[b] ? a : b })
+    return Object.keys(counts).reduce(function (a, b) {
+        return counts[a] > counts[b] ? a : b
+    })
 }
 
 function sortorder(as, bs) {
@@ -5964,7 +6243,7 @@ function newpairsplot() {
     data = $('#datain').val().split('@#$')
     data.pop();
 
-    $(data).each(function(index, value) {
+    $(data).each(function (index, value) {
         data[index] = value.split(',');
         data[index].pop();
     });
@@ -6056,8 +6335,18 @@ function drawminihistogram(ctx, data, bleft, bright, btop, bbottom, r, title) {
     sec4 = 0;
     sec5 = 0;
 
-    $(data).each(function(index, value) {
-        if (value < point1) { sec1++; } else if (value < point2) { sec2++; } else if (value < point3) { sec3++; } else if (value < point4) { sec4++; } else { sec5++; }
+    $(data).each(function (index, value) {
+        if (value < point1) {
+            sec1++;
+        } else if (value < point2) {
+            sec2++;
+        } else if (value < point3) {
+            sec3++;
+        } else if (value < point4) {
+            sec4++;
+        } else {
+            sec5++;
+        }
     });
 
     max = Math.max(sec1, sec2, sec3, sec4, sec5);
@@ -6085,7 +6374,7 @@ function drawminihistogram(ctx, data, bleft, bright, btop, bbottom, r, title) {
 
 function drawminibarchart(ctx, data, bleft, bright, btop, bbottom, r, title) {
     var counts = {};
-    $.each(data, function(index, value) {
+    $.each(data, function (index, value) {
         if (counts[value]) {
             counts[value] = add(counts[value], 1);
         } else {
@@ -6094,7 +6383,7 @@ function drawminibarchart(ctx, data, bleft, bright, btop, bbottom, r, title) {
     });
     var maxpoints = 0;
     num = 0;
-    $.each(counts, function(index, value) {
+    $.each(counts, function (index, value) {
         if (value > maxpoints) {
             maxpoints = value;
         }
@@ -6105,7 +6394,7 @@ function drawminibarchart(ctx, data, bleft, bright, btop, bbottom, r, title) {
     bleft += 5 * scalefactor;
     i = 0;
     ctx.fillStyle = '#267BD0';
-    $.each(counts, function(index, value) {
+    $.each(counts, function (index, value) {
         ctx.rect(bleft + bwidth / num * i, bbottom, bwidth / num - 5 * scalefactor, -bheight * value / maxpoints);
         ctx.fill();
         ctx.stroke();
@@ -6122,7 +6411,7 @@ function drawminiscatter(ctx, xdata, ydata, bleft, bright, btop, bbottom, c, r, 
     miny = Math.min.apply(null, ydata);
     maxy = Math.max.apply(null, ydata);
     ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-    $.each(xdata, function(index, value) {
+    $.each(xdata, function (index, value) {
         var xpoint = value;
         var ypoint = ydata[index];
         var xpixel = convertvaltopixel(xpoint, minx, maxx, bleft + 10 * scalefactor, bright - 10 * scalefactor);
@@ -6140,7 +6429,7 @@ function drawminivboxes(ctx, xdata, ydata, bleft, bright, btop, bbottom, c, r, t
     maxy = Math.max.apply(null, ydata);
     thisdata = {};
     count = 0;
-    $.each(xdata, function(index, value) {
+    $.each(xdata, function (index, value) {
         var xpoint = value;
         var ypoint = ydata[index];
         if (thisdata[xpoint]) {
@@ -6153,7 +6442,7 @@ function drawminivboxes(ctx, xdata, ydata, bleft, bright, btop, bbottom, c, r, t
     })
     i = 0;
     w = (bright - bleft) / count;
-    $.each(thisdata, function(index, thisvalues) {
+    $.each(thisdata, function (index, thisvalues) {
         var minval = Math.min.apply(null, thisvalues);
         var lq = lowerquartile(thisvalues);
         var med = median(thisvalues);
@@ -6182,7 +6471,7 @@ function drawminihboxes(ctx, xdata, ydata, bleft, bright, btop, bbottom, c, r, t
     maxx = Math.max.apply(null, xdata);
     thisdata = {};
     count = 0;
-    $.each(ydata, function(index, value) {
+    $.each(ydata, function (index, value) {
         var xpoint = value;
         var ypoint = xdata[index];
         if (thisdata[xpoint]) {
@@ -6195,7 +6484,7 @@ function drawminihboxes(ctx, xdata, ydata, bleft, bright, btop, bbottom, c, r, t
     })
     i = 0;
     w = (bbottom - btop) / count;
-    $.each(thisdata, function(index, thisvalues) {
+    $.each(thisdata, function (index, thisvalues) {
         var minval = Math.min.apply(null, thisvalues);
         var lq = lowerquartile(thisvalues);
         var med = median(thisvalues);
@@ -6225,7 +6514,7 @@ function drawminiareagraphs(ctx, ydata, xdata, bleft, bright, btop, bbottom, c, 
     thisdata = {};
     ycats = {};
     count = xdata.length;
-    $.each(ydata, function(index, value) {
+    $.each(ydata, function (index, value) {
         var xpoint = value;
         var ypoint = xdata[index];
         if (!thisdata[xpoint]) {
@@ -6241,13 +6530,13 @@ function drawminiareagraphs(ctx, ydata, xdata, bleft, bright, btop, bbottom, c, 
     })
     l = 0;
     ctx.fillStyle = 'rgba(0,0,0,0.12)';
-    $.each(thisdata, function(index, thisvalues) {
+    $.each(thisdata, function (index, thisvalues) {
         h = 0;
         total = 0;
-        $.each(thisvalues, function(index, value) {
+        $.each(thisvalues, function (index, value) {
             total += value;
         });
-        $.each(ycats, function(index, value) {
+        $.each(ycats, function (index, value) {
             if (thisvalues[index]) {
                 ctx.beginPath();
                 ctx.rect(bleft + l, bbottom + h, bwidth * total / count, -bheight * thisvalues[index] / total);
@@ -6263,10 +6552,18 @@ function drawminiareagraphs(ctx, ydata, xdata, bleft, bright, btop, bbottom, c, 
 }
 
 function lockaxis() {
-    if (xmin == null) { xmin = 'auto'; }
-    if (xmax == null) { xmax = 'auto'; }
-    if (ymin == null) { ymin = 'auto'; }
-    if (ymax == null) { ymax = 'auto'; }
+    if (xmin == null) {
+        xmin = 'auto';
+    }
+    if (xmax == null) {
+        xmax = 'auto';
+    }
+    if (ymin == null) {
+        ymin = 'auto';
+    }
+    if (ymax == null) {
+        ymax = 'auto';
+    }
 
     $('#boxplotmin').val(xmin);
     $('#boxplotmax').val(xmax);
