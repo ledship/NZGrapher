@@ -819,7 +819,9 @@ if (isset($_COOKIE['welcome'])) {
 				<input type="checkbox" onclick="updategraph();" id="grayscale" name="grayscale" value="yes"> Gray Scale <br>(do not use on Firefox)</label><br>
 			</span>
                 </div>
-            <td><span style='font-size:12px;line-height:27px;'>
+            </td>
+            <td>
+                <span style='font-size:12px;line-height:27px;'>
 			<span style='display:inline-block;width:50px;'>Title: </span><input type="text" id="title" name="title"
                                                                                 value="Graph Title"><br>
 			<span style='display:inline-block;width:50px;'>x-axis: </span><input type="text" id="xaxis" name="xaxis"
@@ -830,18 +832,26 @@ if (isset($_COOKIE['welcome'])) {
                                                                                                     id="colorlabel"
                                                                                                     name="colorlabel"
                                                                                                     value="Color Label"><br></span>
-			<span style='display:inline-block;width:50px;'>Size: </span><select id="standardsize" name="standardsize"
-                                                                                onchange="updategraph()"
-                                                                                style='width:120px;'>
-				<option>Auto</option>
-				<?php
-                //echo "<option>Auto - High Res</option>";
-                ?>
-				<option>Standard</option>
-				<option>Short</option>
-				<option>Small</option>
-			</select>
+			<span style='display:inline-block;width:50px;'>Size: </span>
+                    <select id="standardsize" name="standardsize" onchange="updategraph()" style='width:120px;'>
+				        <option>Auto</option>
+				        <?php
+                        //echo "<option>Auto - High Res</option>";
+                        ?>
+				        <option>Standard</option>
+				        <option>Short</option>
+				        <option>Small</option>
+                        <option>Custom</option>
+			    </select>
 			</span>
+            </td>
+            <td style="display:none" id="customSize">
+                <span style='font-size: 12px; line-height:27px;'>
+                    <span style="display:inline-block;width:50px;">Width: </span><input type="number" id="customWidth" name="customWidth" value="1920"><br>
+                    <span style="display:inline-block;width:50px;">Height: </span><input type="number" id="customHeight" name="customHeight" value="1080"><br>
+                </span>
+            </td>
+        </tr>
     </table>
     <div id=sizediv><span id=pointsizename>Point Size:</span> <input id=size type="range" min=3 max=19 step=2 value=7
                                                                      onchange="updategraph()"></div>

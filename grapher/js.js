@@ -39,6 +39,16 @@ var scalefactor;
 
 $(function () {
 
+    $('#customWidth').on('change', function() {
+        document.getElementById('width').value = $(this).val();
+        updategraph();
+    });
+
+    $('#customHeight').on('change', function() {
+        document.getElementById('height').value = $(this).val();
+        updategraph();
+    });
+
     $('#graph').on('load', function () {
         $('#loading').hide();
     });
@@ -1333,6 +1343,7 @@ function updategraphgo() {
     document.getElementById('transform').value = document.getElementById('trans').value;
     document.getElementById("form").action = document.getElementById('type').value + '.php';
     scalefactor = 1;
+    document.getElementById('customSize').style.display = "none";
     if (document.getElementById('standardsize').value == 'Standard') {
         document.getElementById('width').value = 800;
         document.getElementById('height').value = 600;
@@ -1346,6 +1357,10 @@ function updategraphgo() {
         document.getElementById('width').value = document.getElementById('graphdiv').offsetWidth * 5;
         document.getElementById('height').value = document.getElementById('graphdiv').offsetHeight * 5;
         scalefactor = 5;
+    } else if(document.getElementById('standardsize').value == 'Custom') {
+        document.getElementById('customSize').style.display = "block";
+        document.getElementById('width').value = document.getElementById('customWidth').value;
+        document.getElementById('height').value = document.getElementById('customHeight').value;
     } else {
         document.getElementById('width').value = document.getElementById('graphdiv').offsetWidth;
         document.getElementById('height').value = document.getElementById('graphdiv').offsetHeight;
@@ -1423,7 +1438,7 @@ function jsgraphtoimage(dataURL) {
         $('#loading').hide();
     } else {
         highres = 'no';
-        if (document.getElementById('standardsize').value == 'Auto - High Res') {
+        if (document.getElementById('standardsize').value == 'Auto - High Res' || document.getElementById('standardsize').value == 'Custom') {
             highres = 'yes';
         }
         $.ajax({
