@@ -475,6 +475,229 @@ function newbarandarea() {
     return canvas.toDataURL();
 }
 
+function newhistogram() {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    //set size
+    var width = $('#width').val();
+    var height = $('#height').val();
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // get points
+    var xPoints = $('#xvar').val().split(',');
+    xPoints.pop();
+    var yPoints = $('#yvar').val().split(',');
+    yPoints.pop();
+
+    var i = 0;
+    var pointsRemoved = [];
+    for (var xPoint in xPoints) {
+        if (!$.isNumeric(xPoint)) {
+            xPoints.splice(xPoint, 1);
+            yPoints.splice(xPoint, 1);
+            pointsRemoved += (i + 1) + ", ";
+        }
+        i++;
+    }
+
+    if (xPoints.length == 0 || !($.isNumeric(xPoints[0]))) {
+        return '<br><br><br><br><br><center>You must select a numerical x-variable</center>';
+    }
+
+    if (pointsRemoved.length != 0) {
+        ctx.fillStyle = '#000000';
+        ctx.font = 13 * scalefactor + "px Roboto";
+        ctx.textAlign = "right";
+        ctx.fillText("ID(s) of Points Removed: " + pointsremoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
+    }
+
+    var numCategories = array_unique(yPoints).length;
+    if (numCategories > 5 && $.isNumeric(yPoints[0])) {
+        var min = Math.min.apply(null, yPoints);
+        var max = Math.max.apply(null, yPoints);
+        var range = max - min;
+        var i = 0;
+        var c1max = parseFloat(Number(min + range / 4).toPrecision(2));
+        var c2max = parseFloat(Number(c1max + range / 4).toPrecision(2));
+        var c3max = parseFloat(Number(c2max + range / 4).toPrecision(2));
+        for (var yPoint in yPoints) {
+            var value = yPoints[yPoint];
+            if (value < c1max) {
+                yPoints[i] = "a: < " + c1max;
+            } else if (value < c2max) {
+                yPoints[i] = "b: " + c1max - c2max;
+            } else if (value < c3max) {
+                yPoints[i] = "c: " + c2max - c3max;
+            } else {
+                yPoints[i] = "d: > " + c3max;
+            }
+            i++;
+        }
+        numCategories = 4;
+    }
+    if (numCategories > 5) {
+        return '<br><br><br><br><br><center>You must select a categorical y-variable with 4 or fewer categories or a numerical y-variable which will automatically be split into 4 categories.</center>';
+    }
+
+    if (numCategories == 0) {
+        numCategories = 1;
+        for (var index in xPoints) {
+            yPoints[index] = " ";
+        }
+    }
+
+    var relativeFrequency = false;
+    if ($('#relativefrequency').is(":checked") && $('#relativefrequencyshow').is(":visible")) {
+        relativeFrequency = true;
+    }
+
+    ctx.fillStyle = '#000000';
+    ctx.font = "bold " + 20 * scalefactor + "px Roboto";
+    ctx.textAlign = "center";
+    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+
+    ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+    ctx.fillText($('#xaxis').val(), width / 2, height - 10 * scalefactor);
+    ctx.save();
+    ctx.fillStyle = '#000000';
+    ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+    ctx.translate(20 * scalefactor, height / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = "center";
+    ctx.fillText($('#yaxis').val(), 0, 0);
+    ctx.restore();
+
+    var minX = Math.min.apply(null, xPoints);
+    var maxX = Math.max.apply(null, xPoints);
+    var minMaxSteps = axisminmaxstep(minX, maxX);
+    var minXTick = minMaxSteps[0];
+    var maxXTick = minMaxSteps[1] + minMaxSteps[2];
+    var xStep = minMaxSteps[2];
+
+    var left = 90 * scalefactor;
+    var right = width - 80 * scalefactor;
+    var gTop = 60 * scalefactor;
+    var bottom = height - 60 * scalefactor;
+
+    var i = 0;
+    var data = [];
+    var odata = [];
+    xPoints.forEach(function (xPoint) {
+        var yPoint = yPoints[i];
+        var xBucket = Math.floor(xPoint / xStep) * xStep;
+        if (!(yPoint in data)) {
+            data[yPoint] = [];
+        }
+        if (!(yPoint in odata)) {
+            odata[yPoint] = [];
+        }
+        data[yPoint].push(xBucket);
+        odata[yPoint].push(xPoint);
+        i++;
+    });
+    var maxFreq = [];
+    for (var category in data) {
+        var values = data[category];
+        data[category] = array_count_values(values);
+        var keys = Object.keys(data[category]);
+        var sum = 0;
+        var max = data[category][keys[0]];
+        for (var key in keys) {
+            key = keys[key];
+            sum += data[category][key];
+            if (data[category][key] > max) {
+                max = data[category][key];
+            }
+        }
+        if (relativeFrequency) {
+            sum = 1;
+        }
+        maxFreq.push(max / sum);
+    }
+
+    maxFreq = Math.max.apply(null, maxFreq);
+    var numCategories = Object.keys(data).length;
+
+    var minY = 0.0001;
+    var maxY = maxFreq;
+    minMaxSteps = axisminmaxstep(minY, maxY);
+    var minYTick = minMaxSteps[0];
+    var maxYTick = minMaxSteps[1];
+    var yStep = minMaxSteps[2];
+
+    var bottomStart = bottom + 30 * scalefactor;
+    var dataKeys = Object.keys(data);
+    dataKeys.sort(sortorder);
+    var axisOffset = (bottomStart - gTop) / dataKeys.length;
+    var yAxis = gTop + axisOffset;
+    var oldYAxis = gTop;
+    var axisTolerance = 40 * scalefactor;
+    var axisWidth = width - 170 * scalefactor;
+    for (var key in dataKeys) {
+        key = dataKeys[key];
+        var values = data[key];
+        var i = 0;
+        // Axis
+        horaxis(ctx, left, right, yAxis - axisTolerance, minXTick, maxXTick, xStep);
+        vertaxis(ctx, oldYAxis, yAxis - axisTolerance, left - 10 * scalefactor, minYTick, maxYTick, yStep, undefined, false, false);
+        ctx.save();
+        ctx.save();
+        ctx.fillStyle = '#000000';
+        ctx.font = "bold " + 13 * scalefactor + "px Roboto";
+        ctx.translate(40 * scalefactor, oldYAxis + ((axisOffset) / 2) - axisTolerance / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.fillText("Frequency", 0, 0);
+        ctx.restore();
+        ctx.font = "bold " + 13 * scalefactor + "px Roboto";
+        ctx.fillText(key, right + 50 * scalefactor, oldYAxis + ((axisOffset) / 2) - axisTolerance / 2);
+
+        ctx.strokeStyle = '#000000';
+        ctx.fillStyle = '#d3d3d3';
+
+        xPoints = odata[key];
+        var med = median(xPoints);
+        var mean = calculatemean(xPoints);
+        var num = xPoints.length;
+
+        var valueKeys = Object.keys(values);
+        for(var valueKey in valueKeys) {
+            var xBucket = parseFloat(valueKeys[valueKey]);
+            var freq = values[xBucket];
+            var x1 = (axisWidth * (xBucket - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
+            var x2 = (axisWidth * ((xBucket + xStep) - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
+            var w = x2 - x1;
+            var div = 1;
+            if(relativeFrequency) {
+                div = num;
+            }
+            var y1 = convertvaltopixel(freq, minYTick, maxYTick, yAxis - axisTolerance, oldYAxis);
+            var h = (yAxis - axisTolerance) - y1;
+            line(ctx, x1, y1, x2, y1);
+            ctx.fillRect(x1, y1, w, h);
+            ctx.strokeRect(x1, y1, w, h);
+        }
+        ctx.fillStyle = '#ed0000';
+        ctx.font = 11 * scalefactor + "px Roboto";
+        ctx.textAlign = "left";
+        if($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+            ctx.fillText("med:  " + med, 90 * scalefactor, oldYAxis);
+            ctx.fillText("mean:  " + mean, 90 * scalefactor, oldYAxis + 10 * scalefactor);
+            ctx.fillText("num:  " + num, 90 * scalefactor, oldYAxis + 20 * scalefactor);
+        }
+
+        oldYAxis = yAxis;
+        yAxis += axisOffset;
+    }
+
+    return canvas.toDataURL();
+}
+
 function array_unique(array) {
     var found = {};
     var result = [];
@@ -487,4 +710,13 @@ function array_unique(array) {
         }
     }
     return result;
+}
+
+function array_count_values(array) {
+    var counts = {};
+    for (var i = 0; i < array.length; i++) {
+        var key = array[i];
+        counts[key] = (counts[key]) ? counts[key] + 1 : 1;
+    }
+    return counts;
 }

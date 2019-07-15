@@ -1065,48 +1065,38 @@ function graphchange(obj) {
     document.getElementById('stripgraphshow').style.display = 'none';
     document.getElementById('stackdots').checked = false;
     $('#removedpointsshow').hide();
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'pie chart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
     }
-    ;
     if (obj.value == 'bootstrap') {
         document.getElementById('yvar').style.display = 'none';
         document.getElementById('yvar').selectedIndex = 0;
     }
-    ;
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
         document.getElementById('regshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time') {
         document.getElementById('labelshow').style.display = 'block';
     }
-    ;
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'histogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
         document.getElementById('sum').style.display = 'inline';
     }
-    ;
     if (obj.value == 'paired experiment') {
         document.getElementById('arrowsshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'dotplot') {
         document.getElementById('highboxplotshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'dotplot') {
         document.getElementById('boxnowhiskershow').style.display = 'block';
     }
-    ;
     if (obj.value == 'dotplot') {
         document.getElementById('boxnooutliershow').style.display = 'block';
     }
-    ;
     if (obj.value == 'residuals') {
         document.getElementById('regtypeshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'scatter') {
         document.getElementById('jittershow').style.display = 'block';
         document.getElementById('reg').style.display = 'inline';
@@ -1117,20 +1107,16 @@ function graphchange(obj) {
         document.getElementById('powshow').style.display = 'block';
         document.getElementById('yxshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'time series forecasts') {
         document.getElementById('for').style.display = 'inline';
     }
-    ;
     if (obj.value.substring(0, 4) == 'time') {
         document.getElementById('addmultshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'time series') {
         document.getElementById('longtermtrendshow').style.display = 'block';
     }
-    ;
-    if (obj.value == 'histogramf' || obj.value == 'histogram' || obj.value == 'newbarandarea') {
+    if (obj.value == 'histogramf' || obj.value == 'newhistogram' || obj.value == 'newbarandarea') {
         document.getElementById('relativefrequencyshow').style.display = 'block';
     }
     if (obj.value == 'residuals') {
@@ -1144,34 +1130,27 @@ function graphchange(obj) {
         document.getElementById('boxplotshow').style.display = 'block';
         document.getElementById('intervalshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Point Size:';
     }
-    ;
-    if (obj.value == 'histogram' || obj.value == 'histogramf') {
+    if (obj.value == 'newhistogram' || obj.value == 'histogramf') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Interval Width:';
     }
-    ;
     if (obj.value == 'bootstrap') {
         document.getElementById('btypeshow').style.display = 'block';
     }
-    ;
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals') {
         document.getElementById('transdiv').style.display = 'block';
     }
-    ;
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'histogramf') {
         document.getElementById('zvar').style.display = 'inline';
     }
-    ;
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment') {
         document.getElementById('color').style.display = 'inline';
         document.getElementById('colorname').style.display = 'inline';
     }
-    ;
 
     updategraph();
 }
@@ -1854,7 +1833,7 @@ function horaxis(ctx, x1, x2, y, min, max, step, gridlinetop) {
     }
 }
 
-function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop, extendBelow) {
+function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop, extendBelow, extendAbove) {
     min = parseFloat(parseFloat(min.toFixed(10)).toPrecision(8));
     max = parseFloat(parseFloat(max.toFixed(10)).toPrecision(8));
     ctx.strokeStyle = '#000000';
@@ -1863,7 +1842,7 @@ function vertaxis(ctx, y1, y2, x, min, max, step, gridlinetop, extendBelow) {
     }
     ctx.fillStyle = '#000000';
     ctx.lineWidth = 1 * scalefactor;
-    line(ctx, x, add(y1, -10 * scalefactor), x, (extendBelow === false) ? y2 : add(y2, 10 * scalefactor));
+    line(ctx, x, (extendAbove === false) ? y1 : add(y1, -10 * scalefactor), x, (extendBelow === false) ? y2 : add(y2, 10 * scalefactor));
     fontsize = 13 * scalefactor;
     ctx.font = fontsize + "px Roboto";
     ctx.textAlign = "right";
@@ -6369,7 +6348,7 @@ function drawminihistogram(ctx, data, bleft, bright, btop, bbottom, r, title) {
     ctx.stroke();
     ctx.fillStyle = '#000';
 
-    $('#graphmap').append("<area shape='rect' coords='" + (bleft / scalefactor) + "," + (btop / scalefactor) + "," + (bright / scalefactor) + "," + (bbottom / scalefactor) + "' href=\"javascript:document.getElementById('xvar').selectedIndex=" + r + "+1;document.getElementById('yvar').selectedIndex=0;document.getElementById('type').value='histogram';document.getElementById('xaxis').value=document.getElementById('xvar').options[document.getElementById('xvar').selectedIndex].text;document.getElementById('yaxis').value=document.getElementById('yvar').options[document.getElementById('yvar').selectedIndex].text;graphchange(document.getElementById('type'));updategraph();\" alt='" + bleft + "," + btop + "' desc='" + title + "'>");
+    $('#graphmap').append("<area shape='rect' coords='" + (bleft / scalefactor) + "," + (btop / scalefactor) + "," + (bright / scalefactor) + "," + (bbottom / scalefactor) + "' href=\"javascript:document.getElementById('xvar').selectedIndex=" + r + "+1;document.getElementById('yvar').selectedIndex=0;document.getElementById('type').value='newhistogram';document.getElementById('xaxis').value=document.getElementById('xvar').options[document.getElementById('xvar').selectedIndex].text;document.getElementById('yaxis').value=document.getElementById('yvar').options[document.getElementById('yvar').selectedIndex].text;graphchange(document.getElementById('type'));updategraph();\" alt='" + bleft + "," + btop + "' desc='" + title + "'>");
 }
 
 function drawminibarchart(ctx, data, bleft, bright, btop, bbottom, r, title) {
