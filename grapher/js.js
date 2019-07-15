@@ -1157,7 +1157,7 @@ function graphchange(obj) {
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'histogramf') {
         document.getElementById('zvar').style.display = 'inline';
     }
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment') {
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'newresiduals') {
         document.getElementById('color').style.display = 'inline';
         document.getElementById('colorname').style.display = 'inline';
     }

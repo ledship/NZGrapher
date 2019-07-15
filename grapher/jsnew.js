@@ -11,7 +11,8 @@ function newresiduals() {
     $('#residualsforcexshow').show();
     $('#regtypeshow').show();
     $('#weightedaverageshow').show();
-    $('#color')[0].selectedIndex = 0;
+    $('#colorname').show();
+    //$('#color')[0].selectedIndex = 0;
 
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
@@ -302,8 +303,7 @@ function newbarandarea() {
     yPoints.pop();
 
     if (xPoints.length == 0) {
-        return "<br><br><br><br><br><center>You must select an x-variable for a bar graph<br>" +
-            "or<br>an x-variable and a y-variable for an area graph.</center>";
+        return "Error: You must select an x-variable for a bar graph an x-variable and a y-variable for an area graph.";
     }
 
     // graph title
@@ -505,8 +505,11 @@ function newhistogram() {
         i++;
     }
 
+    console.log("length: " + xPoints.length);
+
     if (xPoints.length == 0 || !($.isNumeric(xPoints[0]))) {
-        return '<br><br><br><br><br><center>You must select a numerical x-variable</center>';
+        console.log("not numerical");
+        return 'Error: You must select a numerical x-variable';
     }
 
     if (pointsRemoved.length != 0) {
@@ -541,7 +544,7 @@ function newhistogram() {
         numCategories = 4;
     }
     if (numCategories > 5) {
-        return '<br><br><br><br><br><center>You must select a categorical y-variable with 4 or fewer categories or a numerical y-variable which will automatically be split into 4 categories.</center>';
+        return 'Error: You must select a categorical y-variable with 4 or fewer categories or a numerical y-variable which will automatically be split into 4 categories.</center>';
     }
 
     if (numCategories == 0) {

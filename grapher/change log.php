@@ -58,12 +58,17 @@
     <?php
     /*
     To Do List
-    - Colour points in residuals graph
     - Escape titles on graphs.
+    - Switch everything to JavaScript to reduce dependency on server processing
     *************************
     - Look into adding a file from a URL
     */
     ?>
+    <b>2019-07-15</b>
+    <ul>
+        <li>Bug fixes</li>
+        <li>Can now colour points on residuals graph</li>
+    </ul>
     <b>2019-07-15</b>
     <ul>
         <li>Custom height/width graphs</li>
