@@ -662,14 +662,14 @@ function newhistogram() {
         var num = xPoints.length;
 
         var valueKeys = Object.keys(values);
-        for(var valueKey in valueKeys) {
+        for (var valueKey in valueKeys) {
             var xBucket = parseFloat(valueKeys[valueKey]);
             var freq = values[xBucket];
             var x1 = (axisWidth * (xBucket - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
             var x2 = (axisWidth * ((xBucket + xStep) - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
             var w = x2 - x1;
             var div = 1;
-            if(relativeFrequency) {
+            if (relativeFrequency) {
                 div = num;
             }
             var y1 = convertvaltopixel(freq, minYTick, maxYTick, yAxis - axisTolerance, oldYAxis);
@@ -681,7 +681,7 @@ function newhistogram() {
         ctx.fillStyle = '#ed0000';
         ctx.font = 11 * scalefactor + "px Roboto";
         ctx.textAlign = "left";
-        if($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+        if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
             ctx.fillText("med:  " + med, 90 * scalefactor, oldYAxis);
             ctx.fillText("mean:  " + mean, 90 * scalefactor, oldYAxis + 10 * scalefactor);
             ctx.fillText("num:  " + num, 90 * scalefactor, oldYAxis + 20 * scalefactor);
@@ -692,6 +692,167 @@ function newhistogram() {
     }
 
     return canvas.toDataURL();
+}
+
+function newpiechart() {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    //set size
+    var width = $('#width').val();
+    var height = $('#height').val();
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // get points
+    var xPoints = $('#xvar').val().split(',');
+    xPoints.pop();
+    var yPoints = $('#yvar').val().split(',');
+    yPoints.pop();
+
+    if (xPoints.length == 0) {
+        return "Error: You must select an x-variable for a pie chart <br>or<br>an x-variable and a y-variable for a series of pie charts.";
+    }
+
+    if (yPoints.length == 0) {
+        var centerX = width / 2;
+        var centerY = height / 2;
+        var diameter = Math.min(height - 150, width - 150);
+        pie(ctx, xPoints, diameter / 2, centerX, centerY);
+        if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+            ctx.fillStyle = '#000';
+            ctx.textAlign = "center";
+            ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+            var num = "num: " + xPoints.length;
+            ctx.fillText(num, centerX, centerY + (diameter / 2) + 30);
+        }
+    } else {
+        var catsY = array_unique(yPoints);
+        var full = [];
+        for (var cat in catsY) {
+            cat = catsY[cat];
+            full[cat] = [];
+        }
+        for (var i in xPoints) {
+            var yPoint = yPoints[i];
+            var xPoint = xPoints[i];
+            full[yPoint].push(xPoint);
+        }
+        var numGraphs = catsY.length;
+        var numWidth = numGraphs;
+        if (numGraphs > 3) {
+            numWidth = Math.ceil(Math.sqrt(numGraphs));
+        }
+        var numHeight = Math.ceil(numGraphs / numWidth);
+        var graphWidth = Math.round(width - 50) / numWidth;
+        var graphHeight = Math.round(height - 80) / numHeight;
+        var left = 25 * scalefactor;
+        var top = 50 * scalefactor;
+        var keys = Object.keys(full);
+        keys.sort(sortorder);
+        for (var i in keys) {
+            var cat = keys[i];
+            var points = full[cat];
+            if (left > width - 30 * scalefactor) {
+                left = 25 * scalefactor;
+                top += graphHeight;
+            }
+            var centerX = graphWidth / 2 + left;
+            var centerY = graphHeight / 2 + top - 20 * scalefactor;
+            var diameter = Math.min(graphHeight - 50, graphWidth - 10);
+            pie(ctx, points, diameter / 2, centerX, centerY);
+            if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+                cat += " (num: " + points.length + ")";
+            }
+            ctx.fillStyle = '#000';
+            ctx.textAlign = "center";
+            ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+            ctx.fillText(cat, centerX, centerY + (diameter / 2) + 30);
+            left += graphWidth;
+        }
+    }
+
+    ctx.fillStyle = '#000';
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
+
+    return canvas.toDataURL();
+}
+
+function pie(ctx, xPoints, radius, centerX, centerY) {
+    if (radius <= 0) {
+        return 'Error: The number of pie charts being drawn is too large!';
+    }
+    var freq = array_count_values(xPoints);
+    var total = 0;
+    var keys = Object.keys(freq);
+    for (var key in keys) {
+        key = keys[key];
+        total += freq[key];
+    }
+    keys.sort(sortorder);
+    ctx.font = 15 * scalefactor + "px Roboto";
+    ctx.textAlign = "center";
+    var rot = 270;
+    for (var key in keys) {
+        key = keys[key];
+        var numInKey = freq[key];
+        var angle = numInKey / total * 360;
+        var start = Math.round(rot);
+        var end = Math.round(rot + angle);
+        var pixX = Math.round(radius * Math.cos(deg2rad(start)) + centerX);
+        var pixY = Math.round(radius * Math.sin(deg2rad(start)) + centerY);
+        ctx.strokeStyle = '#' + intToRGB(hashCode(key));
+        ctx.fillStyle = '#' + intToRGB(hashCode(key));
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(pixX, pixY);
+        ctx.arc(centerX, centerY, radius, deg2rad(start), deg2rad(end));
+        // We don't need to move back to the next point, since the path finding algorithm can work out we want to go back
+        ctx.fill();
+        rot += angle;
+    }
+    ctx.fillStyle = '#000000';
+    ctx.strokeStyle = '#000000';
+    ctx.beginPath();
+    ctx.ellipse(centerX, centerY, radius, radius, 0, 0, 2 * Math.PI);
+    ctx.stroke();
+    var rot = 270;
+    for (var key in keys) {
+        key = keys[key];
+        var numInKey = freq[key];
+        var angle = numInKey / total * 360;
+        var start = Math.round(rot);
+        var end = Math.round(rot + angle);
+        var half = (start + end) / 2;
+        var pixX = Math.round(radius * Math.cos(deg2rad(start)) + centerX);
+        var pixY = Math.round(radius * Math.sin(deg2rad(start)) + centerY);
+        line(ctx, centerX, centerY, pixX, pixY);
+        pixX = Math.round(radius * 0.7 * Math.cos(deg2rad(half)) + centerX);
+        pixY = Math.round(radius * 0.7 * Math.sin(deg2rad(half)) + centerY);
+        ctx.fillStyle = '#000';
+        ctx.fillText(key, pixX, pixY + 5 * scalefactor);
+        rot += angle;
+    }
+}
+
+function deg2rad(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
+function hashCode(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}
+
+function intToRGB(int) {
+    var c = (int & 0x00FFFFFF).toString(16).toUpperCase();
+    return "00000".substr(0, 6 - c.length) + c;
 }
 
 function array_unique(array) {
@@ -728,13 +889,13 @@ function array_count_values(array) {
 function drawTitle(ctx, title, x, y, fontsize) {
     ctx.font = "bold " + fontsize * scalefactor + "px Roboto";
     ctx.textAlign = "center";
-    if(title.length < 80) { // We don't have to run this check, but by doing this we don't have to spend resources by doing regex matching
+    if (title.length < 80) { // We don't have to run this check, but by doing this we don't have to spend resources by doing regex matching
         ctx.fillText(title, x, y);
     } else {
         // Split into lines
         var split = title.match(/.{1,80}(\s|$)/g);
         var titleY = y;
-        split.forEach(function(t,index) {
+        split.forEach(function (t, index) {
             ctx.fillText(split[index], x, titleY);
             titleY += 25 * scalefactor;
         });

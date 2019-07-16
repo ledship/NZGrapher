@@ -59,11 +59,17 @@
     /*
     To Do List
     - Escape titles on graphs.
-    - Switch everything to JavaScript to reduce dependency on server processing
+    - Switch histogramf, bootstrap, re-randomisation, paired experiment dot plot to JavaScript
     *************************
     - Look into adding a file from a URL
     */
     ?>
+    <b>2019-07-16</b>
+    <ul>
+        <li>Graph titles automatically split to a new line after 80 characters</li>
+        <li>Switched pie chart to JavaScript</li>
+        <li>Can now Change scale factor when using custom size</li>
+    </ul>
     <b>2019-07-15</b>
     <ul>
         <li>Bug fixes</li>

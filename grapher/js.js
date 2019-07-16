@@ -49,6 +49,13 @@ $(function () {
         updategraph();
     });
 
+    $('#customScalefactor').on('change', function() {
+        if($(this).val() <= 0) {
+            $('#customScalefactor').val(1);
+        }
+        updategraph();
+    });
+
     $('#graph').on('load', function () {
         $('#loading').hide();
     });
@@ -1075,7 +1082,7 @@ function graphchange(obj) {
     document.getElementById('stripgraphshow').style.display = 'none';
     document.getElementById('stackdots').checked = false;
     $('#removedpointsshow').hide();
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'pie chart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
     }
@@ -1083,13 +1090,13 @@ function graphchange(obj) {
         document.getElementById('yvar').style.display = 'none';
         document.getElementById('yvar').selectedIndex = 0;
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart') {
         document.getElementById('regshow').style.display = 'block';
     }
     if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time') {
         document.getElementById('labelshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'pie chart') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart') {
         document.getElementById('sum').style.display = 'inline';
     }
     if (obj.value == 'paired experiment') {
@@ -1361,6 +1368,7 @@ function updategraphgo() {
         document.getElementById('customSize').style.display = "block";
         document.getElementById('width').value = document.getElementById('customWidth').value;
         document.getElementById('height').value = document.getElementById('customHeight').value;
+        scalefactor = document.getElementById('customScalefactor').value;
     } else {
         document.getElementById('width').value = document.getElementById('graphdiv').offsetWidth;
         document.getElementById('height').value = document.getElementById('graphdiv').offsetHeight;

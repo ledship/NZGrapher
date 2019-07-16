@@ -545,7 +545,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
                         <option value='newbarandarea'>Bar Graph (and Area Graph)</option>
                         <option value='newhistogram'>Histogram</option>
                         <option value='histogramf'>Histogram - Summary Data</option>
-                        <option value='pie chart'>Pie Chart</option>
+                        <option value='newpiechart'>Pie Chart</option>
                         <option value='newscatter'>Scatter Graph</option>
                         <option value='newresiduals'>Residuals Plot</option>
                         <option disabled></option>
@@ -849,6 +849,7 @@ if (isset($_COOKIE['welcome'])) {
                 <span style='font-size: 12px; line-height:27px;'>
                     <span style="display:inline-block;width:50px;">Width: </span><input type="number" id="customWidth" name="customWidth" value="1920"><br>
                     <span style="display:inline-block;width:50px;">Height: </span><input type="number" id="customHeight" name="customHeight" value="1080"><br>
+                    <span style="display:inline-block;width:50px;">Scale: </span><input type="number" id="customScalefactor" name="customScalefactor" value="1"><br>
                 </span>
             </td>
         </tr>
