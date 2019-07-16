@@ -2409,10 +2409,7 @@ function newdotplot() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     //x-axis title
     ctx.fillStyle = '#000000';
@@ -2567,7 +2564,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
     }
     xpixels.sort(function (a, b) {
         return a[sort] - b[sort]
-    })
+    });
     if ($('#labels').is(":checked")) {
         var labels = "yes";
     } else {
@@ -2955,10 +2952,7 @@ function bootstrap(mm) {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     //x-axis title
     ctx.fillStyle = '#000000';
@@ -3210,10 +3204,7 @@ function newtimeseries() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     if (seasonal == 'yes') {
         width = width * 0.7;
@@ -3712,10 +3703,7 @@ function newtimeseriesrecomp() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     //get points
     var xpoints = $('#xvar').val().split(",");
@@ -4463,10 +4451,7 @@ function newscatter() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     //x-axis title
     ctx.fillStyle = '#000000';
@@ -5031,10 +5016,7 @@ function newtimeseriesseasonaleffects() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     //x-axis title
     ctx.fillStyle = '#000000';
@@ -5300,10 +5282,7 @@ function newtimeseriessforecasts() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor);
 
     //x-axis title
     ctx.fillStyle = '#000000';

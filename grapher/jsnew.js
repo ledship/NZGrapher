@@ -29,10 +29,7 @@ function newresiduals() {
 
     //graph title
     ctx.fillStyle = '#000000';
-    fontsize = 20 * scalefactor;
-    ctx.font = "bold " + fontsize + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     if ($('#residualsforcex').is(":checked")) {
         xtitle = "Explanatory";
@@ -308,9 +305,7 @@ function newbarandarea() {
 
     // graph title
     ctx.fillStyle = '#000000';
-    ctx.font = "bold " + 20 * scalefactor + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     // x-axis title
     ctx.font = "bold " + 15 * scalefactor + "px Roboto";
@@ -560,9 +555,7 @@ function newhistogram() {
     }
 
     ctx.fillStyle = '#000000';
-    ctx.font = "bold " + 20 * scalefactor + "px Roboto";
-    ctx.textAlign = "center";
-    ctx.fillText($('#title').val(), width / 2, 30 * scalefactor);
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
     ctx.font = "bold " + 15 * scalefactor + "px Roboto";
     ctx.fillText($('#xaxis').val(), width / 2, height - 10 * scalefactor);
@@ -722,4 +715,28 @@ function array_count_values(array) {
         counts[key] = (counts[key]) ? counts[key] + 1 : 1;
     }
     return counts;
+}
+
+/**
+ * Draw the title of the graph
+ * @param ctx canvas context
+ * @param title the title of the graph
+ * @param x the x coordinate
+ * @param y the y coordinate of the first line
+ * @param fontsize the font size
+ */
+function drawTitle(ctx, title, x, y, fontsize) {
+    ctx.font = "bold " + fontsize * scalefactor + "px Roboto";
+    ctx.textAlign = "center";
+    if(title.length < 80) { // We don't have to run this check, but by doing this we don't have to spend resources by doing regex matching
+        ctx.fillText(title, x, y);
+    } else {
+        // Split into lines
+        var split = title.match(/.{1,80}(\s|$)/g);
+        var titleY = y;
+        split.forEach(function(t,index) {
+            ctx.fillText(split[index], x, titleY);
+            titleY += 25 * scalefactor;
+        });
+    }
 }
