@@ -549,7 +549,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
                         <option value='newscatter'>Scatter Graph</option>
                         <option value='newresiduals'>Residuals Plot</option>
                         <option disabled></option>
-                        <option value='bootstrap'>Bootstrap Single Variable</option>
+                        <option value='newbootstrap'>Bootstrap Single Variable</option>
                         <option value='newbootstrapcimedian'>Bootstrap Confidence Interval - Median</option>
                         <option value='newbootstrapcimean'>Bootstrap Confidence Interval - Mean</option>
                         <option disabled></option>

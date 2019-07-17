@@ -316,9 +316,6 @@ function newbarandarea() {
         relativeFrequency = true;
     }
 
-    var alpha = 1 - $('#trans').val() / 100;
-    var colours = makecolors(alpha, ctx);
-
     var left = 60 * scalefactor;
     var right = width - 60 * scalefactor;
     var gTop = 60 * scalefactor;
@@ -492,6 +489,7 @@ function newhistogram() {
     var i = 0;
     var pointsRemoved = [];
     for (var xPoint in xPoints) {
+        xPoint = xPoints[xPoint];
         if (!$.isNumeric(xPoint)) {
             xPoints.splice(xPoint, 1);
             yPoints.splice(xPoint, 1);
@@ -499,8 +497,6 @@ function newhistogram() {
         }
         i++;
     }
-
-    console.log("length: " + xPoints.length);
 
     if (xPoints.length == 0 || !($.isNumeric(xPoints[0]))) {
         console.log("not numerical");
@@ -511,7 +507,7 @@ function newhistogram() {
         ctx.fillStyle = '#000000';
         ctx.font = 13 * scalefactor + "px Roboto";
         ctx.textAlign = "right";
-        ctx.fillText("ID(s) of Points Removed: " + pointsremoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
+        ctx.fillText("ID(s) of Points Removed: " + pointsRemoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
     }
 
     var numCategories = array_unique(yPoints).length;
@@ -694,6 +690,231 @@ function newhistogram() {
     return canvas.toDataURL();
 }
 
+function newbootstrap() {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    // set size
+    var width = $('#width').val();
+    var height = $('#height').val();
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // get points
+    var xPoints = $('#xvar').val().split(',');
+    xPoints.pop();
+
+    var pointsRemoved = [];
+    var points = [];
+    for (var i in xPoints) {
+        var xPoint = xPoints[i];
+        if (!$.isNumeric(xPoint)) {
+            xPoints.splice(i, 1);
+            pointsRemoved += (i + 1) + ", ";
+        } else {
+            points.push(i);
+        }
+    }
+
+    if (xPoints.length < 5) {
+        return "Error: You must select a numerical x-variable with at least 5 datapoints.";
+    }
+
+    if (!$.isNumeric(xPoints[0])) {
+        return 'Error: You must select a numerical x-variable.';
+    }
+
+    height = height / 2;
+
+    ctx.fillStyle = '#000000';
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
+    ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+    ctx.fillText($('#xaxis').val(), width / 2, height - 5);
+
+    var oYPixel = height - 60 * scalefactor;
+    var left = 60 * scalefactor;
+    var right = width - 60 * scalefactor;
+    var maxheight = height - 120 * scalefactor;
+
+    var alpha = 1 - $('#trans').val() / 100;
+    var colours = makecolors(alpha, ctx);
+
+    var minX = Math.min.apply(null, xPoints);
+    var maxX = Math.max.apply(null, xPoints);
+
+    var minMaxSteps = axisminmaxstep(minX, maxX);
+    var minXTick = minMaxSteps[0];
+    var maxXTick = minMaxSteps[1];
+    var xStep = minMaxSteps[2];
+    if (minX == minXTick) {
+        minXTick -= xStep;
+    }
+    if (maxX == maxXTick) {
+        maxXTick += xStep;
+    }
+
+    var btype = $('#btype').val();
+
+    // Dot plot
+    horaxis(ctx, left, right, add(oYPixel, 10 * scalefactor), minXTick, maxXTick, xStep);
+    plotdotplot(ctx, points, xPoints, minXTick, maxXTick, oYPixel, left, right, maxheight, colours, 2, 1, true, btype);
+    ctx.fillStyle = '#000';
+
+    height = height * 2;
+    var title = "Bootstrap - ";
+    title += btype;
+
+    drawTitle(ctx, title, width / 2, height - 10 * scalefactor, 20);
+    // Actual bootstrap
+    var bootstrapValues = [];
+    var num = xPoints.length;
+    var b = 0;
+    while (b < 1000) {
+        var i = 0;
+        var bootstrapSample = [];
+        while (i < num) {
+            var select = mt_rand(0, num - 1);
+            bootstrapSample.push(xPoints[select]);
+            i++;
+        }
+        var value = 0;
+        if (btype == 'Mean') {
+            value = array_sum(bootstrapSample) / bootstrapSample.length;
+        }
+        if (btype == 'Median') {
+            value = median(bootstrapSample);
+        }
+        if (btype == 'IQR') {
+            value = upperquartile(bootstrapSample) - lowerquartile(bootstrapSample);
+        }
+        if (btype == 'Standard Deviation') {
+            value = standarddeviation(bootstrapSample);
+        }
+        bootstrapValues.push(value);
+        b++;
+    }
+    console.log(bootstrapValues);
+
+    var offset = 0;
+    if (btype == 'IQR' || btype == 'Standard Deviation') {
+        offset = -(minXTick + maxXTick) / 2 + array_sum(bootstrapValues) / bootstrapValues.length;
+    }
+    offset = Math.floor(offset / xStep);
+    console.log(offset);
+    offset = xStep * offset;
+    console.log(offset);
+    minXTick = minXTick + offset;
+    maxXTick = maxXTick + offset;
+
+    horaxis(ctx, left, right, height - 50 * scalefactor, minXTick, maxXTick, xStep);
+
+    var pSize = $('#size').val() / 2 * scalefactor;
+
+    var xPixels = [];
+    for (var i in bootstrapValues) {
+        var xValue = bootstrapValues[i];
+        var xPixel = Math.round(((width - 120) * (xValue - minXTick) / (maxXTick - minXTick)) / (pSize / 2)) * pSize / 2 + 60;
+        xPixels.push(xPixel);
+    }
+    xPixels.sort();
+
+    var lastXPixel = -10000;
+    var count = array_count_values(xPixels);
+    var keys = Object.keys(count);
+    var max = count[keys[0]];
+    for (var k in keys) {
+        var key = keys[k];
+        if (count[key] > max) {
+            max = count[key];
+        }
+    }
+    var yHeight = (height * 0.5 - 100 * scalefactor) / max;
+    if (yHeight > pSize) {
+        yHeight = pSize;
+    }
+    var yPixel = 0;
+    ctx.fillStyle = '#999999';
+    ctx.lineWidth = 2 * scalefactor;
+    for (var i in xPixels) {
+        var xPixel = xPixels[i];
+        if (lastXPixel == xPixel) {
+            yPixel = yPixel - yHeight;
+        } else {
+            yPixel = height - 90 * scalefactor;
+        }
+        lastXPixel = xPixel;
+        if (i == 25) {
+            ctx.fillStyle = '#636363';
+        }
+        if (i == 975) {
+            ctx.fillStyle = '#999999';
+        }
+        ctx.beginPath();
+        ctx.arc(xPixel, yPixel, pSize, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+    var mean = calculatemean(xPoints);
+    var med = median(xPoints);
+    var lq = lowerquartile(xPoints);
+    var uq = upperquartile(xPoints);
+    var sd = parseFloat(standarddeviation(xPoints));
+
+    var x = 0;
+    var val = 0;
+    if (btype == 'Mean') {
+        x = (width - 120) * (mean - minXTick) / (maxXTick - minXTick) + 60;
+        val = mean.toPrecision(4);
+    }
+    if (btype == 'Median') {
+        x = (width - 120) * (med - minXTick) / (maxXTick - minXTick) + 60;
+        val = med.toPrecision(4);
+    }
+    if (btype == 'IQR') {
+        x = (width - 120) * ((uq - lq) - minXTick) / (maxXTick - minXTick) + 60;
+        val = (uq - lq).toPrecision(4);
+    }
+    if (btype == 'Standard Deviation') {
+        x = (width - 120) * (sd - minXTick) / (maxXTick - minXTick) + 60;
+        val = sd.toPrecision(4);
+    }
+
+    ctx.strokeStyle = 'rgb(255,0,0)';
+    line(ctx, x, height * 0.5, x, height - 80);
+
+    var min = Number(bootstrapValues[25]);
+    var minXPixel = Math.round(((width - 120) * (min - minXTick) / (maxXTick - minXTick))) + 60;
+    ctx.strokeStyle = 'rgb(0, 0, 255)';
+    line(ctx, minXPixel, height - 65, minXPixel, height - 120);
+    var max = Number(bootstrapValues[975]);
+    var maxXPixel = Math.round(((width - 120) * (max - minXTick) / (maxXTick - minXTick))) + 60;
+    line(ctx, maxXPixel, height - 75, maxXPixel, height - 120);
+
+    ctx.lineWidth = 8 * scalefactor;
+    line(ctx, minXPixel, height - 115, maxXPixel, height - 115);
+
+    ctx.textAlign = "center";
+    min = min.toPrecision(4);
+    max = max.toPrecision(4);
+    ctx.fillStyle = 'rgb(0, 0, 255)';
+    ctx.fillText(min, minXPixel, height - 55);
+    ctx.fillText(max, maxXPixel, height - 65);
+    ctx.fillStyle = 'rgb(255, 0, 0)';
+    ctx.textAlign = "left";
+    ctx.fillText(val, x + 3, height * 0.5 + 5);
+
+    if (pointsRemoved > 22) {
+        ctx.fillStyle = '#000000';
+        ctx.font = 13 * scalefactor + "px Roboto";
+        ctx.textAlign = "right";
+        ctx.fillText("ID(s) of Points Removed: " + pointsRemoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
+    }
+
+    return canvas.toDataURL();
+}
+
 function newpiechart() {
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
@@ -855,6 +1076,14 @@ function intToRGB(int) {
     return "00000".substr(0, 6 - c.length) + c;
 }
 
+function array_sum(array) {
+    var sum = 0;
+    for (var i = 0; i < array.length; i++) {
+        sum += Number(array[i]);
+    }
+    return sum;
+}
+
 function array_unique(array) {
     var found = {};
     var result = [];
@@ -900,4 +1129,26 @@ function drawTitle(ctx, title, x, y, fontsize) {
             titleY += 25 * scalefactor;
         });
     }
+}
+
+/**
+ * discuss at: http://locutus.io/php/mt_rand/
+ * original by: Onno Marsman (https://twitter.com/onnomarsman)
+ * improved by: Brett Zamir (http://brett-zamir.me)
+ * @param min
+ * @param max
+ * @returns {number}
+ */
+function mt_rand(min, max) {
+    var argc = arguments.length;
+    if (argc === 0) {
+        min = 0;
+        max = 2147483647;
+    } else if (argc === 1) {
+        throw new Error('Warning: mt_rand() expects exactly 2 parameters, 1 given');
+    } else {
+        min = parseInt(min, 10);
+        max = parseInt(max, 10);
+    }
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

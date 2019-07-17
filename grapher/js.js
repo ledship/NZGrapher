@@ -39,18 +39,18 @@ var scalefactor;
 
 $(function () {
 
-    $('#customWidth').on('change', function() {
+    $('#customWidth').on('change', function () {
         document.getElementById('width').value = $(this).val();
         updategraph();
     });
 
-    $('#customHeight').on('change', function() {
+    $('#customHeight').on('change', function () {
         document.getElementById('height').value = $(this).val();
         updategraph();
     });
 
-    $('#customScalefactor').on('change', function() {
-        if($(this).val() <= 0) {
+    $('#customScalefactor').on('change', function () {
+        if ($(this).val() <= 0) {
             $('#customScalefactor').val(1);
         }
         updategraph();
@@ -1082,21 +1082,21 @@ function graphchange(obj) {
     document.getElementById('stripgraphshow').style.display = 'none';
     document.getElementById('stackdots').checked = false;
     $('#removedpointsshow').hide();
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
     }
-    if (obj.value == 'bootstrap') {
+    if (obj.value == 'newbootstrap') {
         document.getElementById('yvar').style.display = 'none';
         document.getElementById('yvar').selectedIndex = 0;
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
         document.getElementById('regshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time' || obj.value == 'newbootstrap') {
         document.getElementById('labelshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
         document.getElementById('sum').style.display = 'inline';
     }
     if (obj.value == 'paired experiment') {
@@ -1147,7 +1147,7 @@ function graphchange(obj) {
         document.getElementById('boxplotshow').style.display = 'block';
         document.getElementById('intervalshow').style.display = 'block';
     }
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r') {
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newbootstrap') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Point Size:';
     }
@@ -1155,7 +1155,7 @@ function graphchange(obj) {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Interval Width:';
     }
-    if (obj.value == 'bootstrap') {
+    if (obj.value == 'newbootstrap') {
         document.getElementById('btypeshow').style.display = 'block';
     }
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals') {
@@ -1364,7 +1364,7 @@ function updategraphgo() {
         document.getElementById('width').value = document.getElementById('graphdiv').offsetWidth * 5;
         document.getElementById('height').value = document.getElementById('graphdiv').offsetHeight * 5;
         scalefactor = 5;
-    } else if(document.getElementById('standardsize').value == 'Custom') {
+    } else if (document.getElementById('standardsize').value == 'Custom') {
         document.getElementById('customSize').style.display = "block";
         document.getElementById('width').value = document.getElementById('customWidth').value;
         document.getElementById('height').value = document.getElementById('customHeight').value;
@@ -2511,8 +2511,7 @@ function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxhei
     return 'good';
 }
 
-function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, right, maxheight, colors, sort, hovers) {
-
+function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, right, maxheight, colors, sort, hovers, displayBoxPlot, btype) {
     ctx.lineWidth = 2 * scalefactor;
     if ($('#thicklines').is(":checked")) {
         ctx.lineWidth = 5 * scalefactor;
@@ -2619,22 +2618,37 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
     var minnooutliersgraph = convertvaltopixel(minnooutliersval, minxtick, maxxtick, left, right);
     var maxnooutliersgraph = convertvaltopixel(maxnooutliersval, minxtick, maxxtick, left, right);
     var y = oypixel - maxheight * 0.1;
-    if ($('#boxplot').is(":checked")) {
+    if (($('#boxplot').is(":checked") && $('#boxplotshow').is(":visible")) || (displayBoxPlot === true && (btype == 'Median' || btype == 'IQR'))) {
         var y = oypixel - maxheight * 0.1;
         var h = maxheight * 0.1;
         ctx.strokeStyle = 'rgb(0,0,0)';
         ctx.lineWidth = 1 * scalefactor;
         line(ctx, mingraph, add(y, -5 * scalefactor), mingraph, add(y, 5 * scalefactor));
         line(ctx, lqgraph, add(y, -h), lqgraph, add(y, h));
-        line(ctx, medgraph, add(y, -h), medgraph, add(y, h));
+        if (btype == 'Median') {
+            ctx.strokeStyle = 'rgb(255,0,0)';
+            ctx.lineWidth = 2 * scalefactor;
+            line(ctx, medgraph, add(y, -h), medgraph, add(y, h));
+            ctx.strokeStyle = 'rgb(0,0,0)';
+            ctx.lineWidth = 1 * scalefactor;
+        } else {
+            line(ctx, medgraph, add(y, -h), medgraph, add(y, h));
+        }
         line(ctx, uqgraph, add(y, -h), uqgraph, add(y, h));
         line(ctx, maxgraph, add(y, -5 * scalefactor), maxgraph, add(y, 5 * scalefactor));
         line(ctx, mingraph, y, lqgraph, y);
         line(ctx, lqgraph, add(y, h), uqgraph, add(y, h));
         line(ctx, lqgraph, add(y, -h), uqgraph, add(y, -h));
         line(ctx, uqgraph, y, maxgraph, y);
+        if (btype == 'IQR') {
+            ctx.strokeStyle = 'rgb(255,0,0)';
+            ctx.lineWidth = 3 * scalefactor;
+            line(ctx, lqgraph, y, uqgraph, y);
+            ctx.strokeStyle = 'rgb(0,0,0)';
+            ctx.lineWidth = 1 * scalefactor;
+        }
     }
-    if ($('#highboxplot').is(":checked")) {
+    if ($('#highboxplot').is(":checked") && $('#highboxplotshow').is(':visible')) {
         var y = oypixel - maxheight * 0.8;
         var h = maxheight * 0.1;
         ctx.strokeStyle = 'rgb(0,0,0)';
@@ -2649,7 +2663,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         line(ctx, lqgraph, add(y, -h), uqgraph, add(y, -h));
         line(ctx, uqgraph, y, maxgraph, y);
     }
-    if ($('#boxnowhisker').is(":checked")) {
+    if ($('#boxnowhisker').is(":checked") && $('#boxnowhiskershow').is(':visible')) {
         var y = oypixel - maxheight * 0.1;
         var h = maxheight * 0.1;
         ctx.strokeStyle = 'rgb(0,0,0)';
@@ -2660,7 +2674,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         line(ctx, lqgraph, add(y, h), uqgraph, add(y, h));
         line(ctx, lqgraph, add(y, -h), uqgraph, add(y, -h));
     }
-    if ($('#boxnooutlier').is(":checked")) {
+    if ($('#boxnooutlier').is(":checked") && $('#boxnooutliershow').is(':visible')) {
         var y = oypixel - maxheight * 0.1;
         var h = maxheight * 0.1;
         ctx.strokeStyle = 'rgb(0,0,0)';
@@ -2676,7 +2690,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         line(ctx, uqgraph, y, maxnooutliersgraph, y);
     }
 
-    if ($('#regression').is(":checked")) {
+    if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
         ctx.fillStyle = 'rgba(255,0,0,1)';
         fontsize = 11 * scalefactor;
         ctx.font = fontsize + "px Roboto";
@@ -2714,15 +2728,27 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         }
     }
 
-    if ($('#meandot').is(":checked")) {
+    if (($('#meandot').is(":checked") && $('#meandotshow').is(":visible")) || btype === 'Mean' || btype == 'Standard Deviation') {
         var meangraph = convertvaltopixel(mean, minxtick, maxxtick, left, right);
         ctx.fillStyle = 'rgba(255,0,0,1)';
         ctx.beginPath();
-        ctx.arc(meangraph, oypixel - 5 * scalefactor, 7 * scalefactor, 0, Math.PI * 2, true);
+        var radius = 7 * scalefactor;
+        if (btype == 'Mean' || btype == 'Standard Deviation') {
+            radius = 5 * scalefactor;
+        }
+        ctx.arc(meangraph, oypixel - 5 * scalefactor, radius, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.fill();
+        if (btype == 'Standard Deviation') {
+            ctx.strokeStyle = 'rgb(255,0,0)';
+            ctx.lineWidth = 2 * scalefactor;
+            var x1 = convertvaltopixel(parseFloat(parseFloat(mean) - parseFloat(sd)), minxtick, maxxtick, left, right);
+            var x2 = convertvaltopixel(parseFloat(parseFloat(mean) + parseFloat(sd)), minxtick, maxxtick, left, right);
+            line(ctx, x1, oypixel - 5 * scalefactor, x2, oypixel - 5 * scalefactor);
+            ctx.strokeStyle = 'rgb(0,0,0)';
+            ctx.lineWidth = 1 * scalefactor;
+        }
     }
-
 }
 
 function checkforts(xpoints) {
