@@ -1020,8 +1020,8 @@ function pie(ctx, xPoints, radius, centerX, centerY) {
         var end = Math.round(rot + angle);
         var pixX = Math.round(radius * Math.cos(deg2rad(start)) + centerX);
         var pixY = Math.round(radius * Math.sin(deg2rad(start)) + centerY);
-        ctx.strokeStyle = '#' + intToRGB(hashCode(key));
-        ctx.fillStyle = '#' + intToRGB(hashCode(key));
+        ctx.strokeStyle = intToHex(hashCode(key));
+        ctx.fillStyle = intToHex(hashCode(key));
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.lineTo(pixX, pixY);
@@ -1066,9 +1066,41 @@ function hashCode(str) {
     return hash;
 }
 
-function intToRGB(int) {
+function intToHex(int) {
     var c = (int & 0x00FFFFFF).toString(16).toUpperCase();
-    return "00000".substr(0, 6 - c.length) + c;
+    var hex = "00000".substr(0, 6 - c.length) + c;
+    var rgb = hexToRgb(hex);
+    if (Math.sqrt(0.299 * (rgb.r * rgb.r) + 0.587 * (rgb.g * rgb.g) + 0.114 * (rgb.b * rgb.b)) < 127.5) {
+        rgb.r += randint(80,200);
+        rgb.g += randint(80,200);
+        rgb.b += randint(80,200);
+        if(rgb.r > 255) rgb.r = 255;
+        if(rgb.g > 255) rgb.g = 255;
+        if(rgb.b > 255) rgb.b = 255;
+        hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+    } else {
+        hex = "#" + hex;
+    }
+    return hex;
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }
 
 function array_sum(array) {

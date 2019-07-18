@@ -59,7 +59,7 @@
     /*
     To Do List
     - Escape titles on graphs.
-    - Switch histogramf, bootstrap, re-randomisation, paired experiment dot plot to JavaScript
+    - Switch histogramf, re-randomisation, paired experiment dot plot to JavaScript
     *************************
     - Look into adding a file from a URL
     */
