@@ -459,6 +459,7 @@ function newbarandarea() {
         });
     }
 
+    labelgraph(ctx, width, height);
 
     if ($('#invert').is(":checked")) {
         invert(ctx);
@@ -685,6 +686,12 @@ function newhistogram() {
         yAxis += axisOffset;
     }
 
+    labelgraph(ctx, width, height);
+
+    if ($('#invert').is(":checked")) {
+        invert(ctx);
+    }
+
     return canvas.toDataURL();
 }
 
@@ -907,6 +914,12 @@ function newbootstrap() {
         ctx.fillText("ID(s) of Points Removed: " + pointsRemoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
     }
 
+    labelgraph(ctx, width, height);
+
+    if ($('#invert').is(":checked")) {
+        invert(ctx);
+    }
+
     return canvas.toDataURL();
 }
 
@@ -994,6 +1007,12 @@ function newpiechart() {
     ctx.fillStyle = '#000';
     drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
 
+    labelgraph(ctx, width, height);
+
+    if ($('#invert').is(":checked")) {
+        invert(ctx);
+    }
+
     return canvas.toDataURL();
 }
 
@@ -1071,9 +1090,9 @@ function intToHex(int) {
     var hex = "00000".substr(0, 6 - c.length) + c;
     var rgb = hexToRgb(hex);
     if (Math.sqrt(0.299 * (rgb.r * rgb.r) + 0.587 * (rgb.g * rgb.g) + 0.114 * (rgb.b * rgb.b)) < 127.5) {
-        rgb.r += randint(80,200);
-        rgb.g += randint(80,200);
-        rgb.b += randint(80,200);
+        rgb.r += randint(60,200);
+        rgb.g += randint(60,200);
+        rgb.b += randint(60,200);
         if(rgb.r > 255) rgb.r = 255;
         if(rgb.g > 255) rgb.g = 255;
         if(rgb.b > 255) rgb.b = 255;
