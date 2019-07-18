@@ -499,7 +499,6 @@ function newhistogram() {
     }
 
     if (xPoints.length == 0 || !($.isNumeric(xPoints[0]))) {
-        console.log("not numerical");
         return 'Error: You must select a numerical x-variable';
     }
 
@@ -626,14 +625,13 @@ function newhistogram() {
     var dataKeys = Object.keys(data);
     dataKeys.sort(sortorder);
     var axisOffset = (bottomStart - gTop) / dataKeys.length;
-    var yAxis = gTop + axisOffset;
+    var yAxis = Number(gTop + axisOffset);
     var oldYAxis = gTop;
-    var axisTolerance = 40 * scalefactor;
+    var axisTolerance = Number(40 * scalefactor);
     var axisWidth = width - 170 * scalefactor;
     for (var key in dataKeys) {
         key = dataKeys[key];
         var values = data[key];
-        var i = 0;
         // Axis
         horaxis(ctx, left, right, yAxis - axisTolerance, minXTick, maxXTick, xStep);
         vertaxis(ctx, oldYAxis, yAxis - axisTolerance, left - 10 * scalefactor, minYTick, maxYTick, yStep, undefined, false, false);
@@ -668,7 +666,7 @@ function newhistogram() {
             if (relativeFrequency) {
                 div = num;
             }
-            var y1 = convertvaltopixel(freq, minYTick, maxYTick, yAxis - axisTolerance, oldYAxis);
+            var y1 = convertvaltopixel((relativeFrequency) ? freq : freq / num, minYTick, maxYTick, Number(yAxis - axisTolerance), oldYAxis);
             var h = (yAxis - axisTolerance) - y1;
             line(ctx, x1, y1, x2, y1);
             ctx.fillRect(x1, y1, w, h);
@@ -776,8 +774,8 @@ function newbootstrap() {
         var i = 0;
         var bootstrapSample = [];
         while (i < num) {
-            var select = mt_rand(0, num - 1);
-            bootstrapSample.push(xPoints[select]);
+            var select = randint(0, num - 1);
+            bootstrapSample.push(Number(xPoints[select]));
             i++;
         }
         var value = 0;
@@ -796,16 +794,13 @@ function newbootstrap() {
         bootstrapValues.push(value);
         b++;
     }
-    console.log(bootstrapValues);
 
     var offset = 0;
     if (btype == 'IQR' || btype == 'Standard Deviation') {
         offset = -(minXTick + maxXTick) / 2 + array_sum(bootstrapValues) / bootstrapValues.length;
     }
     offset = Math.floor(offset / xStep);
-    console.log(offset);
     offset = xStep * offset;
-    console.log(offset);
     minXTick = minXTick + offset;
     maxXTick = maxXTick + offset;
 
@@ -1129,26 +1124,4 @@ function drawTitle(ctx, title, x, y, fontsize) {
             titleY += 25 * scalefactor;
         });
     }
-}
-
-/**
- * discuss at: http://locutus.io/php/mt_rand/
- * original by: Onno Marsman (https://twitter.com/onnomarsman)
- * improved by: Brett Zamir (http://brett-zamir.me)
- * @param min
- * @param max
- * @returns {number}
- */
-function mt_rand(min, max) {
-    var argc = arguments.length;
-    if (argc === 0) {
-        min = 0;
-        max = 2147483647;
-    } else if (argc === 1) {
-        throw new Error('Warning: mt_rand() expects exactly 2 parameters, 1 given');
-    } else {
-        min = parseInt(min, 10);
-        max = parseInt(max, 10);
-    }
-    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
