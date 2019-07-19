@@ -1082,7 +1082,7 @@ function graphchange(obj) {
     document.getElementById('stripgraphshow').style.display = 'none';
     document.getElementById('stackdots').checked = false;
     $('#removedpointsshow').hide();
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
     }
@@ -1090,16 +1090,16 @@ function graphchange(obj) {
         document.getElementById('yvar').style.display = 'none';
         document.getElementById('yvar').selectedIndex = 0;
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
         document.getElementById('regshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time' || obj.value == 'newbootstrap') {
         document.getElementById('labelshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'paired experiment' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'newhistogram' || obj.value == 'histogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
         document.getElementById('sum').style.display = 'inline';
     }
-    if (obj.value == 'paired experiment') {
+    if (obj.value == 'newpairedexperimentdotplot') {
         document.getElementById('arrowsshow').style.display = 'block';
     }
     if (obj.value == 'dotplot') {
@@ -1143,11 +1143,11 @@ function graphchange(obj) {
         document.getElementById('invertshow').style.display = 'block';
         document.getElementById('thicklinesshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value == 'paired experiment') {
+    if (obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot') {
         document.getElementById('boxplotshow').style.display = 'block';
         document.getElementById('intervalshow').style.display = 'block';
     }
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newbootstrap') {
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newbootstrap') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Point Size:';
     }
@@ -1158,13 +1158,13 @@ function graphchange(obj) {
     if (obj.value == 'newbootstrap') {
         document.getElementById('btypeshow').style.display = 'block';
     }
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'residuals') {
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'residuals') {
         document.getElementById('transdiv').style.display = 'block';
     }
     if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'histogramf') {
         document.getElementById('zvar').style.display = 'inline';
     }
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'paired experiment' || obj.value == 'newresiduals') {
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'newresiduals') {
         document.getElementById('color').style.display = 'inline';
         document.getElementById('colorname').style.display = 'inline';
     }

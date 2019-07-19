@@ -923,6 +923,355 @@ function newbootstrap() {
     return canvas.toDataURL();
 }
 
+function newpairedexperimentdotplot() {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    //set size
+    var width = $('#width').val();
+    var height = $('#height').val();
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = "center";
+
+    // get points
+    var xPoints = $('#xvar').val().split(',');
+    xPoints.pop();
+    var yPoints = $('#yvar').val().split(',');
+    yPoints.pop();
+
+    if (xPoints.length == 0 || !$.isNumeric(xPoints[0])) {
+        return "Error: You must select a numerical x-variable.";
+    }
+
+    if (yPoints.length == 0 || !$.isNumeric(yPoints[0])) {
+        return "Error: You must select a numerical y-variable.";
+    }
+
+    var numX = xPoints.length;
+    var xLabel = $('#xaxis').val();
+    var yLabel = $('#yaxis').val();
+    var titles = [xLabel, yLabel];
+    var dir = "az";
+    if (titles[0] != xLabel) {
+        dir = "za";
+    }
+    var oXPoints = xPoints.slice();
+    var oYPoints = yPoints.slice();
+    var xPoints = xPoints.concat(yPoints);
+
+    var i = 0;
+    for (var xpoint in xPoints) {
+        if (i < numX) {
+            yPoints[i] = xLabel;
+        } else {
+            yPoints[i] = yLabel;
+        }
+        i++;
+    }
+
+    var numSubSets = 1;
+    var diffPoints = [];
+    var i = 0;
+    for (var index in oXPoints) {
+        var diff = add(-oXPoints[index], oYPoints[i]);
+        diffPoints[i] = diff;
+        i++;
+    }
+
+    if (!($('#arrows').is(":checked"))) {
+        var title = "Difference (" + yLabel + " - " + xLabel + ")";
+        drawTitle(ctx, title, width / 2, height - 10 * scalefactor, 20);
+        xPoints = diffPoints;
+        yPoints = [];
+        i = 0;
+        for (var xPoint in xPoints) {
+            yPoints[i] = "";
+            i++;
+        }
+    }
+
+    var oYPixel = height - 60 * scalefactor;
+    var left = 120 * scalefactor;
+    var right = width - 60 * scalefactor;
+    var maxheight = height - 180 * scalefactor;
+
+    var pSize = $('#size').val() / 2 * scalefactor;
+
+    var alpha = 1 - $('#trans').val() / 100;
+    var colours = makecolors(alpha, ctx);
+
+    var numCategories = Math.max(array_unique(yPoints).length, 1);
+    var minX = Math.min.apply(null, xPoints);
+    var maxX = Math.max.apply(null, xPoints);
+
+    var XaxisMinMaxSteps = axisminmaxstep(minX, maxX);
+    var minXTick = XaxisMinMaxSteps[0];
+    var maxXTick = XaxisMinMaxSteps[1];
+    var xStep = XaxisMinMaxSteps[2];
+
+    horaxis(ctx, left, right, height - 50 * scalefactor, minXTick, maxXTick, xStep);
+
+    i = 0;
+    var subsets = [];
+    xPoints.forEach(function (xpoint) {
+        var subset = " ";
+        i++;
+        if (subsets.hasOwnProperty(subset)) {
+            subsets[subset].push([xpoint, yPoints[i - 1], i]);
+        } else {
+            subsets[subset] = [[xpoint, yPoints[i - 1], i]];
+        }
+    });
+
+    var keys = Object.keys(subsets);
+    var numsubsets = keys.length;
+    keys.sort();
+
+    var catNames = array_unique(yPoints);
+    if (dir == "az") {
+        catNames.sort();
+    } else {
+        catNames.sort();
+        catNames.reverse();
+    }
+
+    var offset = 50 * scalefactor;
+    for (var key in keys) {
+        key = keys[key];
+
+        var xPoints = [];
+        var yPoints = [];
+        var labels = [];
+        subsets[key].forEach(function (xvals) {
+            xPoints.push(xvals[0]);
+            yPoints.push(xvals[1]);
+            labels.push(xvals[2]);
+        });
+
+        i = 0;
+        var categories = [];
+        xPoints.forEach(function (xPoint) {
+            var category = " ";
+            if (yPoints.length != 0) {
+                category = yPoints[i];
+            }
+            i++;
+            if (categories.hasOwnProperty(category)) {
+                categories[category].push([xPoint, labels[i - 1]]);
+            } else {
+                categories[category] = [[xPoint, labels[i - 1]]];
+            }
+        });
+
+        var subHeight = Math.max((height - 100), 1);
+        var subWidth = Math.max((width - 100) / numsubsets, 1);
+
+        ctx.textAlign = "center";
+        ctx.fillStyle = '#000';
+        ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+        ctx.fillText(key, (subWidth / 2) + 30,
+            (subHeight + 10) + offset);
+
+        var imheight = (subHeight - 20) / numCategories;
+        if (dir == "az") {
+            categories.sort();
+        } else {
+            categories.sort();
+            categories.reverse();
+        }
+
+        var catKeys = Object.keys(categories);
+        catKeys.forEach(function (category) {
+            xPoints = [];
+            labels = [];
+            categories[category].forEach(function (xVals) {
+                xPoints.push(xVals[0]);
+                labels.push(xVals[1]);
+            });
+            imheight = (subHeight - 20) / numCategories;
+            ctx.textAlign = "center";
+            ctx.fillStyle = '#000';
+            ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+            ctx.fillText(category, subWidth, (imheight * 0.4) + offset);
+
+            var min = Math.min.apply(null, xPoints);
+            var minGraph = convertvaltopixel(min, minXTick, maxXTick, left, right);
+            minGraph = Math.floor(minGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var lq = lowerquartile(xPoints);
+            var lqGraph = convertvaltopixel(lq, minXTick, maxXTick, left, right);
+            lqGraph = Math.floor(lqGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var med = median(xPoints);
+            var medGraph = convertvaltopixel(med, minXTick, maxXTick, left, right);
+            medGraph = Math.floor(medGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var mean = calculatemean(xPoints);
+            var meanGraph = convertvaltopixel(mean, minXTick, maxXTick, left, right);
+            meanGraph = Math.floor(meanGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var uq = upperquartile(xPoints);
+            var uqGraph = convertvaltopixel(uq, minXTick, maxXTick, left, right);
+            uqGraph = Math.floor(uqGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var max = Math.max.apply(null, xPoints);
+            var maxGraph = convertvaltopixel(max, minXTick, max, left, right);
+            maxGraph = Math.floor(maxGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var sd = standarddeviation(xPoints);
+            var num = xPoints.length;
+            var y = height * 0.8 - 5 * scalefactor;
+            var h = height * 0.1;
+            var intmin = med - 1.5 * (uq - lq) / Math.sqrt(num);
+            var intminGraph = convertvaltopixel(intmin, minXTick, maxXTick, left, right);
+            intminGraph = Math.floor(intminGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var intmax = med + 1.5 * (uq - lq) / Math.sqrt(num);
+            var intmaxGraph = convertvaltopixel(intmax, minXTick, maxXTick, left, right);
+            intmaxGraph = Math.floor(intmaxGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            var top = imheight * 0.7 - 39 + offset;
+
+            if ($('#regression').is(":checked")) {
+                ctx.fillStyle = 'rgb(255, 0, 0)';
+                ctx.font = 11 * scalefactor + "px Roboto";
+                ctx.textAlign = "left";
+                ctx.fillText("min: " + min, left - 60, top + 8);
+                ctx.fillText("LQ: " + lq, left - 60, top + 18);
+                ctx.fillText("med: " + med, left - 60, top + 28);
+                ctx.fillText("mean: " + mean, left - 60, top + 38);
+                ctx.fillText("UQ: " + uq, left - 60, top + 48);
+                ctx.fillText("max: " + max, left - 60, top + 58);
+                ctx.fillText("sd: " + sd, left - 60, top + 68);
+                ctx.fillText("num: " + num, left - 60, top + 78);
+            }
+            ctx.fillStyle = "#000";
+            if (!$("#arrows").is(":checked")) {
+                var xPixels = [];
+                var xLabels = [];
+
+                i = 0;
+                while (i < xPoints.length) {
+                    var xValue = xPoints[i];
+                    var xPixel = convertvaltopixel(xValue, minXTick, maxXTick, left, right);
+                    xPixel = Math.floor(xPixel / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+                    xPixels.push(xPixel);
+                    xLabels.push(labels[i]);
+                    i++;
+                }
+
+                i = 0;
+                var count = array_count_values(xPixels);
+                var keys = Object.keys(count);
+                var max = count[keys[0]];
+                for (var key in keys) {
+                    key = keys[key];
+                    if (count[key] > max) {
+                        max = count[key];
+                    }
+                }
+                var yHeight = (height * 0.5 - (100 * scalefactor)) / max;
+                if (yHeight > pSize) {
+                    yHeight = pSize;
+                }
+                array_multisort(xPixels, xLabels);
+                ctx.lineWidth = 2 * scalefactor;
+                ctx.strokeStyle = '#999999';
+                var yPixel = 0;
+                var lastXPixel = -100000;
+                for (var i in xPixels) {
+                    var xPixel = xPixels[i];
+                    if (lastXPixel == xPixel) {
+                        yPixel = yPixel - yHeight - 1;
+                    } else {
+                        yPixel = height - 115 * scalefactor;
+                    }
+                    lastXPixel = xPixel;
+                    ctx.strokeStyle = colours[i];
+                    ctx.beginPath();
+                    ctx.arc(xPixel, yPixel, pSize / 2, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    if ($('#labels').is(":checked")) {
+                        var print = xLabels[i];
+                        if (print > numX) {
+                            print = print - numX;
+                        }
+                        ctx.fillStyle = "rgb(0, 0, 255)";
+                        ctx.font = 8 * scalefactor + "px Roboto";
+                        ctx.fillText(print, xPixel + 3, yPixel + 3);
+                    }
+                }
+                if ($('#boxplot').is(":checked")) {
+                    ctx.lineWidth = 1 * scalefactor;
+                    ctx.fillStyle = "#000";
+                    ctx.strokeStyle = "#000";
+                    line(ctx, minGraph, y - 5 * scalefactor, minGraph, y + 5 * scalefactor);
+                    line(ctx, lqGraph, y - h, lqGraph, y + h);
+                    line(ctx, medGraph, y - h, medGraph, y + h);
+                    line(ctx, uqGraph, y - h, uqGraph, y + h);
+                    line(ctx, maxGraph, y - 5 * scalefactor, maxGraph, y + 5 * scalefactor);
+                    line(ctx, minGraph, y, lqGraph, y);
+                    line(ctx, lqGraph, y + h, uqGraph, y + h);
+                    line(ctx, lqGraph, y - h, uqGraph, y - h);
+                    line(ctx, uqGraph, y, maxGraph, y);
+                }
+                if ($('#interval').is(":checked")) {
+                    ctx.lineWidth = 8 * scalefactor;
+                    ctx.strokeStyle = "rgb(0, 0, 255)";
+                    line(ctx, intminGraph, y, intmaxGraph, y);
+                    ctx.strokeStyle = "#000";
+                    ctx.lineWidth = 1 * scalefactor;
+                }
+                if ($('#intervallim').is(":checked")) {
+                    ctx.textAlign = "right";
+                    ctx.fillStyle = "rgb(0, 0, 255)";
+                    intmin = intmin.toPrecision(5);
+                    intmax = intmax.toPrecision(5);
+                    ctx.fillText(intmin, intminGraph, y + 14);
+                    ctx.textAlign = "left";
+                    ctx.fillText(intmax, intmaxGraph, y + 14);
+                    ctx.fillStyle = "#000";
+                    ctx.textAlign = "center";
+                }
+            }
+            offset += height / 3;
+        });
+    }
+
+    if ($("#arrows").is(":checked")) {
+        i = 0;
+        ctx.strokeStyle = "#828282";
+        ctx.fillStyle = "#828282";
+        oXPoints.forEach(function (xValue) {
+            var yValue = oYPoints[i];
+            var t = height * 0.3;
+            var b = height * 0.8;
+            var xPix = convertvaltopixel(xValue, minXTick, maxXTick, left, right);
+            var yPix = convertvaltopixel(yValue, minXTick, maxXTick, left, right);
+            ctx.beginPath();
+            ctx.ellipse(xPix, t - 5, pSize, pSize, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(yPix, b + 5, pSize, pSize, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = colours[i];
+            ctx.strokeStyle = colours[i];
+            arrow(ctx, xPix, t, yPix, b, 5, 3);
+            ctx.strokeStyle = "#828282";
+            ctx.fillStyle = "#828282";
+            i++;
+        });
+    }
+
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
+
+    labelgraph(ctx, width, height);
+
+    if ($('#invert').is(":checked")) {
+        invert(ctx);
+    }
+
+    return canvas.toDataURL();
+}
+
 function newpiechart() {
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
@@ -1090,12 +1439,12 @@ function intToHex(int) {
     var hex = "00000".substr(0, 6 - c.length) + c;
     var rgb = hexToRgb(hex);
     if (Math.sqrt(0.299 * (rgb.r * rgb.r) + 0.587 * (rgb.g * rgb.g) + 0.114 * (rgb.b * rgb.b)) < 127.5) {
-        rgb.r += randint(60,200);
-        rgb.g += randint(60,200);
-        rgb.b += randint(60,200);
-        if(rgb.r > 255) rgb.r = 255;
-        if(rgb.g > 255) rgb.g = 255;
-        if(rgb.b > 255) rgb.b = 255;
+        rgb.r += randint(60, 200);
+        rgb.g += randint(60, 200);
+        rgb.b += randint(60, 200);
+        if (rgb.r > 255) rgb.r = 255;
+        if (rgb.g > 255) rgb.g = 255;
+        if (rgb.b > 255) rgb.b = 255;
         hex = rgbToHex(rgb.r, rgb.g, rgb.b);
     } else {
         hex = "#" + hex;
@@ -1175,4 +1524,323 @@ function drawTitle(ctx, title, x, y, fontsize) {
             titleY += 25 * scalefactor;
         });
     }
+}
+
+function arrow(ctx, x1, y1, x2, y2, aLength, aWidth) {
+    var distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y1, 2));
+    var dx = x2 + (x1 - x2) * aLength / distance;
+    var dy = y2 + (y1 - y2) * aLength / distance;
+
+    var k = aWidth / aLength;
+
+    var x2o = x2 - dx;
+    var y2o = dy - y2;
+
+    var x3 = y2o * k + dx;
+    var y3 = x2o * k + dy;
+
+    var x4 = dx - y2o * k;
+    var y4 = dy - x2o * k;
+
+    line(ctx, x1, y1, dx, dy);
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.lineTo(x4, y4);
+    ctx.lineTo(x2, y2);
+    ctx.fill();
+}
+
+/**
+ * Thanks to locutus.io for the array_multisort function from PHP
+ *
+ * discuss at: http://locutus.io/php/array_multisort/
+ * original by: Theriault (https://github.com/Theriault)
+ * improved by: Oleg Andreyev (https://github.com/oleg-andreyev)
+ * @param arr
+ * @returns {boolean}
+ */
+function array_multisort(arr) {
+    var g
+    var i
+    var j
+    var k
+    var l
+    var sal
+    var vkey
+    var elIndex
+    var lastSorts
+    var tmpArray
+    var zlast
+
+    var sortFlag = [0]
+    var thingsToSort = []
+    var nLastSort = []
+    var lastSort = []
+    // possibly redundant
+    var args = arguments
+
+    var flags = {
+        'SORT_REGULAR': 16,
+        'SORT_NUMERIC': 17,
+        'SORT_STRING': 18,
+        'SORT_ASC': 32,
+        'SORT_DESC': 40
+    }
+
+    var sortDuplicator = function (a, b) {
+        return nLastSort.shift()
+    }
+
+    var sortFunctions = [
+        [
+
+            function (a, b) {
+                lastSort.push(a > b ? 1 : (a < b ? -1 : 0))
+                return a > b ? 1 : (a < b ? -1 : 0)
+            },
+            function (a, b) {
+                lastSort.push(b > a ? 1 : (b < a ? -1 : 0))
+                return b > a ? 1 : (b < a ? -1 : 0)
+            }
+        ],
+        [
+
+            function (a, b) {
+                lastSort.push(a - b)
+                return a - b
+            },
+            function (a, b) {
+                lastSort.push(b - a)
+                return b - a
+            }
+        ],
+        [
+
+            function (a, b) {
+                lastSort.push((a + '') > (b + '') ? 1 : ((a + '') < (b + '') ? -1 : 0))
+                return (a + '') > (b + '') ? 1 : ((a + '') < (b + '') ? -1 : 0)
+            },
+            function (a, b) {
+                lastSort.push((b + '') > (a + '') ? 1 : ((b + '') < (a + '') ? -1 : 0))
+                return (b + '') > (a + '') ? 1 : ((b + '') < (a + '') ? -1 : 0)
+            }
+        ]
+    ]
+
+    var sortArrs = [
+        []
+    ]
+
+    var sortKeys = [
+        []
+    ]
+
+    // Store first argument into sortArrs and sortKeys if an Object.
+    // First Argument should be either a Javascript Array or an Object,
+    // otherwise function would return FALSE like in PHP
+    if (Object.prototype.toString.call(arr) === '[object Array]') {
+        sortArrs[0] = arr
+    } else if (arr && typeof arr === 'object') {
+        for (i in arr) {
+            if (arr.hasOwnProperty(i)) {
+                sortKeys[0].push(i)
+                sortArrs[0].push(arr[i])
+            }
+        }
+    } else {
+        return false
+    }
+
+    // arrMainLength: Holds the length of the first array.
+    // All other arrays must be of equal length, otherwise function would return FALSE like in PHP
+    // sortComponents: Holds 2 indexes per every section of the array
+    // that can be sorted. As this is the start, the whole array can be sorted.
+    var arrMainLength = sortArrs[0].length
+    var sortComponents = [0, arrMainLength]
+
+    // Loop through all other arguments, checking lengths and sort flags
+    // of arrays and adding them to the above variables.
+    var argl = arguments.length
+    for (j = 1; j < argl; j++) {
+        if (Object.prototype.toString.call(arguments[j]) === '[object Array]') {
+            sortArrs[j] = arguments[j]
+            sortFlag[j] = 0
+            if (arguments[j].length !== arrMainLength) {
+                return false
+            }
+        } else if (arguments[j] && typeof arguments[j] === 'object') {
+            sortKeys[j] = []
+            sortArrs[j] = []
+            sortFlag[j] = 0
+            for (i in arguments[j]) {
+                if (arguments[j].hasOwnProperty(i)) {
+                    sortKeys[j].push(i)
+                    sortArrs[j].push(arguments[j][i])
+                }
+            }
+            if (sortArrs[j].length !== arrMainLength) {
+                return false
+            }
+        } else if (typeof arguments[j] === 'string') {
+            var lFlag = sortFlag.pop()
+            // Keep extra parentheses around latter flags check
+            // to avoid minimization leading to CDATA closer
+            if (typeof flags[arguments[j]] === 'undefined' ||
+                ((((flags[arguments[j]]) >>> 4) & (lFlag >>> 4)) > 0)) {
+                return false
+            }
+            sortFlag.push(lFlag + flags[arguments[j]])
+        } else {
+            return false
+        }
+    }
+
+    for (i = 0; i !== arrMainLength; i++) {
+        thingsToSort.push(true)
+    }
+
+    // Sort all the arrays....
+    for (i in sortArrs) {
+        if (sortArrs.hasOwnProperty(i)) {
+            lastSorts = []
+            tmpArray = []
+            elIndex = 0
+            nLastSort = []
+            lastSort = []
+
+            // If there are no sortComponents, then no more sorting is neeeded.
+            // Copy the array back to the argument.
+            if (sortComponents.length === 0) {
+                if (Object.prototype.toString.call(arguments[i]) === '[object Array]') {
+                    args[i] = sortArrs[i]
+                } else {
+                    for (k in arguments[i]) {
+                        if (arguments[i].hasOwnProperty(k)) {
+                            delete arguments[i][k]
+                        }
+                    }
+                    sal = sortArrs[i].length
+                    for (j = 0, vkey = 0; j < sal; j++) {
+                        vkey = sortKeys[i][j]
+                        args[i][vkey] = sortArrs[i][j]
+                    }
+                }
+                sortArrs.splice(i, 1)
+                sortKeys.splice(i, 1)
+                continue
+            }
+
+            // Sort function for sorting. Either sorts asc or desc, regular/string or numeric.
+            var sFunction = sortFunctions[(sortFlag[i] & 3)][((sortFlag[i] & 8) > 0) ? 1 : 0]
+
+            // Sort current array.
+            for (l = 0; l !== sortComponents.length; l += 2) {
+                tmpArray = sortArrs[i].slice(sortComponents[l], sortComponents[l + 1] + 1)
+                tmpArray.sort(sFunction)
+                // Is there a better way to copy an array in Javascript?
+                lastSorts[l] = [].concat(lastSort)
+                elIndex = sortComponents[l]
+                for (g in tmpArray) {
+                    if (tmpArray.hasOwnProperty(g)) {
+                        sortArrs[i][elIndex] = tmpArray[g]
+                        elIndex++
+                    }
+                }
+            }
+
+            // Duplicate the sorting of the current array on future arrays.
+            sFunction = sortDuplicator
+            for (j in sortArrs) {
+                if (sortArrs.hasOwnProperty(j)) {
+                    if (sortArrs[j] === sortArrs[i]) {
+                        continue
+                    }
+                    for (l = 0; l !== sortComponents.length; l += 2) {
+                        tmpArray = sortArrs[j].slice(sortComponents[l], sortComponents[l + 1] + 1)
+                        // alert(l + ':' + nLastSort);
+                        nLastSort = [].concat(lastSorts[l])
+                        tmpArray.sort(sFunction)
+                        elIndex = sortComponents[l]
+                        for (g in tmpArray) {
+                            if (tmpArray.hasOwnProperty(g)) {
+                                sortArrs[j][elIndex] = tmpArray[g]
+                                elIndex++
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Duplicate the sorting of the current array on array keys
+            for (j in sortKeys) {
+                if (sortKeys.hasOwnProperty(j)) {
+                    for (l = 0; l !== sortComponents.length; l += 2) {
+                        tmpArray = sortKeys[j].slice(sortComponents[l], sortComponents[l + 1] + 1)
+                        nLastSort = [].concat(lastSorts[l])
+                        tmpArray.sort(sFunction)
+                        elIndex = sortComponents[l]
+                        for (g in tmpArray) {
+                            if (tmpArray.hasOwnProperty(g)) {
+                                sortKeys[j][elIndex] = tmpArray[g]
+                                elIndex++
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Generate the next sortComponents
+            zlast = null
+            sortComponents = []
+            for (j in sortArrs[i]) {
+                if (sortArrs[i].hasOwnProperty(j)) {
+                    if (!thingsToSort[j]) {
+                        if ((sortComponents.length & 1)) {
+                            sortComponents.push(j - 1)
+                        }
+                        zlast = null
+                        continue
+                    }
+                    if (!(sortComponents.length & 1)) {
+                        if (zlast !== null) {
+                            if (sortArrs[i][j] === zlast) {
+                                sortComponents.push(j - 1)
+                            } else {
+                                thingsToSort[j] = false
+                            }
+                        }
+                        zlast = sortArrs[i][j]
+                    } else {
+                        if (sortArrs[i][j] !== zlast) {
+                            sortComponents.push(j - 1)
+                            zlast = sortArrs[i][j]
+                        }
+                    }
+                }
+            }
+
+            if (sortComponents.length & 1) {
+                sortComponents.push(j)
+            }
+            if (Object.prototype.toString.call(arguments[i]) === '[object Array]') {
+                args[i] = sortArrs[i]
+            } else {
+                for (j in arguments[i]) {
+                    if (arguments[i].hasOwnProperty(j)) {
+                        delete arguments[i][j]
+                    }
+                }
+
+                sal = sortArrs[i].length
+                for (j = 0, vkey = 0; j < sal; j++) {
+                    vkey = sortKeys[i][j]
+                    args[i][vkey] = sortArrs[i][j]
+                }
+            }
+            sortArrs.splice(i, 1)
+            sortKeys.splice(i, 1)
+        }
+    }
+    return true
 }

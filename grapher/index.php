@@ -556,7 +556,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
                         <option value='re-randomisation - median'>Re-Randomisation - Median</option>
                         <option value='re-randomisation - mean'>Re-Randomisation - Mean</option>
                         <option disabled></option>
-                        <option value='paired experiment'>Paired Experiment Dot Plot (and Arrows Graph)</option>
+                        <option value='newpairedexperimentdotplot'>Paired Experiment Dot Plot (and Arrows Graph)</option>
                         <option disabled></option>
                         <option value='newtimeseries'>Time Series</option>
                         <option value='newtimeseriesrecomp'>&nbsp;&nbsp;&nbsp;Re-Composition</option>
