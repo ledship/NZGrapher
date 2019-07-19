@@ -1120,8 +1120,8 @@ function newpairedexperimentdotplot() {
             maxGraph = Math.floor(maxGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
             var sd = standarddeviation(xPoints);
             var num = xPoints.length;
-            var y = height * 0.8 - 5 * scalefactor;
-            var h = height * 0.1;
+            var y = height - 105 * scalefactor;
+            var h = 46 * scalefactor;
             var intmin = med - 1.5 * (uq - lq) / Math.sqrt(num);
             var intminGraph = convertvaltopixel(intmin, minXTick, maxXTick, left, right);
             intminGraph = Math.floor(intminGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;

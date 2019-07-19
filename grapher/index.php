@@ -645,18 +645,6 @@ if (isset($_COOKIE['welcome'])) {
                     Something not working or have an idea to make NZGrapher better... please <a target='_blank'
                                                                                                 href='//www.mathsnz.com/contact'>let
                         me know</a>.<br>
-                <td style='width:50%;padding-left:10px;vertical-align:top;padding-bottom:0px;padding-top:0px;'>
-                    <span style='display:block;width:100%;text-align:center;font-size:150%;'><b>Cost</b></span><br>
-                    NZGrapher is free for non-commercial <b>individual</b> use, you can however <a target='_blank'
-                                                                                                   href='https://www.mathsnz.com/donate'>make
-                        a donation</a>.<br>
-                    <br>
-                    <b>Schools</b> are required to subscribe at a minimum of $0.50 per student using NZGrapher. <b>Commerial
-                        users</b> are also required to pay. Please visit the <a target='_blank'
-                                                                                href='https://www.mathsnz.com/nzgrapher-invoice'>invoice
-                        creator</a> for details.<br>
-                    <br>
-                    This is optional for 2019, but will be compulsory for 2020.<br>
             </tr>
         </table>
         <br>
