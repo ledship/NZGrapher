@@ -735,7 +735,7 @@ function newbootstrap() {
     ctx.fillStyle = '#000000';
     drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
     ctx.font = "bold " + 15 * scalefactor + "px Roboto";
-    ctx.fillText($('#xaxis').val(), width / 2, height - 5);
+    ctx.fillText($('#xaxis').val(), width / 2, height - 5 * scalefactor);
 
     var oYPixel = height - 60 * scalefactor;
     var left = 60 * scalefactor;
@@ -1502,6 +1502,254 @@ function newhistogramf() {
 
         oldYAxis = yAxis;
         yAxis += axisOffset;
+    }
+
+    labelgraph(ctx, width, height);
+
+    if ($('#invert').is(":checked")) {
+        invert(ctx);
+    }
+
+    return canvas.toDataURL();
+}
+
+function newrerandomisationmedian() {
+    return rerandomisation("median");
+}
+
+function newrerandomisationmean() {
+    return rerandomisation("mean");
+}
+
+function rerandomisation(type) {
+    var isMedian = (type == "median");
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    //set size
+    var width = $('#width').val();
+    var height = $('#height').val();
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    var pSize = $('#size').val() / 2 * scalefactor;
+    var alpha = 1 - $('#trans').val() / 100;
+    var colours = makecolors(alpha, ctx);
+
+    // get points
+    var xOPoints = $('#xvar').val().split(',');
+    xOPoints.pop();
+    var yPoints = $('#yvar').val().split(',');
+    yPoints.pop();
+
+    var i = 0;
+    var pointsRemoved = [];
+    var pointLabels = [];
+    xOPoints.forEach(function (xPoint) {
+        pointLabels.push(i + 1);
+        if (!$.isNumeric(xPoint)) {
+            xOPoints.splice(i, 1);
+            yPoints.splice(i, 1);
+            pointLabels.splice(i, 1);
+            pointsRemoved += (i + 1) + ", ";
+        }
+        i++;
+    });
+
+    if(xOPoints.length == 0 && !$.isNumeric(xOPoints[0])) {
+        return "Error: You must select a numerical x-variable.";
+    }
+    var numCategories = array_unique(yPoints).length;
+    if(numCategories != 2) {
+        return "Error: You must select a categorical y-variable with 2 categories.";
+    }
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#000000";
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
+
+    height /= 2;
+    ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+    ctx.fillText($('#xaxis').val(), width / 2, height - 5 * scalefactor);
+    ctx.save();
+    ctx.translate(20 * scalefactor, height / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText($('#yaxis').val(), 0, 0);
+    ctx.restore();
+
+    var i = 0;
+    var categories = [];
+    xOPoints.forEach(function(xPoint) {
+        var category = " ";
+        if(yPoints.length != 1) {
+            category = yPoints[i];
+        }
+        i++;
+        if(categories.hasOwnProperty(category)) {
+            categories[category].push([xPoint, i]);
+        } else {
+            categories[category] = [[xPoint, i]];
+        }
+    });
+    i = 0;
+    var medOrMeans = [];
+    categories.forEach(function(values) {
+        var points = [];
+        values.forEach(function(value) {
+            points.push(value[0]);
+        });
+        // TODO: Come back to this, both functions use median but call them different things?
+        var med = median(points);
+        medOrMeans.push(med);
+        i++;
+    });
+
+    var differ = Math.max.apply(null, medOrMeans) - Math.min.apply(null, medOrMeans);
+    var minX = Math.min.apply(null, xOPoints);
+    var maxX = Math.max.apply(null, xOPoints);
+    var axisMinMaxSteps = axisminmaxstep(minX, maxX, differ);
+    var minXTick = axisMinMaxSteps[0];
+    var maxXTick = axisMinMaxSteps[1];
+    var xStep = axisMinMaxSteps[2];
+
+    var left = 90 * scalefactor;
+    var right = width - 80 * scalefactor;
+    var gTop = 60 * scalefactor;
+    var bottom = height - 60 * scalefactor;
+
+    horaxis(ctx, left, right, height - 50 * scalefactor, minXTick, maxXTick, xStep);
+
+    var subHeight = Math.max((height - 100), 1);
+    var subWidth = Math.max((width - 100), 1);
+    var imheight = (subHeight - 20) / numCategories;
+
+    var offset = 40;
+    var yOffset = 0;
+    var medians = [];
+    var cnames = [];
+    var keys = Object.keys(categories);
+    keys.sort(sortorder);
+    console.log("Key length: " + keys.length);
+    keys.forEach(function(category) {
+        var value = categories[category];
+        cnames.push(category);
+
+        var xPoints = [];
+        var labels = [];
+        categories[category].forEach(function(xVals) {
+            xPoints.push(xVals[0]);
+            labels.push(xVals[1]);
+        });
+
+        console.log("Length: " + xPoints.length);
+
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+        ctx.fillText(category, subWidth, (imheight * 0.4) + offset);
+
+        var min = Math.min.apply(null, xPoints);
+        var minGraph = convertvaltopixel(min, minXTick, maxXTick, left, right);
+        var min = Math.min.apply(null, xPoints);
+        var minGraph = convertvaltopixel(min, minXTick, maxXTick, left, right);
+        minGraph = Math.floor(minGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+        var lq = lowerquartile(xPoints);
+        var lqGraph = convertvaltopixel(lq, minXTick, maxXTick, left, right);
+        lqGraph = Math.floor(lqGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+        var med = median(xPoints);
+        var medGraph = convertvaltopixel(med, minXTick, maxXTick, left, right);
+        medGraph = Math.floor(medGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+        var mean = calculatemean(xPoints);
+        var meanGraph = convertvaltopixel(mean, minXTick, maxXTick, left, right);
+        meanGraph = Math.floor(meanGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+        var uq = upperquartile(xPoints);
+        var uqGraph = convertvaltopixel(uq, minXTick, maxXTick, left, right);
+        uqGraph = Math.floor(uqGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+        var max = Math.max.apply(null, xPoints);
+        var maxGraph = convertvaltopixel(max, minXTick, max, left, right);
+        maxGraph = Math.floor(maxGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+        var sd = standarddeviation(xPoints);
+        var num = xPoints.length;
+        var y = height - 105 * scalefactor;
+        var h = 46 * scalefactor;
+        var top = offset;
+
+        if($('#regression').is(":checked")) {
+            ctx.fillStyle = 'rgb(255, 0, 0)';
+            ctx.font = 11 * scalefactor + "px Roboto";
+            ctx.textAlign = "left";
+            ctx.fillText("min: " + min, left - 60, top + 8);
+            ctx.fillText("LQ: " + lq, left - 60, top + 18);
+            ctx.fillText("med: " + med, left - 60, top + 28);
+            ctx.fillText("mean: " + mean, left - 60, top + 38);
+            ctx.fillText("UQ: " + uq, left - 60, top + 48);
+            ctx.fillText("max: " + max, left - 60, top + 58);
+            ctx.fillText("sd: " + sd, left - 60, top + 68);
+            ctx.fillText("num: " + num, left - 60, top + 78);
+        }
+        ctx.fillStyle = '#000000';
+        var xPixels = [];
+        var xLabels = [];
+        i = 0;
+        while(i < xPoints.length) {
+            var xValue = xPoints[i];
+            var xPixel = convertvaltopixel(xValue, minXTick, maxXTick, left, right);
+            xPixel = Math.floor(xPixel / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            xPixels.push(xPixel);
+            xLabels.push(labels[i]);
+            i++;
+        }
+        array_multisort(xPixels, xLabels);
+        i = 0;
+        var count = array_count_values(xPixels);
+        var keys = Object.keys(count);
+        var max = count[keys[0]];
+        for(var key in keys) {
+            key = keys[key];
+            if(count[key] > max) {
+                max = count[key];
+            }
+        }
+        var yHeight = (height * 0.5 - (100 * scalefactor)) / max;
+        if (yHeight > pSize) {
+            yHeight = pSize;
+        }
+        ctx.lineWidth = 2 * scalefactor;
+        ctx.strokeStyle = '#999999';
+        var yPixel = 0;
+        var lastXPixel = -100000;
+        xPixels.forEach(function(xPixel) {
+            if(lastXPixel == xPixel) {
+                yPixel = yPixel - yHeight - 1 - yOffset;
+            } else {
+                yPixel = height - 115 * scalefactor - yOffset;
+            }
+            lastXPixel = xPixel;
+            ctx.strokeStyle = colours[i];
+            ctx.beginPath();
+            ctx.arc(xPixel, yPixel, pSize / 2, 0, 2 * Math.PI);
+            ctx.stroke();
+            if ($('#labels').is(":checked")) {
+                var print = xLabels[i];
+                ctx.fillStyle = "rgb(0, 0, 255)";
+                ctx.font = 8 * scalefactor + "px Roboto";
+                ctx.fillText(print, xPixel + 3, yPixel + 3);
+            }
+        });
+
+        yOffset -= 100;
+        offset += height / 3;
+    });
+
+    height *= 2;
+    if (pointsRemoved > 22) {
+        ctx.fillStyle = '#000000';
+        ctx.font = 13 * scalefactor + "px Roboto";
+        ctx.textAlign = "right";
+        ctx.fillText("ID(s) of Points Removed: " + pointsRemoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
     }
 
     labelgraph(ctx, width, height);

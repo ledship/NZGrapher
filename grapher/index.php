@@ -553,8 +553,8 @@ if (substr($_GET['folder'], 0, 1) == ".") {
                         <option value='newbootstrapcimedian'>Bootstrap Confidence Interval - Median</option>
                         <option value='newbootstrapcimean'>Bootstrap Confidence Interval - Mean</option>
                         <option disabled></option>
-                        <option value='re-randomisation - median'>Re-Randomisation - Median</option>
-                        <option value='re-randomisation - mean'>Re-Randomisation - Mean</option>
+                        <option value='newrerandomisationmedian'>Re-Randomisation - Median</option>
+                        <option value='newrerandomisationmean'>Re-Randomisation - Mean</option>
                         <option disabled></option>
                         <option value='newpairedexperimentdotplot'>Paired Experiment Dot Plot (and Arrows Graph)</option>
                         <option disabled></option>

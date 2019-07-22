@@ -1082,7 +1082,7 @@ function graphchange(obj) {
     document.getElementById('stripgraphshow').style.display = 'none';
     document.getElementById('stackdots').checked = false;
     $('#removedpointsshow').hide();
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
         document.getElementById('xvar').style.display = 'block';
         document.getElementById('yvar').style.display = 'block';
     }
@@ -1090,13 +1090,13 @@ function graphchange(obj) {
         document.getElementById('yvar').style.display = 'none';
         document.getElementById('yvar').selectedIndex = 0;
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
         document.getElementById('regshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'time' || obj.value.substring(0, 8) == 'old time' || obj.value == 'newbootstrap') {
         document.getElementById('labelshow').style.display = 'block';
     }
-    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
+    if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbootstrap') {
         document.getElementById('sum').style.display = 'inline';
     }
     if (obj.value == 'newpairedexperimentdotplot') {
@@ -1147,7 +1147,8 @@ function graphchange(obj) {
         document.getElementById('boxplotshow').style.display = 'block';
         document.getElementById('intervalshow').style.display = 'block';
     }
-    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 4) == 're-r' || obj.value == 'newbootstrap') {
+    if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'residuals' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer'
+        || obj.value == 'newbootstrap') {
         document.getElementById('sizediv').style.display = 'block';
         document.getElementById('pointsizename').innerHTML = 'Point Size:';
     }
@@ -1950,12 +1951,19 @@ function FirstSF(number) {
     }
 }
 
-function axisminmaxstep(min, max) {
+function axisminmaxstep(min, max, differ) {
     if (min == max) {
         min = add(min, 1);
         max = add(max, 1);
     }
     var range = max - min;
+    if(differ != undefined) {
+        if(differ * 2 > range) {
+            min = (min + max) / 2 - differ;
+            max = (min + max) / 2 + differ;
+            range = max - min;
+        }
+    }
     var rangeround = range.toPrecision(1);
     var steps = FirstSF(rangeround);
     if (steps < 2) {

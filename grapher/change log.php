@@ -60,6 +60,7 @@
     TODO List
     - Escape titles on graphs.
     - Switch re-randomisation to JavaScript
+    - Once all the graphing functions are on JavaScript, work to remove jQuery some of the more intensive jquery functions.
     *************************
     - Look into adding a file from a URL
     */
