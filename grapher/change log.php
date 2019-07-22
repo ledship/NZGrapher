@@ -57,9 +57,9 @@
     </center>
     <?php
     /*
-    To Do List
+    TODO List
     - Escape titles on graphs.
-    - Switch histogramf, re-randomisation, paired experiment dot plot to JavaScript
+    - Switch histogramf, re-randomisation to JavaScript
     *************************
     - Look into adding a file from a URL
     */

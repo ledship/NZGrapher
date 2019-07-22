@@ -544,7 +544,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
                         <option value='newdotplot'>Dot Plot (and Box and Whisker)</option>
                         <option value='newbarandarea'>Bar Graph (and Area Graph)</option>
                         <option value='newhistogram'>Histogram</option>
-                        <option value='histogramf'>Histogram - Summary Data</option>
+                        <option value='newhistogramf'>Histogram - Summary Data</option>
                         <option value='newpiechart'>Pie Chart</option>
                         <option value='newscatter'>Scatter Graph</option>
                         <option value='newresiduals'>Residuals Plot</option>
@@ -643,7 +643,7 @@ if (isset($_COOKIE['welcome'])) {
                     <a target='_blank' href='https://www.mathsnz.com/nzgrapher-info'>MathsNZ</a>.<br>
                     <br>
                     Something not working or have an idea to make NZGrapher better... please <a target='_blank'
-                                                                                                href='//www.mathsnz.com/contact'>let
+                                                                                                href='//github.com/ledship/NZGrapher'>let
                         me know</a>.<br>
             </tr>
         </table>

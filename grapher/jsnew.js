@@ -492,8 +492,8 @@ function newhistogram() {
     for (var xPoint in xPoints) {
         xPoint = xPoints[xPoint];
         if (!$.isNumeric(xPoint)) {
-            xPoints.splice(xPoint, 1);
-            yPoints.splice(xPoint, 1);
+            xPoints.splice(i, 1);
+            yPoints.splice(i, 1);
             pointsRemoved += (i + 1) + ", ";
         }
         i++;
@@ -606,7 +606,7 @@ function newhistogram() {
                 max = data[category][key];
             }
         }
-        if (relativeFrequency) {
+        if (!relativeFrequency) {
             sum = 1;
         }
         maxFreq.push(max / sum);
@@ -636,7 +636,6 @@ function newhistogram() {
         // Axis
         horaxis(ctx, left, right, yAxis - axisTolerance, minXTick, maxXTick, xStep);
         vertaxis(ctx, oldYAxis, yAxis - axisTolerance, left - 10 * scalefactor, minYTick, maxYTick, yStep, undefined, false, false);
-        ctx.save();
         ctx.save();
         ctx.fillStyle = '#000000';
         ctx.font = "bold " + 13 * scalefactor + "px Roboto";
@@ -1262,6 +1261,217 @@ function newpairedexperimentdotplot() {
     }
 
     drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
+
+    labelgraph(ctx, width, height);
+
+    if ($('#invert').is(":checked")) {
+        invert(ctx);
+    }
+
+    return canvas.toDataURL();
+}
+
+function newhistogramf() {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    //set size
+    var width = $('#width').val();
+    var height = $('#height').val();
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    var relativeFrequency = false;
+    if ($('#relativefrequency').is(":checked")) {
+        relativeFrequency = true;
+    }
+
+    // get points
+    var xPoints = $('#xvar').val().split(',');
+    xPoints.pop();
+    var yPoints = $('#yvar').val().split(',');
+    yPoints.pop();
+    var zPoints = $('#zvar').val().split(',');
+    zPoints.pop();
+
+    var i = 0;
+    var pointsRemoved = [];
+    xPoints.forEach(function (xPoint) {
+        if (!$.isNumeric(xPoint)) {
+            xPoints.splice(i, 1);
+            yPoints.splice(i, 1);
+            zPoints.splice(i, 1);
+            pointsRemoved += (i + 1) + ", ";
+        }
+        i++;
+    });
+
+    if (xPoints.length == 0 || !$.isNumeric(xPoints[0])) {
+        return "Error: You must select a numerical variable for variable 1";
+    }
+    if (yPoints.length == 0 || !$.isNumeric(yPoints[0])) {
+        return "Error: you must select a numerical variable for variable 2";
+    }
+
+    var newXPoints = [];
+    for (var key in xPoints) {
+        var value = xPoints[key];
+        i = 0;
+        while (i < yPoints[key]) {
+            newXPoints.push(value);
+            i++;
+        }
+    }
+
+    var numCategories = array_unique(zPoints).length;
+    if (numCategories > 5 && $.isNumeric(zPoints[0])) {
+        var min = Math.min.apply(null, zPoints);
+        var max = Math.max.apply(null, zPoints);
+        var range = max - min;
+        i = 0;
+        var c1max = parseFloat(Number(min + range / 4).toPrecision(2));
+        var c2max = parseFloat(Number(c1max + range / 4).toPrecision(2));
+        var c3max = parseFloat(Number(c2max + range / 4).toPrecision(2));
+        zPoints.forEach(function (zPoint) {
+            if (zPoint < c1max) {
+                zPoints[i] = "a: < " + c1max;
+            } else if (value < c2max) {
+                zPoints[i] = "b: " + c1max - c2max;
+            } else if (value < c3max) {
+                zPoints[i] = "c: " + c2max - c3max;
+            } else {
+                zPoints[i] = "d: > " + c3max;
+            }
+            i++;
+        });
+        numCategories = 4;
+    }
+    if (numCategories > 5) {
+        return "Error: You must select a categorical variable for variable 3 with 4 or fewer categories or a numerical variable for variable 3 which will automatically be split into 4 categories.";
+    }
+    if (numCategories == 0) {
+        numCategories = 1;
+        for (var key in xPoints) {
+            zPoints[key] = " ";
+        }
+    }
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = '#000000';
+    drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
+
+    ctx.font = "bold " + 15 * scalefactor + "px Roboto";
+    ctx.fillText($('#xaxis').val(), width / 2, height - 10 * scalefactor);
+    ctx.save();
+    ctx.translate(20 * scalefactor, height / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText($('#yaxis').val(), 0, 0);
+    ctx.restore();
+
+    // Calculate minX and maxX by looping the array, because it can be too large to process
+    var minX = newXPoints[0];
+    var maxX = newXPoints[0];
+    for (var index in newXPoints) {
+        var value = newXPoints[index];
+        if (value < minX) {
+            minX = value;
+        }
+        if (value > maxX) {
+            maxX = value;
+        }
+    }
+    var minMaxSteps = axisminmaxstep(minX, maxX);
+    var minXTick = minMaxSteps[0];
+    var maxXTick = minMaxSteps[1] + minMaxSteps[2];
+    var xStep = minMaxSteps[2];
+
+    var left = 90 * scalefactor;
+    var right = width - 80 * scalefactor;
+    var gTop = 60 * scalefactor;
+    var bottom = height - 60 * scalefactor;
+
+    i = 0;
+    var data = [];
+    var oData = [];
+    xPoints.forEach(function (xPoint) {
+        var zPoint = zPoints[i];
+        var xBucket = Math.floor(xPoint / xStep) * xStep;
+        if (!(zPoint in data)) {
+            data[zPoint] = [];
+        }
+        if (!(zPoint in oData)) {
+            oData[zPoint] = [];
+        }
+        data[zPoint].push(xBucket);
+        oData[zPoint].push(xPoint);
+        i++;
+    });
+
+    var sum = 1;
+    var maxFreq = [];
+    for (var category in data) {
+        var values = data[category];
+        data[category] = array_count_values(values);
+        var keys = Object.keys(data[category]);
+
+        var max = data[category][keys[0]];
+        for (var key in keys) {
+            key = keys[key];
+            if (data[category][key] > max) {
+                max = data[category][key];
+            }
+        }
+        if (relativeFrequency) {
+            sum = array_sum(values);
+        }
+        maxFreq.push(max / sum);
+    }
+    console.log("Sum: " + sum);
+
+    maxFreq = Math.max.apply(null, maxFreq);
+    numCategories = Object.keys(data).length;
+
+    var minY = 0.0001;
+    var maxY = maxFreq;
+    console.log("maxFreq: " + maxFreq);
+    minMaxSteps = axisminmaxstep(minY, maxY);
+    var minYTick = minMaxSteps[0];
+    var maxYTick = minMaxSteps[1];
+    var yStep = minMaxSteps[2];
+
+    console.log("maxYTick: " + maxYTick);
+
+    var dataKeys = Object.keys(data);
+    dataKeys.sort(sortorder);
+    var bottomStart = bottom + 30 * scalefactor;
+    var axisOffset = (bottomStart - gTop) / dataKeys.length;
+    var yAxis = Number(gTop + axisOffset);
+    var oldYAxis = gTop;
+    var axisTolerance = Number(40 * scalefactor);
+    var axisWidth = width - 170 * scalefactor;
+    for (var category in dataKeys) {
+        category = dataKeys[category];
+        var values = data[category];
+        i = 0;
+        horaxis(ctx, left, right, yAxis - axisTolerance, minXTick, maxXTick, xStep);
+        vertaxis(ctx, oldYAxis, yAxis - axisTolerance, left - 10 * scalefactor, minYTick, maxYTick, yStep, undefined, false, false);
+        ctx.textAlign = "center";
+        ctx.fillStyle = '#000000';
+        ctx.font = "bold " + 13 * scalefactor + "px Roboto";
+        ctx.save();
+        ctx.translate(40 * scalefactor, oldYAxis + ((axisOffset) / 2) - axisTolerance / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText("Frequency", 0, 0);
+        ctx.restore();
+        ctx.fillText(category, right + 50 * scalefactor, oldYAxis + ((axisOffset) / 2) - axisTolerance / 2);
+
+
+        oldYAxis = yAxis;
+        yAxis += axisOffset;
+    }
 
     labelgraph(ctx, width, height);
 
