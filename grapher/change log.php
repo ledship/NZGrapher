@@ -59,7 +59,7 @@
     /*
     TODO List
     - Escape titles on graphs.
-    - Switch histogramf, re-randomisation to JavaScript
+    - Switch re-randomisation to JavaScript
     *************************
     - Look into adding a file from a URL
     */

@@ -524,9 +524,9 @@ function newhistogram() {
             if (value < c1max) {
                 yPoints[i] = "a: < " + c1max;
             } else if (value < c2max) {
-                yPoints[i] = "b: " + c1max - c2max;
+                yPoints[i] = "b: " + c1max  + " - " +  c2max;
             } else if (value < c3max) {
-                yPoints[i] = "c: " + c2max - c3max;
+                yPoints[i] = "c: " + c2max  + " - " +  c3max;
             } else {
                 yPoints[i] = "d: > " + c3max;
             }
@@ -537,7 +537,6 @@ function newhistogram() {
     if (numCategories > 5) {
         return 'Error: You must select a categorical y-variable with 4 or fewer categories or a numerical y-variable which will automatically be split into 4 categories.</center>';
     }
-
     if (numCategories == 0) {
         numCategories = 1;
         for (var index in xPoints) {
@@ -1339,9 +1338,9 @@ function newhistogramf() {
             if (zPoint < c1max) {
                 zPoints[i] = "a: < " + c1max;
             } else if (value < c2max) {
-                zPoints[i] = "b: " + c1max - c2max;
+                zPoints[i] = "b: " + c1max + " - " + c2max;
             } else if (value < c3max) {
-                zPoints[i] = "c: " + c2max - c3max;
+                zPoints[i] = "c: " + (c2max + " - " + c3max);
             } else {
                 zPoints[i] = "d: > " + c3max;
             }
