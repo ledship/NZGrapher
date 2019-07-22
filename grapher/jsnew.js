@@ -666,7 +666,7 @@ function newhistogram() {
             if (relativeFrequency) {
                 div = num;
             }
-            var y1 = convertvaltopixel((relativeFrequency) ? freq : freq / num, minYTick, maxYTick, Number(yAxis - axisTolerance), oldYAxis);
+            var y1 = convertvaltopixel(freq / div, minYTick, maxYTick, Number(yAxis - axisTolerance), oldYAxis);
             var h = (yAxis - axisTolerance) - y1;
             line(ctx, x1, y1, x2, y1);
             ctx.fillRect(x1, y1, w, h);
@@ -1405,16 +1405,19 @@ function newhistogramf() {
         if (!(zPoint in oData)) {
             oData[zPoint] = [];
         }
-        data[zPoint].push(xBucket);
-        oData[zPoint].push(xPoint);
+        var w = 0;
+        while(w < yPoints[i]) {
+            data[zPoint].push(xBucket);
+            oData[zPoint].push(xPoint);
+            w++;
+        }
         i++;
     });
 
     var sum = 1;
     var maxFreq = [];
     for (var category in data) {
-        var values = data[category];
-        data[category] = array_count_values(values);
+        data[category] = array_count_values(data[category]);
         var keys = Object.keys(data[category]);
 
         var max = data[category][keys[0]];
@@ -1425,24 +1428,20 @@ function newhistogramf() {
             }
         }
         if (relativeFrequency) {
-            sum = array_sum(values);
+            sum = array_sum(data[category]);
         }
         maxFreq.push(max / sum);
     }
-    console.log("Sum: " + sum);
 
     maxFreq = Math.max.apply(null, maxFreq);
     numCategories = Object.keys(data).length;
 
     var minY = 0.0001;
     var maxY = maxFreq;
-    console.log("maxFreq: " + maxFreq);
     minMaxSteps = axisminmaxstep(minY, maxY);
     var minYTick = minMaxSteps[0];
     var maxYTick = minMaxSteps[1];
     var yStep = minMaxSteps[2];
-
-    console.log("maxYTick: " + maxYTick);
 
     var dataKeys = Object.keys(data);
     dataKeys.sort(sortorder);
@@ -1468,6 +1467,39 @@ function newhistogramf() {
         ctx.restore();
         ctx.fillText(category, right + 50 * scalefactor, oldYAxis + ((axisOffset) / 2) - axisTolerance / 2);
 
+        ctx.strokeStyle = '#000000';
+        ctx.fillStyle = '#d3d3d3';
+
+        xPoints = oData[category];
+        var med = median(xPoints);
+        var mean = calculatemean(xPoints);
+        var num = xPoints.length;
+
+        var valueKeys = Object.keys(values);
+        for(var valueKey in valueKeys) {
+            var xBucket = parseFloat(valueKeys[valueKey]);
+            var freq = values[xBucket];
+            var x1 = (axisWidth * (xBucket - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
+            var x2 = (axisWidth * ((xBucket + xStep) - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
+            var w = x2 - x1;
+            var div = 1;
+            if (relativeFrequency) {
+                div = num;
+            }
+            var y1 = convertvaltopixel(freq / div, minYTick, maxYTick, Number(yAxis - axisTolerance), oldYAxis);
+            var h = (yAxis - axisTolerance) - y1;
+            line(ctx, x1, y1, x2, y1);
+            ctx.fillRect(x1, y1, w, h);
+            ctx.strokeRect(x1, y1, w, h);
+        }
+        ctx.fillStyle = '#ed0000';
+        ctx.font = 11 * scalefactor + "px Roboto";
+        ctx.textAlign = "left";
+        if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+            ctx.fillText("med:  " + med, 90 * scalefactor, oldYAxis);
+            ctx.fillText("mean:  " + mean, 90 * scalefactor, oldYAxis + 10 * scalefactor);
+            ctx.fillText("num:  " + num, 90 * scalefactor, oldYAxis + 20 * scalefactor);
+        }
 
         oldYAxis = yAxis;
         yAxis += axisOffset;
@@ -1683,8 +1715,15 @@ function hexToRgb(hex) {
 
 function array_sum(array) {
     var sum = 0;
-    for (var i = 0; i < array.length; i++) {
-        sum += Number(array[i]);
+    if(Object.keys(array).length > 0) {
+        var keys = Object.keys(array);
+        for(var key in keys) {
+            sum += Number(array[keys[key]]);
+        }
+    } else {
+        for (var i = 0; i < array.length; i++) {
+            sum += Number(array[i]);
+        }
     }
     return sum;
 }
