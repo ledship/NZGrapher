@@ -1414,7 +1414,7 @@ function updategraphgo() {
         $('#tooltip').css('top', e.pageY);
         $('#tooltiparrow').css('margin-top', '-8px');
         $('#tooltip span').html($(this).attr('desc'));
-        if ($('#type').val() != 'newpairsplot') {
+        if ($('#type').val() != 'newpairsplot' && $(this).is('[alt]')) {
             id = $(this).attr('alt');
             $('#left').scrollTop(0);
             $('#left').scrollTop($('#data').find("th:textEquals('" + id + "')").position().top - 100);
@@ -1957,8 +1957,8 @@ function axisminmaxstep(min, max, differ) {
         max = add(max, 1);
     }
     var range = max - min;
-    if(differ != undefined) {
-        if(differ * 2 > range) {
+    if (differ != undefined) {
+        if (differ * 2 > range) {
             min = (min + max) / 2 - differ;
             max = (min + max) / 2 + differ;
             range = max - min;
@@ -2511,7 +2511,7 @@ function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxhei
     return 'good';
 }
 
-function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, right, maxheight, colors, sort, hovers, displayBoxPlot, btype) {
+function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, right, maxheight, colors, sort, hovers, displayBoxPlot, btype, disableLabelsSum, differenceXCount) {
     ctx.lineWidth = 2 * scalefactor;
     if ($('#thicklines').is(":checked")) {
         ctx.lineWidth = 5 * scalefactor;
@@ -2527,14 +2527,19 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         var index = indexes[index];
         var value = values[index];
         thisvalues.push(value);
-        var rawxpixel = convertvaltopixel(value, minxtick, maxxtick, left, right);
-        xpixel = Math.floor(rawxpixel / (rad * 3)) * rad * 3;
-        if ($('#stackdots').is(':checked')) {
-            xpixel = Math.floor(rawxpixel / (rad * 2)) * rad * 2;
-        } else {
+        if (differenceXCount !== true) {
+            var rawxpixel = convertvaltopixel(value, minxtick, maxxtick, left, right);
             xpixel = Math.floor(rawxpixel / (rad * 3)) * rad * 3;
+            if ($('#stackdots').is(':checked')) {
+                xpixel = Math.floor(rawxpixel / (rad * 2)) * rad * 2;
+            } else {
+                xpixel = Math.floor(rawxpixel / (rad * 3)) * rad * 3;
+            }
+            xpixels.push([index, xpixel, rawxpixel, value]);
+        } else {
+            var xPixel = Math.round((($('#width').val() - 120 * scalefactor) * (value - minxtick) / (maxxtick - minxtick)) / rad) * rad + 60;
+            xpixels.push([index, xPixel, convertvaltopixel(value, minxtick, maxxtick, left, right), left, right]);
         }
-        xpixels.push([index, xpixel, rawxpixel, value]);
     }
     var minval = Math.min.apply(null, thisvalues);
     var lq = lowerquartile(thisvalues);
@@ -2572,7 +2577,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
     xpixels.sort(function (a, b) {
         return a[sort] - b[sort]
     });
-    if ($('#labels').is(":checked")) {
+    if ($('#labels').is(":checked") && disableLabelsSum !== true) {
         var labels = "yes";
     } else {
         var labels = "no";
@@ -2690,7 +2695,7 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
         line(ctx, uqgraph, y, maxnooutliersgraph, y);
     }
 
-    if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+    if ($('#regression').is(":checked") && $('#regshow').is(":visible") && disableLabelsSum !== true) {
         ctx.fillStyle = 'rgba(255,0,0,1)';
         fontsize = 11 * scalefactor;
         ctx.font = fontsize + "px Roboto";
@@ -3235,6 +3240,11 @@ function newtimeseries() {
     } else {
         var seasonal = "no";
     }
+    if ($('#addmult option:selected').text() == "Multiplicative") {
+        var multiplicative = "yes";
+    } else {
+        multiplicative = "no";
+    }
 
     //graph title
     ctx.fillStyle = '#000000';
@@ -3375,7 +3385,7 @@ function newtimeseries() {
         var startfinish = "no";
     }
 
-    if (longtermtrend == 'yes') {
+    if (longtermtrend == 'yes' || multiplicative == "yes") {
         stlresponse = stl(tsxpoints, ypoints, seasons);
         trend = stlresponse[0];
         fitted = stlresponse[1];
@@ -3413,11 +3423,6 @@ function newtimeseries() {
     var maxytick = minmaxstep[1];
     var ystep = minmaxstep[2];
 
-    if ($('#addmult option:selected').text() == "Multiplicative") {
-        var multiplicative = "yes";
-    } else {
-        var multiplicative = "no";
-    }
     vertaxis(ctx, gtop, gbottom, left - 10 * scalefactor, minytick, maxytick, ystep, right + 10 * scalefactor);
     if (seasonal == "yes") {
         seasonright = width / 0.7 * 0.3 + right;
@@ -3436,12 +3441,10 @@ function newtimeseries() {
             }
             if (zpoints.length > 0 && differentaxis != "yes") {
                 stlresponse = stl(tsxpoints, zpoints, seasons);
-                trend = stlresponse[0];
-                fitted = stlresponse[1];
-                s = stlresponse[2];
-                r = stlresponse[3];
-                for (var index in fitted) {
-                    pointsforminmax.push(fitted[index] / trend[index]);
+                trendz = stlresponse[0];
+                fittedz = stlresponse[1];
+                for (var index in fittedz) {
+                    pointsforminmax.push(fittedz[index] / trendz[index]);
                 }
             }
             var smin = Math.min.apply(null, pointsforminmax);
@@ -3508,11 +3511,13 @@ function newtimeseries() {
         }
         xpixel = convertvaltopixel(tsxpoints[index], minxtick, maxxtick, left, right);
         ypixel = convertvaltopixel(ypoints[index], maxytick, minytick, gtop, gbottom);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ': ' + parseFloat(ypoints[index]).toPrecision(5) + '">');
         if (index != 0) {
             line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
         }
         if (longtermtrend == 'yes') {
             trendpixel = convertvaltopixel(trend[index], maxytick, minytick, gtop, gbottom);
+            $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (trendpixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ' Trend: ' + trend[index].toPrecision(5) + '">');
             ytrendpts.push(xpixel, trendpixel);
             if (startfinish == "yes" && (index == 0 || index == tsxpoints.length - 1)) {
                 ctx.textAlign = "left";
@@ -3537,12 +3542,15 @@ function newtimeseries() {
             if (seasonal == 'yes') {
                 if (multiplicative == "yes") {
                     seasonypixel = convertvaltopixel(smult[index], maxstick, minstick, gtop, gbottom);
+                    seasonalvalue = smult[index];
                 } else {
                     seasonypixel = convertvaltopixel(s[index], maxytick - shiftforseasonal, minytick - shiftforseasonal, gtop, gbottom);
+                    seasonalvalue = s[index];
                 }
                 point = parseFloat(tsxpoints[index]);
                 season = Math.round((point - Math.floor(point)) * seasons + 1);
                 seasonxpixel = convertvaltopixel(season, 1, seasons, seasonleft, seasonright);
+                $('#graphmap').append('<area shape="circle" coords="' + (seasonxpixel / scalefactor) + ',' + (seasonypixel / scalefactor) + ',' + 3 + '" desc="Season: ' + season + '<br>' + $("#yvar option:selected").text() + ' Seasonal Value: ' + seasonalvalue.toPrecision(5) + '">');
                 if (season != 1 && index != 0) {
                     if (parseFloat(index) <= parseFloat(seasons)) {
                         line(ctx, seasonxpixel, seasonypixel, lastseasonxpixel, lastseasonypixel);
@@ -3571,7 +3579,7 @@ function newtimeseries() {
     }
 
     if (zpoints.length > 0) {
-        if (longtermtrend == 'yes') {
+        if (longtermtrend == 'yes' || multiplicative == "yes") {
             stlresponse = stl(tsxpoints, zpoints, seasons);
             trend = stlresponse[0];
             fitted = stlresponse[1];
@@ -3618,12 +3626,14 @@ function newtimeseries() {
             if (index != 0) {
                 line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
             }
+            $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#zvar option:selected").text() + ': ' + parseFloat(zpoints[index]).toPrecision(5) + '">');
             if (longtermtrend == 'yes') {
                 if (differentaxis == "yes") {
                     trendpixel = convertvaltopixel(trend[index], maxztick, minztick, gtop, gbottom);
                 } else {
                     trendpixel = convertvaltopixel(trend[index], maxytick, minytick, gtop, gbottom);
                 }
+                $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (trendpixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#zvar option:selected").text() + ' Trend: ' + trend[index].toPrecision(5) + '">');
                 ztrendpts.push(xpixel, trendpixel);
                 ctx.lineWidth = 1 * scalefactor;
                 if (startfinish == "yes" && (index == 0 || index == tsxpoints.length - 1)) {
@@ -3645,7 +3655,9 @@ function newtimeseries() {
                 if (seasonal == 'yes') {
                     if (multiplicative == "yes") {
                         seasonypixel = convertvaltopixel(smult[index], maxstick, minstick, gtop, gbottom);
+                        seasonalvalue = smult[index];
                     } else {
+                        seasonalvalue = s[index];
                         if (differentaxis == "yes") {
                             seasonypixel = convertvaltopixel(s[index], maxztick - zshiftforseasonal, minztick - zshiftforseasonal, gtop, gbottom);
                         } else {
@@ -3656,6 +3668,7 @@ function newtimeseries() {
                     point = parseFloat(tsxpoints[index]);
                     season = Math.round((point - Math.floor(point)) * seasons + 1);
                     seasonxpixel = convertvaltopixel(season, 1, seasons, seasonleft, seasonright);
+                    $('#graphmap').append('<area shape="circle" coords="' + (seasonxpixel / scalefactor) + ',' + (seasonypixel / scalefactor) + ',' + 3 + '" desc="Season: ' + season + '<br>' + $("#zvar option:selected").text() + ' Seasonal Value: ' + seasonalvalue.toPrecision(5) + '">');
                     if (season != 1 && index != 0) {
 
                         if (parseFloat(index) <= parseFloat(seasons)) {
@@ -3885,6 +3898,7 @@ function newtimeseriesrecomp() {
     for (index in tsxpoints) {
         xpixel = convertvaltopixel(tsxpoints[index], minxtick, maxxtick, left, right);
         ypixel = convertvaltopixel(fitted[index], maxytick, minytick, gtop, gbottom);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ' Fitted Value: ' + fitted[index].toPrecision(5) + '">');
         if (index != 0) {
             line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
         }
@@ -3906,8 +3920,10 @@ function newtimeseriesrecomp() {
     for (index in tsxpoints) {
         xpixel = convertvaltopixel(tsxpoints[index], minxtick, maxxtick, left, right);
         ypixel = convertvaltopixel(ypoints[index], maxytick, minytick, gtop, gbottom);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ': ' + parseFloat(ypoints[index]).toPrecision(5) + '">');
         trendpixel = convertvaltopixel(trend[index], maxytick, minytick, gtop, gbottom);
         trendpts.push(xpixel, trendpixel);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (trendpixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ' Trend: ' + trend[index].toPrecision(5) + '">');
         if (startfinish == "yes" && (index == 0 || index == tsxpoints.length - 1)) {
             ctx.textAlign = "left";
             if (index == 0) {
@@ -3985,6 +4001,7 @@ function newtimeseriesrecomp() {
     for (index in tsxpoints) {
         xpixel = convertvaltopixel(tsxpoints[index], minxtick, maxxtick, left, right);
         ypixel = convertvaltopixel(s[index], maxstick, minstick, gtop, gbottom);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ' Seasonal Value: ' + s[index].toPrecision(5) + '">');
         if (index != 0) {
             line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
         }
@@ -4029,6 +4046,7 @@ function newtimeseriesrecomp() {
     for (index in tsxpoints) {
         xpixel = convertvaltopixel(tsxpoints[index], minxtick, maxxtick, left, right);
         ypixel = convertvaltopixel(r[index], maxrtick, minrtick, gtop, gbottom);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ' Redidual Value: ' + r[index].toPrecision(5) + '">');
         if (index != 0) {
             line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
         }
@@ -4085,10 +4103,10 @@ function stl(xpoints, ypoints, seasons) {
     T = il[0];
     S = il[1];
 
-    fitted = [];
-    r = [];
-    trend = [];
-    s = [];
+    var fitted = [];
+    var r = [];
+    var trend = [];
+    var s = [];
     if (multiplicative == "yes") {
         for (index in ypoints) {
             ypoints[index] = Math.exp(ypoints[index]);
@@ -5243,6 +5261,7 @@ function newtimeseriesseasonaleffects() {
         season = Math.round((point - year) * seasons + 1);
         xpixel = convertvaltopixel(season, 1, seasons, left, right);
         ypixel = convertvaltopixel(ypoints[index], maxytick, minytick, gtop, gbottom);
+        $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ': ' + parseFloat(ypoints[index]).toPrecision(5) + '">');
         if (season != 1 && index != 0) {
             line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
         }
@@ -5267,6 +5286,7 @@ function newtimeseriesseasonaleffects() {
         ctx.beginPath();
         ctx.arc(seasonxpixel, seasonypixel, 2, 0, 2 * Math.PI);
         ctx.stroke();
+        $('#graphmap').append('<area shape="circle" coords="' + (seasonxpixel / scalefactor) + ',' + (seasonypixel / scalefactor) + ',' + 5 + '" desc="Season: ' + season + '<br>' + $("#yvar option:selected").text() + ' Seasonal Value: ' + s[index].toPrecision(5) + '">');
         lastseasonxpixel = seasonxpixel;
         lastseasonypixel = seasonypixel;
 
@@ -5618,6 +5638,7 @@ function newtimeseriessforecasts() {
             point = parseFloat(tsxpoints[index]);
             xpixel = convertvaltopixel(point, minxtick, maxxtick, left, right);
             ypixel = convertvaltopixel(fitted[index], maxytick, minytick, gtop, gbottom);
+            $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ' Historial Prediction: ' + fitted[index].toPrecision(5) + '">');
             if (index != 0) {
                 line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
             }
@@ -5642,6 +5663,7 @@ function newtimeseriessforecasts() {
             point = parseFloat(tsxpoints[index]);
             xpixel = convertvaltopixel(point, minxtick, maxxtick, left, right);
             ypixel = convertvaltopixel(ypoints[index], maxytick, minytick, gtop, gbottom);
+            $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + xpoints[index] + '<br>' + $("#yvar option:selected").text() + ': ' + parseFloat(ypoints[index]).toPrecision(5) + '">');
             if (index != 0) {
                 line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
             }
@@ -5663,8 +5685,45 @@ function newtimeseriessforecasts() {
 
         for (index in forecasts) {
             point = parseFloat(forecasts[index][0]);
+            year = Math.floor(point);
+            month = Math.round((point - year) * seasons) + 1;
+
+            if (seasons == 1) {
+                split = ""
+            } else if (seasons == 4) {
+                split = "Q"
+            } else if (seasons == 12) {
+                split = "M"
+            } else if (seasons == 7) {
+                split = "D"
+            } else if (seasons == 5) {
+                split = "W"
+            } else if (seasons == 24) {
+                split = "H"
+            } else {
+                split = "C"
+            }
+            if (seasons == 1) {
+                month = "";
+            } else {
+                i = 0;
+                pad = "";
+                while (i < seasons.length) {
+                    pad += "0";
+                    i++;
+                }
+                month = (pad + month).slice(-seasons.length);
+                month = split + month;
+            }
+            min = parseFloat(forecastsmin[index].toPrecision(5));
+            pred = parseFloat(forecasts[index][1].toPrecision(5));
+            max = parseFloat(forecastsmax[index].toPrecision(5));
+
+
             xpixel = convertvaltopixel(point, minxtick, maxxtick, left, right);
             ypixel = convertvaltopixel(forecasts[index][1], maxytick, minytick, gtop, gbottom);
+            $('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + 3 + '" desc="' + year + month + '<br>' + $("#yvar option:selected").text() + ' Forecast: ' + pred + ' (' + min + ' - ' + max + ')">');
+
             line(ctx, xpixel, ypixel, lastxpixel, lastypixel);
             lastxpixel = xpixel;
             lastypixel = ypixel;

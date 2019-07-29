@@ -59,12 +59,19 @@
     /*
     TODO List
     - Escape titles on graphs.
-    - Switch re-randomisation to JavaScript
     - Once all the graphing functions are on JavaScript, work to remove jQuery some of the more intensive jquery functions.
     *************************
     - Look into adding a file from a URL
     */
     ?>
+    <b>2019-07-29</b>
+    <ul>
+        <li>Added hover boxes for Time Series Graphs. (Upstream change)</li>
+        <li>JS Histograms</li>
+        <li>JS Re-randomisation</li>
+        <li>Bug fixes</li>
+        <li>Removal of unneeded files</li>
+    </ul>
     <b>2019-07-16</b>
     <ul>
         <li>Graph titles automatically split to a new line after 80 characters</li>

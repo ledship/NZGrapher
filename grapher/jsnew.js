@@ -524,9 +524,9 @@ function newhistogram() {
             if (value < c1max) {
                 yPoints[i] = "a: < " + c1max;
             } else if (value < c2max) {
-                yPoints[i] = "b: " + c1max  + " - " +  c2max;
+                yPoints[i] = "b: " + c1max + " - " + c2max;
             } else if (value < c3max) {
-                yPoints[i] = "c: " + c2max  + " - " +  c3max;
+                yPoints[i] = "c: " + c2max + " - " + c3max;
             } else {
                 yPoints[i] = "d: > " + c3max;
             }
@@ -1405,7 +1405,7 @@ function newhistogramf() {
             oData[zPoint] = [];
         }
         var w = 0;
-        while(w < yPoints[i]) {
+        while (w < yPoints[i]) {
             data[zPoint].push(xBucket);
             oData[zPoint].push(xPoint);
             w++;
@@ -1475,7 +1475,7 @@ function newhistogramf() {
         var num = xPoints.length;
 
         var valueKeys = Object.keys(values);
-        for(var valueKey in valueKeys) {
+        for (var valueKey in valueKeys) {
             var xBucket = parseFloat(valueKeys[valueKey]);
             var freq = values[xBucket];
             var x1 = (axisWidth * (xBucket - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
@@ -1559,11 +1559,11 @@ function rerandomisation(type) {
         i++;
     });
 
-    if(xOPoints.length == 0 && !$.isNumeric(xOPoints[0])) {
+    if (xOPoints.length == 0 || !$.isNumeric(xOPoints[0])) {
         return "Error: You must select a numerical x-variable.";
     }
     var numCategories = array_unique(yPoints).length;
-    if(numCategories != 2) {
+    if (numCategories != 2) {
         return "Error: You must select a categorical y-variable with 2 categories.";
     }
 
@@ -1582,13 +1582,13 @@ function rerandomisation(type) {
 
     var i = 0;
     var categories = [];
-    xOPoints.forEach(function(xPoint) {
+    xOPoints.forEach(function (xPoint) {
         var category = " ";
-        if(yPoints.length != 1) {
+        if (yPoints.length != 1) {
             category = yPoints[i];
         }
         i++;
-        if(categories.hasOwnProperty(category)) {
+        if (categories.hasOwnProperty(category)) {
             categories[category].push([xPoint, i]);
         } else {
             categories[category] = [[xPoint, i]];
@@ -1596,9 +1596,9 @@ function rerandomisation(type) {
     });
     i = 0;
     var medOrMeans = [];
-    categories.forEach(function(values) {
+    categories.forEach(function (values) {
         var points = [];
-        values.forEach(function(value) {
+        values.forEach(function (value) {
             points.push(value[0]);
         });
         // TODO: Come back to this, both functions use median but call them different things?
@@ -1612,7 +1612,7 @@ function rerandomisation(type) {
     var maxX = Math.max.apply(null, xOPoints);
     var axisMinMaxSteps = axisminmaxstep(minX, maxX, differ);
     var minXTick = axisMinMaxSteps[0];
-    var maxXTick = axisMinMaxSteps[1];
+    var maxXTick = axisMinMaxSteps[1] + axisMinMaxSteps[2];
     var xStep = axisMinMaxSteps[2];
 
     var left = 90 * scalefactor;
@@ -1626,30 +1626,30 @@ function rerandomisation(type) {
     var subWidth = Math.max((width - 100), 1);
     var imheight = (subHeight - 20) / numCategories;
 
-    var offset = 40;
+    var offset = 30 * scalefactor;
     var yOffset = 0;
     var medians = [];
     var cnames = [];
     var keys = Object.keys(categories);
+    var medians = [];
     keys.sort(sortorder);
-    console.log("Key length: " + keys.length);
-    keys.forEach(function(category) {
+    var tCount = 1;
+    var oyPixel = height / 5;
+    keys.forEach(function (category) {
         var value = categories[category];
         cnames.push(category);
 
         var xPoints = [];
         var labels = [];
-        categories[category].forEach(function(xVals) {
+        categories[category].forEach(function (xVals) {
             xPoints.push(xVals[0]);
             labels.push(xVals[1]);
         });
 
-        console.log("Length: " + xPoints.length);
-
         ctx.textAlign = "center";
         ctx.fillStyle = "#000000";
         ctx.font = "bold " + 15 * scalefactor + "px Roboto";
-        ctx.fillText(category, subWidth, (imheight * 0.4) + offset);
+        ctx.fillText(category, subWidth, (imheight * 0.8) + offset);
 
         var min = Math.min.apply(null, xPoints);
         var minGraph = convertvaltopixel(min, minXTick, maxXTick, left, right);
@@ -1660,6 +1660,7 @@ function rerandomisation(type) {
         var lqGraph = convertvaltopixel(lq, minXTick, maxXTick, left, right);
         lqGraph = Math.floor(lqGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
         var med = median(xPoints);
+        medians.push(med);
         var medGraph = convertvaltopixel(med, minXTick, maxXTick, left, right);
         medGraph = Math.floor(medGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
         var mean = calculatemean(xPoints);
@@ -1669,7 +1670,7 @@ function rerandomisation(type) {
         var uqGraph = convertvaltopixel(uq, minXTick, maxXTick, left, right);
         uqGraph = Math.floor(uqGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
         var max = Math.max.apply(null, xPoints);
-        var maxGraph = convertvaltopixel(max, minXTick, max, left, right);
+        var maxGraph = convertvaltopixel(max, minXTick, maxXTick, left, right);
         maxGraph = Math.floor(maxGraph / ((pSize / 2) * 3)) * (pSize / 2) * 3;
         var sd = standarddeviation(xPoints);
         var num = xPoints.length;
@@ -1677,7 +1678,8 @@ function rerandomisation(type) {
         var h = 46 * scalefactor;
         var top = offset;
 
-        if($('#regression').is(":checked")) {
+        if ($('#regression').is(":checked")) {
+            top = ((height / 3) * tCount) - 70 * scalefactor;
             ctx.fillStyle = 'rgb(255, 0, 0)';
             ctx.font = 11 * scalefactor + "px Roboto";
             ctx.textAlign = "left";
@@ -1694,10 +1696,10 @@ function rerandomisation(type) {
         var xPixels = [];
         var xLabels = [];
         i = 0;
-        while(i < xPoints.length) {
+        while (i < xPoints.length) {
             var xValue = xPoints[i];
             var xPixel = convertvaltopixel(xValue, minXTick, maxXTick, left, right);
-            xPixel = Math.floor(xPixel / ((pSize / 2) * 3)) * (pSize / 2) * 3;
+            xPixel = Math.floor(xPixel / ((pSize) * 3)) * (pSize) * 3;
             xPixels.push(xPixel);
             xLabels.push(labels[i]);
             i++;
@@ -1707,44 +1709,185 @@ function rerandomisation(type) {
         var count = array_count_values(xPixels);
         var keys = Object.keys(count);
         var max = count[keys[0]];
-        for(var key in keys) {
+        for (var key in keys) {
             key = keys[key];
-            if(count[key] > max) {
+            if (count[key] > max) {
                 max = count[key];
             }
         }
         var yHeight = (height * 0.5 - (100 * scalefactor)) / max;
         if (yHeight > pSize) {
-            yHeight = pSize;
+            yHeight = pSize * 2;
         }
         ctx.lineWidth = 2 * scalefactor;
         ctx.strokeStyle = '#999999';
         var yPixel = 0;
         var lastXPixel = -100000;
-        xPixels.forEach(function(xPixel) {
-            if(lastXPixel == xPixel) {
-                yPixel = yPixel - yHeight - 1 - yOffset;
+        if (tCount == 1) {
+            oyPixel /= 2;
+            oyPixel += height / 4;
+        } else {
+            oyPixel *= 2;
+        }
+        xPixels.forEach(function (xPixel) {
+            if (lastXPixel == xPixel) {
+                yPixel = yPixel - yHeight - 1;
             } else {
-                yPixel = height - 115 * scalefactor - yOffset;
+                yPixel = oyPixel;
             }
             lastXPixel = xPixel;
             ctx.strokeStyle = colours[i];
             ctx.beginPath();
-            ctx.arc(xPixel, yPixel, pSize / 2, 0, 2 * Math.PI);
+            ctx.arc(xPixel, yPixel, pSize, 0, 2 * Math.PI);
             ctx.stroke();
             if ($('#labels').is(":checked")) {
                 var print = xLabels[i];
                 ctx.fillStyle = "rgb(0, 0, 255)";
                 ctx.font = 8 * scalefactor + "px Roboto";
-                ctx.fillText(print, xPixel + 3, yPixel + 3);
+                ctx.textAlign = "left";
+                ctx.fillText(print, xPixel + 5, yPixel + 3);
             }
         });
+        ctx.textAlign = "center";
 
-        yOffset -= 100;
+        if (type == 'median') {
+            // Box plot
+            ctx.lineWidth = 1 * scalefactor;
+            ctx.fillStyle = '#000000';
+            ctx.strokeStyle = '#000000';
+            line(ctx, minGraph, oyPixel - 10 * scalefactor, minGraph, oyPixel + 10 * scalefactor);
+            line(ctx, lqGraph, oyPixel - 10 * scalefactor, lqGraph, oyPixel + 10 * scalefactor);
+            line(ctx, medGraph, oyPixel - 10 * scalefactor, medGraph, oyPixel + 10 * scalefactor);
+            line(ctx, uqGraph, oyPixel - 10 * scalefactor, uqGraph, oyPixel + 10 * scalefactor);
+            line(ctx, maxGraph, oyPixel - 10 * scalefactor, maxGraph, oyPixel + 10 * scalefactor);
+            line(ctx, minGraph, oyPixel, lqGraph, oyPixel);
+            line(ctx, lqGraph, oyPixel + 10 * scalefactor, uqGraph, oyPixel + 10 * scalefactor);
+            line(ctx, lqGraph, oyPixel - 10 * scalefactor, uqGraph, oyPixel - 10 * scalefactor);
+            line(ctx, uqGraph, oyPixel, maxGraph, oyPixel);
+        } else if (type == 'mean') {
+            // Mean dot
+            ctx.fillStyle = "rgb(255, 0, 0)";
+            ctx.beginPath();
+            ctx.arc(meanGraph, oyPixel, pSize, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
         offset += height / 3;
+        tCount++;
+    });
+    height *= 2;
+
+
+    var diff = medians[0] - medians[1];
+    var arrow = 5;
+    var reverse = 1;
+    if (diff < 0) {
+        diff = -diff;
+        reverse = -1;
+        arrow = -5;
+    }
+
+    var title = "";
+    if (reverse == 1) {
+        title = "Difference Between " + ((type == 'median') ? "Medians" : "Means") + " (" + cnames[0] + " - " + cnames[1] + ")";
+    } else {
+        title = "Difference Between " + ((type == 'median') ? "Medians" : "Means") + " (" + cnames[1] + " - " + cnames[0] + ")";
+    }
+    ctx.font = "bold " + 17 * scalefactor + "px Roboto";
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+    ctx.fillText(title, width / 2, height - 10 * scalefactor);
+
+    var steps = (maxXTick - minXTick) / xStep;
+    var offset = minXTick + xStep * Math.floor(steps / 2);
+    offset = -offset;
+    offset = Math.floor(offset / xStep);
+    offset = xStep * offset;
+    minXTick = minXTick + offset;
+    maxXTick = maxXTick + offset;
+    horaxis(ctx, left, right, height - 50 * scalefactor, minXTick, maxXTick, xStep);
+
+
+    var bootstrapDiffs = [];
+    var num = xOPoints.length;
+    var b = 0;
+    var oyPoints = yPoints.slice();
+    var errorCount = 0;
+    while (b < 1000) {
+        i = 0;
+        var bootstrap1 = [];
+        var bootstrap2 = [];
+        yPoints = oyPoints.slice();
+        while (i < num) {
+            var max = num - i - 1;
+            var category = randint(0, max);
+            var cat = yPoints[category];
+            yPoints.sort();
+            if (cat == cnames[0]) {
+                bootstrap1.push(xOPoints[i]);
+            } else {
+                bootstrap2.push(xOPoints[i]);
+            }
+            i++;
+        }
+        if (type == "median") {
+            var med1 = median(bootstrap1);
+            var med2 = median(bootstrap2);
+            var dif = (med1 - med2) * reverse;
+
+            bootstrapDiffs.push(dif);
+            b++;
+        } else {
+            if (bootstrap1.length > 0 && bootstrap2.length > 0) {
+                var mean1 = calculatemean(bootstrap1);
+                var mean2 = calculatemean(bootstrap2);
+                var dif = (mean1 - mean2) * reverse;
+                bootstrapDiffs.push(dif);
+                b++;
+            } else {
+                errorCount++;
+                if (errorCount > 10) {
+                    return "Error: An error happened " + errorCount + " times... Something must be up with the data.";
+                }
+            }
+        }
+    }
+
+    var p = 0;
+    bootstrapDiffs.forEach(function (xValue) {
+        if (xValue >= diff) {
+            p++;
+        }
     });
 
-    height *= 2;
+    bootstrapDiffs.sort().reverse();
+
+    var maxHeight = height * 0.5 - 100 * scalefactor;
+    var bspoints = [];
+    i = 0;
+    while (i < 1000) {
+        bspoints.push(i);
+        i++;
+    }
+    plotdotplot(ctx, bspoints, bootstrapDiffs, minXTick, maxXTick, height - 60 * scalefactor, left, right, maxHeight, makebscolors(1000, alpha), 1, 0, undefined, undefined, true, true);
+
+    ctx.lineWidth = 3 * scalefactor;
+    ctx.strokeStyle = "#004fff";
+    ctx.fillStyle = '#004fff';
+    var x1 = (width - 120) * (-minXTick) / (maxXTick - minXTick) + 60;
+    var x2 = (width - 120) * (diff - minXTick) / (maxXTick - minXTick) + 60;
+    line(ctx, x1, height - 70 * scalefactor, x2, height - 70 * scalefactor);
+    line(ctx, x2 - arrow, height - 75 * scalefactor, x2, height - 70 * scalefactor);
+    line(ctx, x2 - arrow, height - 65 * scalefactor, x2, height - 70 * scalefactor);
+    ctx.lineWidth = 3 * scalefactor;
+    line(ctx, x2, height - 55 * scalefactor, x2, height * 0.5 + 10);
+    ctx.font = 12 * scalefactor + "px Roboto";
+    ctx.textAlign = "right";
+    ctx.fillText(diff, x2 - 5 * scalefactor, height - 55 * scalefactor);
+    ctx.textAlign = "left";
+    ctx.fillText("p = " + p + "/1000", x2 + 3, height * 0.5 + 40 * scalefactor);
+    ctx.fillText("   = " + p / 1000, x2 + 3, height * 0.5 + 55 * scalefactor);
+
     if (pointsRemoved > 22) {
         ctx.fillStyle = '#000000';
         ctx.font = 13 * scalefactor + "px Roboto";
@@ -1962,9 +2105,9 @@ function hexToRgb(hex) {
 
 function array_sum(array) {
     var sum = 0;
-    if(Object.keys(array).length > 0) {
+    if (Object.keys(array).length > 0) {
         var keys = Object.keys(array);
-        for(var key in keys) {
+        for (var key in keys) {
             sum += Number(array[keys[key]]);
         }
     } else {
