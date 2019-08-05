@@ -1081,6 +1081,7 @@ function graphchange(obj) {
 	document.getElementById('stackdotsshow').style.display = 'none';
 	document.getElementById('stripgraphshow').style.display = 'none';
 	document.getElementById('stackdots').checked = false;
+	document.getElementById('bettercoloursshow').style.display = 'none';
 	$('#removedpointsshow').hide();
 	if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
 		document.getElementById('xvar').style.display = 'block';
@@ -1165,9 +1166,12 @@ function graphchange(obj) {
 	if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newhistogramf') {
 		document.getElementById('zvar').style.display = 'inline';
 	}
-	if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'newresiduals') {
+	if (obj.value == 'scatter' || obj.value == 'dotplot' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'newresiduals' || obj.value == 'newbarandarea') {
 		document.getElementById('color').style.display = 'inline';
 		document.getElementById('colorname').style.display = 'inline';
+	}
+	if (obj.value == 'newbarandarea') {
+		document.getElementById('bettercoloursshow').style.display = 'block';
 	}
 
 	updategraph();
@@ -1994,7 +1998,7 @@ function axisminmaxstep(min, max, differ) {
 	return [mintick, maxtick, step];
 }
 
-function makecolors(alpha, ctx) {
+function makecolors(alpha, ctx, defaultColour, displayText) {
 	ctx.lineWidth = 2 * scalefactor;
 	if ($('#thicklines').is(":checked")) {
 		ctx.lineWidth = 5 * scalefactor;
@@ -2010,7 +2014,11 @@ function makecolors(alpha, ctx) {
 		var xpoints = $('#xvar').val().split(",");
 		xpoints.pop();
 		for (var index in xpoints) {
-			color = 'rgba(80,80,80,' + alpha + ')';
+			if (defaultColour != undefined) {
+				color = defaultColour;
+			} else {
+				color = 'rgba(80,80,80,' + alpha + ')';
+			}
 			colors.push(color);
 		}
 	} else if ($.isNumeric(colorpoints[0])) {
@@ -2030,7 +2038,11 @@ function makecolors(alpha, ctx) {
 				var n = (colorpoints[index] - min) / (max - min);
 				colors[index] = ColorHSLaToRGBa(n * end, s, l, alpha);
 			} else {
-				colors[index] = 'rgba(80,80,80,' + alpha + ')';
+				if (defaultColour != undefined) {
+					colors[index] = defaultColour;
+				} else {
+					colors[index] = 'rgba(80,80,80,' + alpha + ')';
+				}
 			}
 		}
 		var left = 40 * scalefactor;
@@ -2039,18 +2051,24 @@ function makecolors(alpha, ctx) {
 		ctx.font = 12 * scalefactor + "px Roboto";
 		ctx.textAlign = "left";
 		var txt = 'Coloured by ' + $('#colorlabel').val() + ': ' + min;
-		ctx.fillText(txt, left, 48 * scalefactor);
+		if (displayText !== false) {
+			ctx.fillText(txt, left, 48 * scalefactor);
+		}
 		left = left + ctx.measureText(txt).width + 5 * scalefactor + rad;
 		var colz = 0;
 		while (colz <= 1) {
-			ctx.beginPath();
-			ctx.strokeStyle = ColorHSLaToRGBa(colz * end, s, l, alpha);
-			ctx.arc(left, 48 * scalefactor - rad, rad, 0, 2 * Math.PI);
-			ctx.stroke();
+			if (displayText !== false) {
+				ctx.beginPath();
+				ctx.strokeStyle = ColorHSLaToRGBa(colz * end, s, l, alpha);
+				ctx.arc(left, 48 * scalefactor - rad, rad, 0, 2 * Math.PI);
+				ctx.stroke();
+			}
 			left = left + rad * 2 + 2;
 			colz = colz + 0.1;
 		}
-		ctx.fillText(max, left, 48 * scalefactor);
+		if (displayText !== false) {
+			ctx.fillText(max, left, 48 * scalefactor);
+		}
 	} else {
 		var colorindexs = []; // An new empty array
 		for (var i in colorpoints) {
@@ -2077,15 +2095,19 @@ function makecolors(alpha, ctx) {
 		ctx.font = 12 * scalefactor + "px Roboto";
 		ctx.textAlign = "left";
 		var txt = 'Coloured by ' + $('#colorlabel').val() + ': ';
-		ctx.fillText(txt, left, 48 * scalefactor);
+		if (displayText !== false) {
+			ctx.fillText(txt, left, 48 * scalefactor);
+		}
 		left = left + ctx.measureText(txt).width + 5 * scalefactor + rad;
 		for (var index in colorindexs) {
 			var name = colorindexs[index];
-			ctx.beginPath();
-			ctx.strokeStyle = thecolors[index];
-			ctx.arc(left, 48 * scalefactor - rad, rad, 0, 2 * Math.PI);
-			ctx.stroke();
-			ctx.fillText(name, left + rad + 2 * scalefactor, 48 * scalefactor);
+			if (displayText !== false) {
+				ctx.beginPath();
+				ctx.strokeStyle = thecolors[index];
+				ctx.arc(left, 48 * scalefactor - rad, rad, 0, 2 * Math.PI);
+				ctx.stroke();
+				ctx.fillText(name, left + rad + 2 * scalefactor, 48 * scalefactor);
+			}
 			left = left + ctx.measureText(name).width + 10 * scalefactor + rad * 2;
 		}
 	}

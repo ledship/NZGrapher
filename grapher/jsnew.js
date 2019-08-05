@@ -315,6 +315,13 @@ function newbarandarea() {
 	if ($('#relativefrequency').is(":checked") && $('#relativefrequencyshow').is(":visible")) {
 		relativeFrequency = true;
 	}
+	var betterColours = false;
+	if ($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+		betterColours = true;
+	} else {
+		var alpha = 1 - $('#trans').val() / 100;
+		colours = makecolors(alpha, ctx, '#d3d3d3', false);
+	}
 
 	var left = 60 * scalefactor;
 	var right = width - 60 * scalefactor;
@@ -381,7 +388,15 @@ function newbarandarea() {
 			var value = convertvaltopixel(freq[keys[i]] / sum, origMin / sum, maxYTick, bottom, gTop);
 			var tRight = tLeft + eachWidth;
 			ctx.fillText(key, add(tLeft, tRight - 50 * scalefactor) / 2, height - 40 * scalefactor);
-			ctx.fillStyle = '#d3d3d3';
+			if (betterColours) {
+				ctx.fillStyle = document.getElementById('primarycolour').value;
+			} else {
+				if ($('#color option:selected').text() == $('#xvar option:selected').text()) {
+					ctx.fillStyle = colours[i];
+				} else {
+					ctx.fillStyle = '#d3d3d3';
+				}
+			}
 			var yPixel = value;
 			var x1 = add(tLeft, tRight - 50 * scalefactor) / 2 - ((eachWidth * 0.7) / 2);
 			ctx.fillRect(x1, yPixel, eachWidth * 0.7, bottom - yPixel);
@@ -448,11 +463,40 @@ function newbarandarea() {
 			categoriesY.forEach(function (catY) {
 				var ya = yb;
 				if (full[catX].hasOwnProperty(catY)) {
-					ctx.fillStyle = '#d3d3d3';
+					if (betterColours) {
+						ctx.fillStyle = document.getElementById('primarycolour').value;
+					} else {
+						i = 0;
+						if ($('#color option:selected').text() == $('#xvar option:selected').text() || $('#color option:selected').text() == $('#yvar option:selected').text()) {
+							var usingCatX = $('#color option:selected').text() == $('#xvar option:selected').text() ? true : false;
+							if ($('#color').val() && $('#color').val() != "") {
+								var colorPoints = $('#color').val().split(',');
+								colorPoints.pop();
+								for (var cIndex in colorPoints) {
+									var key = colorPoints[cIndex];
+									if (usingCatX) {
+										if (key == catX) {
+											ctx.fillStyle = colours[i];
+										}
+									} else {
+										if (key == catY) {
+											ctx.fillStyle = colours[i];
+										}
+									}
+									i++;
+								}
+							} else {
+								ctx.fillStyle = '#d3d3d3';
+							}
+						} else {
+							ctx.fillStyle = '#d3d3d3';
+						}
+					}
 					yb = yb + (height - 100 * scalefactor) * full[catX][catY] / numY;
 					ctx.fillRect(xa + 3 * scalefactor, ya + 3 * scalefactor, xb - xa - 3 * scalefactor, yb - ya - 3 * scalefactor);
 					ctx.strokeRect(xa + 3 * scalefactor, ya + 3 * scalefactor, xb - xa - 3 * scalefactor, yb - ya - 3 * scalefactor);
 					ctx.fillStyle = '#000000';
+					ctx.textAlign = "center";
 					ctx.fillText(catY, (xa + xb) / 2, (ya + yb) / 2 + 5 * scalefactor)
 				}
 			});

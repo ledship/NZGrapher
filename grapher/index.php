@@ -6,14 +6,14 @@
 	<title>NZGrapher</title>
 	<link href='//fonts.googleapis.com/css?family=Roboto:400,700|Roboto+Condensed' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="style.css?v=<?php
-		date_default_timezone_set('Pacific/Auckland');
-		echo $v;
+	date_default_timezone_set('Pacific/Auckland');
+	echo $v;
 	?>">
 	<script src="./js.js?v=<?php
-		echo $v;
+	echo $v;
 	?>"></script>
 	<script src="./jsnew.js?v=<?php
-		echo $v;
+	echo $v;
 	?>"></script>
 	<meta name="description"
 	      content="NZGrapher is a web based graphing tool. NZ Grapher was designed for New Zealand Schools by a New Zealand Teacher.">
@@ -164,27 +164,27 @@
 </div>
 
 <?php
-	$fileupload = "no";
-	$mimes = array('application/vnd.ms-excel', 'application/ms-excel', 'application/csv', 'text/plain', 'text/csv', 'text/tsv', 'text/comma-separated-values', 'application/excel', 'application/vnd.msexcel', 'text/anytext', 'application/octet-stream', 'application/txt', 'application/x-csv');
-	if (isset($_FILES['file'])) {
-		if ($_FILES["file"]["error"] > 0) {
-			echo "Error: " . $_FILES["file"]["error"] . "<br>";
-		} else if (!(in_array($_FILES['file']['type'], $mimes))) {
-			echo "<script>alert('Error: file must be a CSV (Type: " . $_FILES["file"]["type"] . ")\\nNo file uploaded');</script>";
-		} else if ($_FILES["file"]["size"] > 200000) {
-			echo "<script>alert('Error: file too large (Size: " . $_FILES["file"]["size"] . ")\\nNo file uploaded');</script>";
-		} else {
-			$fileupload = "yes";
-		}
+$fileupload = "no";
+$mimes = array('application/vnd.ms-excel', 'application/ms-excel', 'application/csv', 'text/plain', 'text/csv', 'text/tsv', 'text/comma-separated-values', 'application/excel', 'application/vnd.msexcel', 'text/anytext', 'application/octet-stream', 'application/txt', 'application/x-csv');
+if (isset($_FILES['file'])) {
+	if ($_FILES["file"]["error"] > 0) {
+		echo "Error: " . $_FILES["file"]["error"] . "<br>";
+	} else if (!(in_array($_FILES['file']['type'], $mimes))) {
+		echo "<script>alert('Error: file must be a CSV (Type: " . $_FILES["file"]["type"] . ")\\nNo file uploaded');</script>";
+	} else if ($_FILES["file"]["size"] > 200000) {
+		echo "<script>alert('Error: file too large (Size: " . $_FILES["file"]["size"] . ")\\nNo file uploaded');</script>";
+	} else {
+		$fileupload = "yes";
 	}
-	if (empty($_GET['folder'])) {
-		$_GET['folder'] = "datasets";
-	}
-	$_GET['folder'] = basename($_GET['folder']);
-	if (substr($_GET['folder'], 0, 1) == ".") {
-		$_GET['folder'] = "datasets";
-		$_GET['dataset'] = "Babies.csv";
-	}
+}
+if (empty($_GET['folder'])) {
+	$_GET['folder'] = "datasets";
+}
+$_GET['folder'] = basename($_GET['folder']);
+if (substr($_GET['folder'], 0, 1) == ".") {
+	$_GET['folder'] = "datasets";
+	$_GET['dataset'] = "Babies.csv";
+}
 
 ?>
 
@@ -204,35 +204,35 @@
 			                     style='width:180px;height:27px;padding:0px;'>
 				<?php
 
-					if ($fileupload == "yes") {
-						$_GET['dataset'] = $_FILES["file"]["name"];
-						echo "<option>" . $_FILES["file"]["name"] . "</option>";
-					}
+				if ($fileupload == "yes") {
+					$_GET['dataset'] = $_FILES["file"]["name"];
+					echo "<option>" . $_FILES["file"]["name"] . "</option>";
+				}
 
-					$files = glob($_GET['folder'] . '/*.csv');
-					$files2 = glob($_GET['folder'] . '/*.CSV');
-					$files = array_merge($files, $files2);
-					foreach ($files as $key => $file) {
-						$files[$key] = substr($file, strlen($_GET['folder']) + 1);
-					}
-					sort($files);
-					if (array_key_exists('dataset', $_GET)) {
-						$dataset = $_GET['dataset'];
-					} else if (array_key_exists(0, $files)) {
-						$dataset = $files[0];
-					} else {
-						echo '<option>ERROR</option>';
-					}
-					$dataset = basename($dataset);
-					foreach ($files as $file) {
-						if (strtolower(substr($file, -3)) == 'csv') {
-							echo "<option";
-							if ($file == $dataset) {
-								echo " selected";
-							}
-							echo ">$file</option>";
+				$files = glob($_GET['folder'] . '/*.csv');
+				$files2 = glob($_GET['folder'] . '/*.CSV');
+				$files = array_merge($files, $files2);
+				foreach ($files as $key => $file) {
+					$files[$key] = substr($file, strlen($_GET['folder']) + 1);
+				}
+				sort($files);
+				if (array_key_exists('dataset', $_GET)) {
+					$dataset = $_GET['dataset'];
+				} else if (array_key_exists(0, $files)) {
+					$dataset = $files[0];
+				} else {
+					echo '<option>ERROR</option>';
+				}
+				$dataset = basename($dataset);
+				foreach ($files as $file) {
+					if (strtolower(substr($file, -3)) == 'csv') {
+						echo "<option";
+						if ($file == $dataset) {
+							echo " selected";
 						}
+						echo ">$file</option>";
 					}
+				}
 				?>
 			</select>
 		</form>
@@ -303,9 +303,9 @@
 		<li id=pastelinkclick>Paste Link</li>
 		<li id=highlightdatatable>Select Data Table</li>
 		<?php
-			if (substr($dataset, 0, 6) != "SECURE") {
-				echo "<li><a href='#' id=download style='text-decoration:none;color:#000;'>Download Data</a></li>";
-			}
+		if (substr($dataset, 0, 6) != "SECURE") {
+			echo "<li><a href='#' id=download style='text-decoration:none;color:#000;'>Download Data</a></li>";
+		}
 		?>
 	</ul>
 </div>
@@ -370,157 +370,157 @@
 	</span>
 	</div>
 	<?php
-		echo "<table id=data>\n\n";
-		if (empty($dataset)) {
-			echo "No such file";
-			die();
-		}
+	echo "<table id=data>\n\n";
+	if (empty($dataset)) {
+		echo "No such file";
+		die();
+	}
 
-		ini_set("auto_detect_line_endings", "1");
-		if ($fileupload == "yes") {
-			$f = fopen($_FILES["file"]["tmp_name"], "r") or die("can't open file");
-			$file = $_FILES["file"]["tmp_name"];
-		} else {
-			if (file_exists($_GET['folder'])) {
-				if (substr($dataset, -3) != 'csv') {
-					echo "Invalid File";
-					die();
-				}
-				if (!in_array($dataset, $files)) {
-					echo "Invalid File";
-					die();
-				}
-				if (file_exists($_GET['folder'] . "/$dataset")) {
-					$f = fopen($_GET['folder'] . "/$dataset", "r") or die("can't open file");
-					$file = $_GET['folder'] . "/$dataset";
-				} else {
-					echo "No such file";
-					die();
-				}
-			} else {
-				echo "The directory is empty. Please choose a valid directory. The default is datasets.";
+	ini_set("auto_detect_line_endings", "1");
+	if ($fileupload == "yes") {
+		$f = fopen($_FILES["file"]["tmp_name"], "r") or die("can't open file");
+		$file = $_FILES["file"]["tmp_name"];
+	} else {
+		if (file_exists($_GET['folder'])) {
+			if (substr($dataset, -3) != 'csv') {
+				echo "Invalid File";
 				die();
 			}
-		}
-		$i = 0;
-		$vars = array();
-		$data = array();
-
-		//Update to check the delimiters
-		//The delimiters array to look through
-		$delimiters = array(
-			'semicolon' => ";",
-			'tab' => "\t",
-			'comma' => ",",
-		);
-
-
-		if (isset($_POST['csv_data'])) {
-			$csv_data = urldecode($_POST['csv_data']);
-		}
-
-		if (isset($_GET['url'])) {
-			$file = $_GET['url'];
-		}
-
-		//Load the csv file into a string
-
-		if (isset($csv_data)) {
-			$csv = $csv_data;
-		} else {
-			$csv = file_get_contents($file);
-		}
-		if (isset($_GET['url'])) {
-			$csv_data = $csv;
-		}
-		foreach ($delimiters as $key => $delim) {
-			$res[$key] = substr_count($csv, $delim);
-		}
-
-		//reverse sort the values, so the [0] element has the most occured delimiter
-		arsort($res);
-
-		reset($res);
-		$first_key = key($res);
-
-		$del = $delimiters[$first_key];
-
-		if (isset($csv_data)) {
-			$csv_data = preg_replace('/\r\n|\n\r|\n|\r/', '\n', $csv_data);
-			$lines = explode("\\n", $csv_data);
-			foreach ($lines as $line) {
-				$line = str_getcsv($line);
-				if ($i == 0) {
-					$i = "id";
-					$cols = count($line);
-				}
-				if (count($line) < $cols) {
-					break;
-				}
-				echo "<tr";
-				if ($i == "id") {
-					echo " class=tabletop";
-				}
-				echo "><th>$i</th>";
-				if ($i == "id") {
-					$i = 0;
-				}
-				$r = 1;
-				foreach ($line as $cell) {
-					$cell = str_replace(",", "-", htmlspecialchars(trim($cell)));
-					if ($i == 0) {
-						array_push($vars, $cell);
-						$data["$r"] = array();
-					} else {
-						if ($r <= $cols) {
-							array_push($data["$r"], $cell);
-						}
-					}
-					if ($r <= $cols) {
-						echo "<td><div>" . $cell . "<br></div></td>";
-					}
-					$r++;
-				}
-				echo "</tr>\n";
-				$i++;
+			if (!in_array($dataset, $files)) {
+				echo "Invalid File";
+				die();
 			}
-
-		} else {
-			while (($line = fgetcsv($f, 0, $del)) !== false) {
-				if ($i == 0) {
-					$i = "id";
-					$cols = count($line);
-				}
-				echo "<tr";
-				if ($i == "id") {
-					echo " class=tabletop";
-				}
-				echo "><th>$i</th>";
-				if ($i == "id") {
-					$i = 0;
-				}
-				$r = 1;
-				foreach ($line as $cell) {
-					$cell = str_replace(",", "-", htmlspecialchars(trim($cell)));
-					if ($i == 0) {
-						array_push($vars, $cell);
-						$data["$r"] = array();
-					} else {
-						if ($r <= $cols) {
-							array_push($data["$r"], $cell);
-						}
-					}
-					if ($r <= $cols) {
-						echo "<td><div>" . $cell . "<br></div></td>";
-					}
-					$r++;
-				}
-				echo "</tr>\n";
-				$i++;
+			if (file_exists($_GET['folder'] . "/$dataset")) {
+				$f = fopen($_GET['folder'] . "/$dataset", "r") or die("can't open file");
+				$file = $_GET['folder'] . "/$dataset";
+			} else {
+				echo "No such file";
+				die();
 			}
+		} else {
+			echo "The directory is empty. Please choose a valid directory. The default is datasets.";
+			die();
 		}
-		fclose($f);
-		echo "\n</table></body></html>";
+	}
+	$i = 0;
+	$vars = array();
+	$data = array();
+
+	//Update to check the delimiters
+	//The delimiters array to look through
+	$delimiters = array(
+		'semicolon' => ";",
+		'tab' => "\t",
+		'comma' => ",",
+	);
+
+
+	if (isset($_POST['csv_data'])) {
+		$csv_data = urldecode($_POST['csv_data']);
+	}
+
+	if (isset($_GET['url'])) {
+		$file = $_GET['url'];
+	}
+
+	//Load the csv file into a string
+
+	if (isset($csv_data)) {
+		$csv = $csv_data;
+	} else {
+		$csv = file_get_contents($file);
+	}
+	if (isset($_GET['url'])) {
+		$csv_data = $csv;
+	}
+	foreach ($delimiters as $key => $delim) {
+		$res[$key] = substr_count($csv, $delim);
+	}
+
+	//reverse sort the values, so the [0] element has the most occured delimiter
+	arsort($res);
+
+	reset($res);
+	$first_key = key($res);
+
+	$del = $delimiters[$first_key];
+
+	if (isset($csv_data)) {
+		$csv_data = preg_replace('/\r\n|\n\r|\n|\r/', '\n', $csv_data);
+		$lines = explode("\\n", $csv_data);
+		foreach ($lines as $line) {
+			$line = str_getcsv($line);
+			if ($i == 0) {
+				$i = "id";
+				$cols = count($line);
+			}
+			if (count($line) < $cols) {
+				break;
+			}
+			echo "<tr";
+			if ($i == "id") {
+				echo " class=tabletop";
+			}
+			echo "><th>$i</th>";
+			if ($i == "id") {
+				$i = 0;
+			}
+			$r = 1;
+			foreach ($line as $cell) {
+				$cell = str_replace(",", "-", htmlspecialchars(trim($cell)));
+				if ($i == 0) {
+					array_push($vars, $cell);
+					$data["$r"] = array();
+				} else {
+					if ($r <= $cols) {
+						array_push($data["$r"], $cell);
+					}
+				}
+				if ($r <= $cols) {
+					echo "<td><div>" . $cell . "<br></div></td>";
+				}
+				$r++;
+			}
+			echo "</tr>\n";
+			$i++;
+		}
+
+	} else {
+		while (($line = fgetcsv($f, 0, $del)) !== false) {
+			if ($i == 0) {
+				$i = "id";
+				$cols = count($line);
+			}
+			echo "<tr";
+			if ($i == "id") {
+				echo " class=tabletop";
+			}
+			echo "><th>$i</th>";
+			if ($i == "id") {
+				$i = 0;
+			}
+			$r = 1;
+			foreach ($line as $cell) {
+				$cell = str_replace(",", "-", htmlspecialchars(trim($cell)));
+				if ($i == 0) {
+					array_push($vars, $cell);
+					$data["$r"] = array();
+				} else {
+					if ($r <= $cols) {
+						array_push($data["$r"], $cell);
+					}
+				}
+				if ($r <= $cols) {
+					echo "<td><div>" . $cell . "<br></div></td>";
+				}
+				$r++;
+			}
+			echo "</tr>\n";
+			$i++;
+		}
+	}
+	fclose($f);
+	echo "\n</table></body></html>";
 	?>
 </div>
 <div id=variable>
@@ -625,9 +625,9 @@
 </div>
 
 <div id=welcome <?php
-	if (isset($_COOKIE['welcome'])) {
-		echo " style='display:none'";
-	}
+if (isset($_COOKIE['welcome'])) {
+	echo " style='display:none'";
+}
 ?>>
 	<div id=welcomecontent style='text-align:center;'>
 		<br>
@@ -653,7 +653,7 @@
 			<br>By pressing the button below you are acknowledging that NZGrapher uses cookies<br>
 			<button class=button style='font-size:15px;margin-top:10px;'
 			        onclick="$('#welcome').hide();document.cookie='welcome=yes; expires=<?php
-				        echo date(DateTime::RSS, strtotime('24 hours'));
+			        echo date(DateTime::RSS, strtotime('24 hours'));
 			        ?>'">Start Using NZGrapher
 			</button>
 		</div>
@@ -807,6 +807,10 @@
 					<span id=grayscaleshow><label>
 				<input type="checkbox" onclick="updategraph();" id="grayscale" name="grayscale" value="yes"> Gray Scale <br>(do not use on Firefox)</label><br>
 			</span>
+					<span id="bettercoloursshow"><label>
+							<input type="checkbox" onclick="updategraph();" id="bettercolours" name="bettercolours"
+							       value="no"> Better Colours
+						</label><br></span>
 				</div>
 			</td>
 			<td>
@@ -825,7 +829,7 @@
                     <select id="standardsize" name="standardsize" onchange="updategraph()" style='width:120px;'>
 				        <option>Auto</option>
 				        <?php
-					        //echo "<option>Auto - High Res</option>";
+				        //echo "<option>Auto - High Res</option>";
 				        ?>
 				        <option>Standard</option>
 				        <option>Short</option>
@@ -855,12 +859,12 @@
 	</div>
 	<div id=updater>
 		<?php
-			if (isset($_GET['dev'])) {
-				?>
-				<span onclick='reload_js()'>Reload JS</span>
+		if (isset($_GET['dev'])) {
+			?>
+			<span onclick='reload_js()'>Reload JS</span>
 
-				<?php
-			}
+			<?php
+		}
 		?>
 		<span onclick="moreoptions()">More Options</span> <span onclick="updatebox()">Update Graph</span></div>
 </div>
@@ -1158,6 +1162,19 @@
 			<tr>
 				<td>Max Y:
 				<td><input id=scatplotmaxy value=auto>
+			<tr>
+				<td colspan="2"><b>Better Colours:</b><br>
+					Use the colour picker to choose the colour of the data in your graph
+				</td>
+			</tr>
+			<tr>
+				<td>Primary Colour</td>
+				<td><input type="color" id="primarycolour" name="primarycolour" value="#3480eb"></td>
+			</tr>
+			<tr>
+				<td>Secondary Colour</td>
+				<td><input type="color" id="secondarycolour" name="secondarycolour"></td>
+			</tr>
 		</table>
 		<br><br>
 		<span href="#"
