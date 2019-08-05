@@ -1170,7 +1170,7 @@ function graphchange(obj) {
 		document.getElementById('color').style.display = 'inline';
 		document.getElementById('colorname').style.display = 'inline';
 	}
-	if (obj.value == 'newbarandarea') {
+	if (obj.value == 'newbarandarea' || obj.value == 'dotplot' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newresiduals') {
 		document.getElementById('bettercoloursshow').style.display = 'block';
 	}
 
@@ -2309,6 +2309,7 @@ function newdotplot() {
 	$('#gridlinesshow').show();
 	$('#removedpointsshow').show();
 	$('#stripgraphshow').show();
+	$('#bettercoloursshow').show();
 
 	var canvas = document.getElementById('myCanvas');
 	var ctx = canvas.getContext('2d');
@@ -2378,6 +2379,10 @@ function newdotplot() {
 
 	var alpha = 1 - $('#trans').val() / 100;
 	var colors = makecolors(alpha, ctx);
+	var betterColours = false;
+	if ($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+		betterColours = true;
+	}
 
 	if (ypoints.length > 0) {
 		allydifferentgroups = split(allpoints, ypoints, 10, 2);
@@ -2431,7 +2436,7 @@ function newdotplot() {
 			return zdifferentgroups;
 		}
 	} else {
-		var error = plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxheight, points, xpoints, ypoints, colors, allygroups);
+		var error = plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxheight, points, xpoints, ypoints, colors, allygroups, betterColours);
 		if (error != 'good') {
 			return error;
 		}
@@ -2502,7 +2507,7 @@ function labelgraph(ctx, width, height) {
 	ctx.fillText("www.mathsnz.com", width - 10 * scalefactor, height - 10 * scalefactor);
 }
 
-function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxheight, points, xpoints, ypoints, colors, allygroups) {
+function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxheight, points, xpoints, ypoints, colors, allygroups, usingBetterColours) {
 	ctx.strokeStyle = '#000000';
 	horaxis(ctx, left, right, add(oypixel, 10 * scalefactor), minxtick, maxxtick, xstep);
 	if (ypoints.length > 0) {
@@ -2515,7 +2520,7 @@ function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxhei
 				group = allygroups[index];
 				points = ydifferentgroups[group];
 				if (points) {
-					plotdotplot(ctx, points, xpoints, minxtick, maxxtick, oypixel, left, right, thismaxheight, colors, 2, 1);
+					plotdotplot(ctx, points, xpoints, minxtick, maxxtick, oypixel, left, right, thismaxheight, colors, 2, 1, undefined, undefined, undefined, undefined, usingBetterColours);
 				}
 				ctx.fillStyle = '#000000';
 				fontsize = 15 * scalefactor;
@@ -2528,12 +2533,13 @@ function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxhei
 			return ydifferentgroups;
 		}
 	} else {
-		plotdotplot(ctx, points, xpoints, minxtick, maxxtick, oypixel, left, right, maxheight, colors, 2, 1);
+		plotdotplot(ctx, points, xpoints, minxtick, maxxtick, oypixel, left, right, maxheight, colors, 2, 1, undefined, undefined, undefined, undefined, usingBetterColours);
 	}
 	return 'good';
 }
 
-function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, right, maxheight, colors, sort, hovers, displayBoxPlot, btype, disableLabelsSum, differenceXCount) {
+function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, right, maxheight, colors, sort, hovers,
+                     displayBoxPlot, btype, disableLabelsSum, differenceXCount, usingBetterColours) {
 	ctx.lineWidth = 2 * scalefactor;
 	if ($('#thicklines').is(":checked")) {
 		ctx.lineWidth = 5 * scalefactor;
@@ -2622,7 +2628,11 @@ function plotdotplot(ctx, indexes, values, minxtick, maxxtick, oypixel, left, ri
 			ypixel = randint(oypixel - 10 * scalefactor, oypixel - maxheight + 10 * scalefactor + maxheight * 0.5)
 		}
 		lastxpixel = xpixel;
-		ctx.strokeStyle = colors[key];
+		if(usingBetterColours === true) {
+			ctx.strokeStyle = document.getElementById('primarycolour').value;
+		} else {
+			ctx.strokeStyle = colors[key];
+		}
 		ctx.arc(rawxpixel, ypixel, rad, 0, 2 * Math.PI);
 		ctx.stroke();
 		if (hovers == 1) {
@@ -4509,6 +4519,7 @@ function newscatter() {
 	$('#removedpointsshow').show();
 	$('#pointsizename').html('Point Size:');
 	$('#transdiv').show();
+	$('#bettercoloursshow').show();
 
 	var canvas = document.getElementById('myCanvas');
 	var ctx = canvas.getContext('2d');
@@ -4522,6 +4533,11 @@ function newscatter() {
 
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	var betterColours = false;
+	if ($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+		betterColours = true;
+	}
 
 	//graph title
 	ctx.fillStyle = '#000000';
@@ -4650,7 +4666,7 @@ function newscatter() {
 				ctx.textAlign = "center";
 				ctx.fillText(group, add(thisleft, thisright - 50 * scalefactor) / 2, oypixel - maxheight);
 
-				plotscatter(ctx, points, xpoints, ypoints, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, add(thisleft, 30 * scalefactor), thisright - 50 * scalefactor, colors);
+				plotscatter(ctx, points, xpoints, ypoints, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, add(thisleft, 30 * scalefactor), thisright - 50 * scalefactor, colors, betterColours);
 
 				thisleft = add(thisleft, eachwidth);
 			}
@@ -4658,7 +4674,7 @@ function newscatter() {
 			return zdifferentgroups;
 		}
 	} else {
-		plotscatter(ctx, points, xpoints, ypoints, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, left, right, colors);
+		plotscatter(ctx, points, xpoints, ypoints, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, left, right, colors, betterColours);
 	}
 
 	labelgraph(ctx, width, height);
@@ -4671,7 +4687,7 @@ function newscatter() {
 	return dataURL;
 }
 
-function plotscatter(ctx, indexes, xpoints, ypoints, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, left, right, colors) {
+function plotscatter(ctx, indexes, xpoints, ypoints, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, left, right, colors, usingBetterColours) {
 	horaxis(ctx, left, right, add(bottom, 10 * scalefactor), minxtick, maxxtick, xstep);
 	vertaxis(ctx, gtop, bottom, left - 10 * scalefactor, minytick, maxytick, ystep);
 	ctx.lineWidth = 2 * scalefactor;
@@ -4708,7 +4724,11 @@ function plotscatter(ctx, indexes, xpoints, ypoints, minxtick, maxxtick, xstep, 
 			ypixel = add(ypixel, randint(-3 * scalefactor, 3 * scalefactor));
 		}
 		ctx.beginPath();
-		ctx.strokeStyle = colors[index];
+		if(usingBetterColours) {
+			ctx.strokeStyle = document.getElementById('primarycolour').value;
+		} else {
+			ctx.strokeStyle = colors[index];
+		}
 		ctx.arc(xpixel, ypixel, rad, 0, 2 * Math.PI);
 		ctx.stroke();
 		$('#graphmap').append('<area shape="circle" coords="' + (xpixel / scalefactor) + ',' + (ypixel / scalefactor) + ',' + rad + '" alt="' + parseInt(add(index, 1)) + '" desc="Point ID: ' + parseInt(add(index, 1)) + '<br>' + $('#xaxis').val() + ': ' + xpoint + '<br>' + $('#yaxis').val() + ': ' + ypoint + '">');

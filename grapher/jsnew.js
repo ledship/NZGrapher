@@ -27,6 +27,11 @@ function newresiduals() {
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+	var betterColours = false;
+	if($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+		betterColours = true;
+	}
+
 	//graph title
 	ctx.fillStyle = '#000000';
 	drawTitle(ctx, $('#title').val(), width / 2, 30 * scalefactor, 20);
@@ -267,7 +272,7 @@ function newresiduals() {
 	var gtop = 90 * scalefactor;
 	var bottom = height - 60 * scalefactor;
 
-	plotscatter(ctx, points, fitted, residuals, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, left, right, colors);
+	plotscatter(ctx, points, fitted, residuals, minxtick, maxxtick, xstep, minytick, maxytick, ystep, gtop, bottom, left, right, colors, betterColours);
 
 	labelgraph(ctx, width, height);
 
@@ -525,6 +530,11 @@ function newhistogram() {
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+	var betterColours = false;
+	if ($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+		betterColours = true;
+	}
+
 	// get points
 	var xPoints = $('#xvar').val().split(',');
 	xPoints.pop();
@@ -700,6 +710,7 @@ function newhistogram() {
 
 		var valueKeys = Object.keys(values);
 		for (var valueKey in valueKeys) {
+			ctx.fillStyle = '#d3d3d3';
 			var xBucket = parseFloat(valueKeys[valueKey]);
 			var freq = values[xBucket];
 			var x1 = (axisWidth * (xBucket - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
@@ -712,6 +723,9 @@ function newhistogram() {
 			var y1 = convertvaltopixel(freq / div, minYTick, maxYTick, Number(yAxis - axisTolerance), oldYAxis);
 			var h = (yAxis - axisTolerance) - y1;
 			line(ctx, x1, y1, x2, y1);
+			if (betterColours) {
+				ctx.fillStyle = document.getElementById('primarycolour').value;
+			}
 			ctx.fillRect(x1, y1, w, h);
 			ctx.strokeRect(x1, y1, w, h);
 		}
@@ -1331,6 +1345,10 @@ function newhistogramf() {
 	if ($('#relativefrequency').is(":checked")) {
 		relativeFrequency = true;
 	}
+	var betterColours = false;
+	if($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+		betterColours = true;
+	}
 
 	// get points
 	var xPoints = $('#xvar').val().split(',');
@@ -1520,6 +1538,7 @@ function newhistogramf() {
 
 		var valueKeys = Object.keys(values);
 		for (var valueKey in valueKeys) {
+			ctx.fillStyle = '#d3d3d3';
 			var xBucket = parseFloat(valueKeys[valueKey]);
 			var freq = values[xBucket];
 			var x1 = (axisWidth * (xBucket - minXTick) / (maxXTick - minXTick)) + 90 * scalefactor;
@@ -1532,6 +1551,9 @@ function newhistogramf() {
 			var y1 = convertvaltopixel(freq / div, minYTick, maxYTick, Number(yAxis - axisTolerance), oldYAxis);
 			var h = (yAxis - axisTolerance) - y1;
 			line(ctx, x1, y1, x2, y1);
+			if (betterColours) {
+				ctx.fillStyle = document.getElementById('primarycolour').value;
+			}
 			ctx.fillRect(x1, y1, w, h);
 			ctx.strokeRect(x1, y1, w, h);
 		}

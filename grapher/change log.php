@@ -59,11 +59,18 @@
 		/*
 		TODO List
 		- Escape titles on graphs.
-		- Once all the graphing functions are on JavaScript, work to remove jQuery some of the more intensive jquery functions.
+		- Work to remove jQuery some of the more intensive jquery functions.
 		*************************
 		- Look into adding a file from a URL
 		*/
 	?>
+	<b>2019-08-5</b>
+	<ul>
+		<li>Better colour options for bar and area graphs, dot plots, histograms, histogram summary data and resiudals. Found under more options button.</li>
+		<li>Option to colour bar graphs by the variable(variable 1) that you selected</li>
+		<li>Option to colour area graphs by either variable(variable 1 and 2) you selected.</li>
+		<li>Removal of unneeded files</li>
+	</ul>
 	<b>2019-07-29</b>
 	<ul>
 		<li>Added hover boxes for Time Series Graphs. (Upstream change)</li>
