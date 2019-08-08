@@ -1,6 +1,34 @@
 <?php include './version.php'; ?>
 <html v=<?php echo $v; ?>>
 <head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-73280928-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+
+		gtag('js', new Date());
+
+		gtag('config', 'UA-73280928-1');
+	</script>
+	<!-- Google Tag Manager -->
+	<script>(function (w, d, s, l, i) {
+			w[l] = w[l] || [];
+			w[l].push({
+				'gtm.start':
+					new Date().getTime(), event: 'gtm.js'
+			});
+			var f = d.getElementsByTagName(s)[0],
+				j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+			j.async = true;
+			j.src =
+				'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+			f.parentNode.insertBefore(j, f);
+		})(window, document, 'script', 'dataLayer', 'GTM-KFXMHCR');</script>
+	<!-- End Google Tag Manager -->
 	<script src="./jquery-1.11.1.min.js"></script>
 	<script src="./regression.min.js"></script>
 	<title>NZGrapher</title>
@@ -39,6 +67,12 @@
 	<meta id="vp" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+	<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KFXMHCR"
+	        height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
 <script>
 	if (screen.availWidth < 760) {
 		var mvp = document.getElementById('vp');
@@ -1174,6 +1208,13 @@ if (isset($_COOKIE['welcome'])) {
 			<tr>
 				<td>Secondary Colour</td>
 				<td><input type="color" id="secondarycolour" name="secondarycolour"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><b>General Graph Settings:</b></td>
+			</tr>
+			<tr>
+				<td># Characters before new line</td>
+				<td><input id="numCharactersBeforeNewLine" name="numCharactersBeforeNewLine" type="number" value="80"></td>
 			</tr>
 		</table>
 		<br><br>

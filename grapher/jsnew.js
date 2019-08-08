@@ -2217,12 +2217,13 @@ function array_count_values(array) {
  */
 function drawTitle(ctx, title, x, y, fontsize) {
 	ctx.font = "bold " + fontsize * scalefactor + "px Roboto";
+	var numCharacters = document.getElementById("numCharactersBeforeNewLine").value;
 	ctx.textAlign = "center";
-	if (title.length < 80) { // We don't have to run this check, but by doing this we don't have to spend resources by doing regex matching
+	if (title.length < numCharacters) { // We don't have to run this check, but by doing this we don't have to spend resources by doing regex matching
 		ctx.fillText(title, x, y);
 	} else {
 		// Split into lines
-		var split = title.match(/.{1,80}(\s|$)/g);
+		var split = title.match(new RegExp(".{1," + numCharacters + "}(\\s|$)", 'g'));
 		var titleY = y;
 		split.forEach(function (t, index) {
 			ctx.fillText(split[index], x, titleY);
