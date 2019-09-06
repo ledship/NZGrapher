@@ -56,17 +56,39 @@
 		<h1><img src='logob.png' style='position:relative;top:22px;height:65px;'> Change Log</h1>
 	</center>
 	<?php
-		/*
-		TODO List
-		- Escape titles on graphs.
-		- Work to remove jQuery some of the more intensive jquery functions.
-		*************************
-		- Look into adding a file from a URL
-		*/
+	/*
+	TODO List
+	- Work to remove jQuery some of the more intensive jquery functions.
+	- Merge upstream addition  of teaching tools and revamp of sampling variability reaching tool.
+	*************************
+	- Look into adding a file from a URL
+	*/
 	?>
+	<b>2019-09-6</b>
+	<ul>
+		<li>Add some of the upstream changes that we didn't already have:</li>
+		<li style="list-style-type: none;">
+			<ul>
+				<li>Donut option for pie charts</li>
+				<li>Hovers</li>
+				<li>Changes to variable labels on dot plots</li>
+				<li>Changed location of 'Reset' to inside the 'Data' menu</li>
+				<li>Standard deviation details displayed on summary data for histograms</li>
+			</ul>
+		</li>
+		<li>To come in the future from the upstream changes:</li>
+		<li style="list-style-type: none;">
+			<ul>
+				<li>New teaching tools</li>
+				<li>Revamp of sampling variability teaching tool</li>
+			</ul>
+		</li>
+	</ul>
 	<b>2019-08-5</b>
 	<ul>
-		<li>Better colour options for bar and area graphs, dot plots, histograms, histogram summary data and resiudals. Found under more options button.</li>
+		<li>Better colour options for bar and area graphs, dot plots, histograms, histogram summary data and resiudals.
+			Found under more options button.
+		</li>
 		<li>Option to colour bar graphs by the variable(variable 1) that you selected</li>
 		<li>Option to colour area graphs by either variable(variable 1 and 2) you selected.</li>
 		<li>Removal of unneeded files</li>

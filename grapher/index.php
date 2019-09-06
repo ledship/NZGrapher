@@ -294,8 +294,6 @@ if (substr($_GET['folder'], 0, 1) == ".") {
 		<div class=spacer></div>
 		<div class=abutton id=samshowhide>Sample and More</div>
 		<div class=spacer></div>
-		<div class=abutton id=reset>Reset</div>
-		<div class=spacer></div>
 		<div class=abutton id=update>Save Changes</div>
 		<div class=spacer></div>
 		<div class=abutton id=helper>Help</div>
@@ -341,6 +339,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
 			echo "<li><a href='#' id=download style='text-decoration:none;color:#000;'>Download Data</a></li>";
 		}
 		?>
+		<li id=reset>Reset</li>
 	</ul>
 </div>
 
