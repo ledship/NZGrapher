@@ -841,10 +841,20 @@ if (isset($_COOKIE['welcome'])) {
 					<span id=grayscaleshow><label>
 				<input type="checkbox" onclick="updategraph();" id="grayscale" name="grayscale" value="yes"> Gray Scale <br>(do not use on Firefox)</label><br>
 			</span>
-					<span id="bettercoloursshow"><label>
+					<span id="bettercoloursshow">
+						<label>
 							<input type="checkbox" onclick="updategraph();" id="bettercolours" name="bettercolours"
 							       value="no"> Better Colours
-						</label><br></span>
+						</label>
+						<br>
+					</span>
+					<span id="donutshow">
+						<label>
+							<input type="checkbox" onclick="updategraphgo();" id="donutchart" name="donutchart"
+							       value="no">Donut
+							<br>
+						</label>
+					</span>
 				</div>
 			</td>
 			<td>
@@ -1214,7 +1224,8 @@ if (isset($_COOKIE['welcome'])) {
 			</tr>
 			<tr>
 				<td># Characters before new line</td>
-				<td><input id="numCharactersBeforeNewLine" name="numCharactersBeforeNewLine" type="number" value="80"></td>
+				<td><input id="numCharactersBeforeNewLine" name="numCharactersBeforeNewLine" type="number" value="80">
+				</td>
 			</tr>
 		</table>
 		<br><br>

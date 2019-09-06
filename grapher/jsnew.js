@@ -707,6 +707,7 @@ function newhistogram() {
 		var med = median(xPoints);
 		var mean = calculatemean(xPoints);
 		var num = xPoints.length;
+		var sd = standarddeviation(xPoints);
 
 		var valueKeys = Object.keys(values);
 		for (var valueKey in valueKeys) {
@@ -736,6 +737,7 @@ function newhistogram() {
 			ctx.fillText("med:  " + med, 90 * scalefactor, oldYAxis);
 			ctx.fillText("mean:  " + mean, 90 * scalefactor, oldYAxis + 10 * scalefactor);
 			ctx.fillText("num:  " + num, 90 * scalefactor, oldYAxis + 20 * scalefactor);
+			ctx.fillText("sd:  " + sd, 90 * scalefactor, oldYAxis + 30 * scalefactor);
 		}
 
 		oldYAxis = yAxis;
@@ -1535,6 +1537,7 @@ function newhistogramf() {
 		var med = median(xPoints);
 		var mean = calculatemean(xPoints);
 		var num = xPoints.length;
+		var sd = standarddeviation(xPoints);
 
 		var valueKeys = Object.keys(values);
 		for (var valueKey in valueKeys) {
@@ -1564,6 +1567,7 @@ function newhistogramf() {
 			ctx.fillText("med:  " + med, 90 * scalefactor, oldYAxis);
 			ctx.fillText("mean:  " + mean, 90 * scalefactor, oldYAxis + 10 * scalefactor);
 			ctx.fillText("num:  " + num, 90 * scalefactor, oldYAxis + 20 * scalefactor);
+			ctx.fillText("sd:  " + sd, 90 * scalefactor, oldYAxis + 30 * scalefactor);
 		}
 
 		oldYAxis = yAxis;
@@ -1997,7 +2001,15 @@ function newpiechart() {
 		var centerX = width / 2;
 		var centerY = height / 2;
 		var diameter = Math.min(height - 150, width - 150);
-		pie(ctx, xPoints, diameter / 2, centerX, centerY);
+		var isDonut = false;
+		if($('#donutchart').is(":checked") && $('#donutshow').is(":visible")) {
+			isDonut = true;
+		}
+		var displaySummary = false;
+		if($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+			displaySummary = true;
+		}
+		pie(ctx, xPoints, diameter / 2, centerX, centerY, displaySummary, isDonut);
 		if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
 			ctx.fillStyle = '#000';
 			ctx.textAlign = "center";
@@ -2039,7 +2051,15 @@ function newpiechart() {
 			var centerX = graphWidth / 2 + left;
 			var centerY = graphHeight / 2 + top - 20 * scalefactor;
 			var diameter = Math.min(graphHeight - 50, graphWidth - 10);
-			pie(ctx, points, diameter / 2, centerX, centerY);
+			var isDonut = false;
+			if($('#donutchart').is(":checked") && $('#donutshow').is(":visible")) {
+				isDonut = true;
+			}
+			var displaySummary = false;
+			if($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+				displaySummary = true;
+			}
+			pie(ctx, points, diameter / 2, centerX, centerY, displaySummary, isDonut);
 			if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
 				cat += " (num: " + points.length + ")";
 			}
@@ -2063,7 +2083,7 @@ function newpiechart() {
 	return canvas.toDataURL();
 }
 
-function pie(ctx, xPoints, radius, centerX, centerY) {
+function pie(ctx, xPoints, radius, centerX, centerY, displaySummary, isDonut) {
 	if (radius <= 0) {
 		return 'Error: The number of pie charts being drawn is too large!';
 	}
@@ -2075,7 +2095,7 @@ function pie(ctx, xPoints, radius, centerX, centerY) {
 		total += freq[key];
 	}
 	keys.sort(sortorder);
-	ctx.font = 15 * scalefactor + "px Roboto";
+	ctx.font = 14 * scalefactor + "px Roboto";
 	ctx.textAlign = "center";
 	var rot = 270;
 	for (var key in keys) {
@@ -2112,11 +2132,24 @@ function pie(ctx, xPoints, radius, centerX, centerY) {
 		var pixX = Math.round(radius * Math.cos(deg2rad(start)) + centerX);
 		var pixY = Math.round(radius * Math.sin(deg2rad(start)) + centerY);
 		line(ctx, centerX, centerY, pixX, pixY);
-		pixX = Math.round(radius * 0.7 * Math.cos(deg2rad(half)) + centerX);
-		pixY = Math.round(radius * 0.7 * Math.sin(deg2rad(half)) + centerY);
+		pixX = Math.round(radius * 0.8 * Math.cos(deg2rad(half)) + centerX);
+		pixY = Math.round(radius * 0.8 * Math.sin(deg2rad(half)) + centerY);
 		ctx.fillStyle = '#000';
 		ctx.fillText(key, pixX, pixY + 5 * scalefactor);
+		if(displaySummary) {
+			ctx.font = 12 * scalefactor + "px Roboto";
+			ctx.fillText("(num: " + numInKey + ")", pixX, pixY + 20 * scalefactor);
+			ctx.font = 14 * scalefactor + "px Roboto";
+		}
 		rot += angle;
+	}
+	if(isDonut) {
+		ctx.fillStyle = '#fff';
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, (radius * 2) * 0.3, 0, 2 * Math.PI);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
 	}
 }
 

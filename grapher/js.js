@@ -1082,6 +1082,8 @@ function graphchange(obj) {
 	document.getElementById('stripgraphshow').style.display = 'none';
 	document.getElementById('stackdots').checked = false;
 	document.getElementById('bettercoloursshow').style.display = 'none';
+	document.getElementById('donutshow').style.display = 'none';
+	document.getElementById('donutchart').checked = false;
 	$('#removedpointsshow').hide();
 	if (obj.value == 'dotplot' || obj.value.substring(0, 4) == 'boot' || obj.value.substring(0, 6) == 'newrer' || obj.value == 'newpairedexperimentdotplot' || obj.value == 'scatter' || obj.value == 'time series forecasts' || obj.value == 'old time series forecasts' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newpiechart' || obj.value == 'newbarandarea' || obj.value == 'residuals' || obj.value == 'time series' || obj.value == 'time series re-composition' || obj.value == 'time series seasonal effects' || obj.value == 'newbootstrap') {
 		document.getElementById('xvar').style.display = 'block';
@@ -1172,6 +1174,9 @@ function graphchange(obj) {
 	}
 	if (obj.value == 'newbarandarea' || obj.value == 'dotplot' || obj.value == 'newhistogram' || obj.value == 'newhistogramf' || obj.value == 'newresiduals') {
 		document.getElementById('bettercoloursshow').style.display = 'block';
+	}
+	if(obj.value === 'newpiechart') {
+		document.getElementById('donutshow').style.display = 'block';
 	}
 
 	updategraph();
