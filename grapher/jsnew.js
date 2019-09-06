@@ -28,7 +28,7 @@ function newresiduals() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	var betterColours = false;
-	if($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+	if ($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
 		betterColours = true;
 	}
 
@@ -1348,7 +1348,7 @@ function newhistogramf() {
 		relativeFrequency = true;
 	}
 	var betterColours = false;
-	if($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
+	if ($('#bettercolours').is(":checked") && $('#bettercoloursshow').is(":visible")) {
 		betterColours = true;
 	}
 
@@ -1975,6 +1975,11 @@ function rerandomisation(type) {
 }
 
 function newpiechart() {
+	$('#zvar').show();
+	$('#variable1label').html("category 1:<br><small>required</small>");
+	$('#var2label').html("category 2:<br><small>optional</small>");
+	$('#var3label').html("frequency:<br><small>optional</small>");
+
 	var canvas = document.getElementById('myCanvas');
 	var ctx = canvas.getContext('2d');
 
@@ -1994,7 +1999,7 @@ function newpiechart() {
 	yPoints.pop();
 
 	if (xPoints.length == 0) {
-		return "Error: You must select an x-variable for a pie chart <br>or<br>an x-variable and a y-variable for a series of pie charts.";
+		return 'Error: You must select a variable for "category 1"';
 	}
 
 	if (yPoints.length == 0) {
@@ -2002,14 +2007,14 @@ function newpiechart() {
 		var centerY = height / 2;
 		var diameter = Math.min(height - 150, width - 150);
 		var isDonut = false;
-		if($('#donutchart').is(":checked") && $('#donutshow').is(":visible")) {
+		if ($('#donutchart').is(":checked") && $('#donutshow').is(":visible")) {
 			isDonut = true;
 		}
 		var displaySummary = false;
-		if($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+		if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
 			displaySummary = true;
 		}
-		pie(ctx, xPoints, diameter / 2, centerX, centerY, displaySummary, isDonut);
+		pie(ctx, xPoints, diameter / 2, centerX, centerY, displaySummary, isDonut, "(num: " + xPoints.length + ")");
 		if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
 			ctx.fillStyle = '#000';
 			ctx.textAlign = "center";
@@ -2052,14 +2057,14 @@ function newpiechart() {
 			var centerY = graphHeight / 2 + top - 20 * scalefactor;
 			var diameter = Math.min(graphHeight - 50, graphWidth - 10);
 			var isDonut = false;
-			if($('#donutchart').is(":checked") && $('#donutshow').is(":visible")) {
+			if ($('#donutchart').is(":checked") && $('#donutshow').is(":visible")) {
 				isDonut = true;
 			}
 			var displaySummary = false;
-			if($('#regression').is(":checked") && $('#regshow').is(":visible")) {
+			if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
 				displaySummary = true;
 			}
-			pie(ctx, points, diameter / 2, centerX, centerY, displaySummary, isDonut);
+			pie(ctx, points, diameter / 2, centerX, centerY, displaySummary, isDonut, cat);
 			if ($('#regression').is(":checked") && $('#regshow').is(":visible")) {
 				cat += " (num: " + points.length + ")";
 			}
@@ -2083,7 +2088,7 @@ function newpiechart() {
 	return canvas.toDataURL();
 }
 
-function pie(ctx, xPoints, radius, centerX, centerY, displaySummary, isDonut) {
+function pie(ctx, xPoints, radius, centerX, centerY, displaySummary, isDonut, group) {
 	if (radius <= 0) {
 		return 'Error: The number of pie charts being drawn is too large!';
 	}
@@ -2136,14 +2141,27 @@ function pie(ctx, xPoints, radius, centerX, centerY, displaySummary, isDonut) {
 		pixY = Math.round(radius * 0.8 * Math.sin(deg2rad(half)) + centerY);
 		ctx.fillStyle = '#000';
 		ctx.fillText(key, pixX, pixY + 5 * scalefactor);
-		if(displaySummary) {
+		if (displaySummary) {
 			ctx.font = 12 * scalefactor + "px Roboto";
 			ctx.fillText("(num: " + numInKey + ")", pixX, pixY + 20 * scalefactor);
 			ctx.font = 14 * scalefactor + "px Roboto";
 		}
+		var points = centerX / scalefactor + "," + centerY / scalefactor;
+		var startangle = start;
+		var i = 0;
+		while(i <= 10) {
+			var l = (radius * Math.cos(deg2rad(startangle)) + centerX) / scalefactor;
+			var t = (radius * Math.sin(deg2rad(startangle)) + centerY) / scalefactor;
+			points += ","+l+","+t;
+			startangle += angle / 10;
+			i++;
+		}
+		points += centerX / scalefactor + "," + centerY / scalefactor;
+		var desc = $('#xaxis').val() + ": " + key + "<br>" + $('#yaxis').val() + ": " + group + "<br>num: " + numInKey + "<br>" + ((numInKey / total) * 100).toFixed(1) + "% of " + group;
+		$('#graphmap').append('<area shape="poly" coords="' + points + '" desc="' + desc + '">');
 		rot += angle;
 	}
-	if(isDonut) {
+	if (isDonut) {
 		ctx.fillStyle = '#fff';
 		ctx.beginPath();
 		ctx.arc(centerX, centerY, (radius * 2) * 0.3, 0, 2 * Math.PI);

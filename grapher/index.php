@@ -561,7 +561,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
 	<form action="scatter.php" method="post" target="graph" id=form>
 		<table style='margin-left:3px;'>
 			<tr>
-				<td>variable 1:
+				<td><span id="variable1label">variable 1:</span>
 				<td style='width:125px'>
 					<select style='width:120px;display:none;'
 					        onChange="document.getElementById('xaxis').value=this.options[this.selectedIndex].text;updategraph();"
@@ -602,7 +602,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
 						<option value='update'>Update</option>
 					</select>
 			<tr>
-				<td>variable 2:
+				<td><span id="variable2label">variable 2:</span>
 				<td>
 					<select style='width:120px;display:none;'
 					        onChange="document.getElementById('yaxis').value=this.options[this.selectedIndex].text;updategraph();"
@@ -614,7 +614,7 @@ if (substr($_GET['folder'], 0, 1) == ".") {
 					        onChange="document.getElementById('colorlabel').value=this.options[this.selectedIndex].text;updategraph();"
 					        name=color id=color>
 			<tr>
-				<td>variable 3:
+				<td><span id="variable3label">variable 3:</span>
 				<td>
 					<select style='width:120px;display:none;' onChange="updategraph();" name=zvals id=zvar>
 					</select>

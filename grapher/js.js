@@ -1237,6 +1237,9 @@ $.expr[':'].textEquals = $.expr.createPseudo(function (arg) {
 
 function updategraphgo() {
 	$('#graphmap').html("");
+	$('#variable1label').html("variable 1:");
+	$('#variable2label').html("variable 2:");
+	$('#variable3label').html("variable 3:");
 	$('.highlight').removeClass('highlight');
 	$('#tooltip').css('display', 'none');
 	if (!$('#xvar').length) {
@@ -2315,6 +2318,9 @@ function newdotplot() {
 	$('#removedpointsshow').show();
 	$('#stripgraphshow').show();
 	$('#bettercoloursshow').show();
+	$('#variable1label').html("numerical 1:<br><small>required</small>");
+	$('#variable2label').html("category 1:<br><small>optional</small>");
+	$('#variable3label').html("category 2:<br><small>optional</small>");
 
 	var canvas = document.getElementById('myCanvas');
 	var ctx = canvas.getContext('2d');
@@ -2353,7 +2359,7 @@ function newdotplot() {
 	}
 
 	if (points.length == 0) {
-		return 'Error: You must select a numeric variable for variable 1';
+		return 'Error: You must select a numeric variable for "Numerical 1"';
 	}
 
 	if (pointsremoved.length != 0 && $('#removedpoints').is(":checked")) {
@@ -2390,7 +2396,7 @@ function newdotplot() {
 	}
 
 	if (ypoints.length > 0) {
-		allydifferentgroups = split(allpoints, ypoints, 10, 2);
+		allydifferentgroups = split(allpoints, ypoints, 10, '"Category 1"');
 		if (typeof allydifferentgroups === 'object') {
 			allygroups = Object.keys(allydifferentgroups);
 			allygroups.sort(sortorder).reverse();
@@ -2411,7 +2417,7 @@ function newdotplot() {
 	}
 
 	if (zpoints.length > 0) {
-		zdifferentgroups = split(points, zpoints, 4, 3);
+		zdifferentgroups = split(points, zpoints, 4, '"Category 2"');
 		if (typeof zdifferentgroups === 'object') {
 			zgroups = Object.keys(zdifferentgroups);
 			zgroups.sort(sortorder);
@@ -2516,7 +2522,7 @@ function plotysplit(ctx, left, right, oypixel, minxtick, maxxtick, xstep, maxhei
 	ctx.strokeStyle = '#000000';
 	horaxis(ctx, left, right, add(oypixel, 10 * scalefactor), minxtick, maxxtick, xstep);
 	if (ypoints.length > 0) {
-		ydifferentgroups = split(points, ypoints, 10, 2);
+		ydifferentgroups = split(points, ypoints, 10, '"Category 1"');
 		if (typeof ydifferentgroups === 'object') {
 			ygroups = Object.keys(ydifferentgroups);
 			ygroups.sort(sortorder).reverse();
