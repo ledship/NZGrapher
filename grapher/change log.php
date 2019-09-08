@@ -59,7 +59,7 @@
 	/*
 	TODO List
 	- Work to remove jQuery some of the more intensive jquery functions.
-	- Merge upstream addition  of teaching tools and revamp of sampling variability reaching tool.
+	- Merge upstream addition  of teaching tools and revamp of sampling variability teaching tool.
 	*************************
 	- Look into adding a file from a URL
 	*/
