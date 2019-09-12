@@ -542,7 +542,7 @@ function newhistogram() {
 	yPoints.pop();
 
 	var i = 0;
-	var pointsRemoved = [];
+	var pointsRemoved = "";
 	for (var xPoint in xPoints) {
 		xPoint = xPoints[xPoint];
 		if (!$.isNumeric(xPoint)) {
@@ -561,7 +561,7 @@ function newhistogram() {
 		ctx.fillStyle = '#000000';
 		ctx.font = 13 * scalefactor + "px Roboto";
 		ctx.textAlign = "right";
-		ctx.fillText("ID(s) of Points Removed: " + pointsRemoved.join(", "), width - 40 * scalefactor, 40 * scalefactor);
+		ctx.fillText("ID(s) of Points Removed: " + pointsRemoved, width - 40 * scalefactor, 40 * scalefactor);
 	}
 
 	var numCategories = array_unique(yPoints).length;
